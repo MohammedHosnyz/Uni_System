@@ -1,0 +1,600 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique 
+  description String?
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  password     String
+  firstName    String
+  lastName     String
+  phone        String?
+  nationalId   String?   @unique
+  roleId       Int
+  role         Role      @relation(fields: [roleId], references: [id])
+  isActive     Boolean   @default(true)
+  student      Student?
+  professor    Professor?
+  loginSessions LoginSession[]
+  securitySettings SecuritySettings?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([roleId])
+}
+
+
+model Faculty {
+  id          Int          @id @default(autoincrement())
+  nameAr      String
+  nameEn      String
+  code        String       @unique
+  description String?      @db.Text
+  departments Department[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Department {
+  id          Int       @id @default(autoincrement())
+  nameAr      String
+  nameEn      String
+  code        String    @unique
+  facultyId   Int
+  faculty     Faculty   @relation(fields: [facultyId], references: [id])
+  programs    Program[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([facultyId])
+}
+
+model Program {
+  id              Int          @id @default(autoincrement())
+  nameAr          String
+  nameEn          String
+  code            String       @unique
+  departmentId    Int
+  department      Department   @relation(fields: [departmentId], references: [id])
+  durationYears   Int          @default(4)
+  totalCredits    Int
+  tuitionFee      Decimal      @db.Decimal(10, 2)
+  students        Student[]
+  courses         Course[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([departmentId])
+}
+
+
+model Student {
+  id              Int            @id @default(autoincrement())
+  userId          Int            @unique
+  user            User           @relation(fields: [userId], references: [id])
+  studentNumber   String         @unique
+  programId       Int
+  program         Program        @relation(fields: [programId], references: [id])
+  enrollmentYear  Int
+  currentLevel    Int            @default(1)
+  status          String         @default("active") 
+  gpa             Decimal?       @db.Decimal(3, 2)
+  photoUrl        String?
+  documents       String?        @db.Text 
+  registrations   Registration[]
+  grades          Grade[]
+  payments        Payment[]
+  attendances     Attendance[]
+  quizSubmissions  QuizSubmission[]
+  serviceRequests  ServiceRequest[]
+  militaryStatus   MilitaryStatus?
+  militaryDocs     MilitaryDocument[]
+  militaryTimeline MilitaryTimeline[]
+  activityRegs     ActivityRegistration[]
+  busSubscriptions BusSubscription[]
+  housingAssignment HousingAssignment[]
+  maintenanceRequests MaintenanceRequest[]
+  createdAt        DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([userId])
+  @@index([programId])
+}
+
+
+model Professor {
+  id              Int               @id @default(autoincrement())
+  userId          Int               @unique
+  user            User              @relation(fields: [userId], references: [id])
+  employeeNumber  String            @unique
+  title           String            
+  specialization  String?
+  officeLocation  String?
+  officeHours     String?           @db.Text
+  courseOfferings CourseOffering[]
+  scheduleEntries ScheduleEntry[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([userId])
+}
+
+
+model Course {
+  id              Int                   @id @default(autoincrement())
+  code            String                @unique
+  nameAr          String
+  nameEn          String
+  description     String?               @db.Text
+  credits         Int
+  programId       Int
+  program         Program               @relation(fields: [programId], references: [id])
+  level           Int                   
+  courseType      String                
+  prerequisites   CoursePrerequisite[]  @relation("CoursePrerequisites")
+  requiredFor     CoursePrerequisite[]  @relation("PrerequisiteFor")
+  offerings       CourseOffering[]
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  @@index([programId])
+}
+
+model CoursePrerequisite {
+  id              Int      @id @default(autoincrement())
+  courseId        Int
+  course          Course   @relation("CoursePrerequisites", fields: [courseId], references: [id])
+  prerequisiteId  Int
+  prerequisite    Course   @relation("PrerequisiteFor", fields: [prerequisiteId], references: [id])
+  createdAt       DateTime @default(now())
+
+  @@unique([courseId, prerequisiteId])
+  @@index([courseId])
+  @@index([prerequisiteId])
+}
+
+
+model Semester {
+  id              Int              @id @default(autoincrement())
+  name            String           
+  year            Int
+  season          String           
+  startDate       DateTime
+  endDate         DateTime
+  registrationStart DateTime
+  registrationEnd DateTime
+  isActive        Boolean          @default(false)
+  courseOfferings CourseOffering[]
+  registrations   Registration[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model CourseOffering {
+  id              Int             @id @default(autoincrement())
+  courseId        Int
+  course          Course          @relation(fields: [courseId], references: [id])
+  semesterId      Int
+  semester        Semester        @relation(fields: [semesterId], references: [id])
+  professorId     Int?
+  professor       Professor?      @relation(fields: [professorId], references: [id])
+  maxStudents     Int             @default(100)
+  enrolledCount   Int             @default(0)
+  registrations   Registration[]
+  scheduleEntries ScheduleEntry[]
+  examSchedules   ExamSchedule[]
+  quizzes         Quiz[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([courseId, semesterId])
+  @@index([courseId])
+  @@index([semesterId])
+  @@index([professorId])
+}
+
+
+model Registration {
+  id               Int            @id @default(autoincrement())
+  studentId        Int
+  student          Student        @relation(fields: [studentId], references: [id])
+  courseOfferingId Int
+  courseOffering   CourseOffering @relation(fields: [courseOfferingId], references: [id])
+  semesterId       Int
+  semester         Semester       @relation(fields: [semesterId], references: [id])
+  status           String         @default("registered") 
+  registrationDate DateTime       @default(now())
+  grade            Grade?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@unique([studentId, courseOfferingId])
+  @@index([studentId])
+  @@index([courseOfferingId])
+  @@index([semesterId])
+}
+
+
+model Grade {
+  id             Int          @id @default(autoincrement())
+  registrationId Int          @unique
+  registration   Registration @relation(fields: [registrationId], references: [id])
+  studentId      Int
+  student        Student      @relation(fields: [studentId], references: [id])
+  midtermGrade   Decimal?     @db.Decimal(5, 2)
+  finalGrade     Decimal?     @db.Decimal(5, 2)
+  assignmentGrade Decimal?    @db.Decimal(5, 2)
+  totalGrade     Decimal?     @db.Decimal(5, 2)
+  letterGrade    String?      
+  gradePoint     Decimal?     @db.Decimal(3, 2)
+  status         String?      
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([studentId])
+}
+
+
+model Classroom {
+  id              Int             @id @default(autoincrement())
+  code            String          @unique
+  name            String
+  building        String
+  capacity        Int
+  type            String          
+  facilities      String?         @db.Text 
+  scheduleEntries ScheduleEntry[]
+  examSchedules   ExamSchedule[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model ScheduleEntry {
+  id               Int            @id @default(autoincrement())
+  courseOfferingId Int
+  courseOffering   CourseOffering @relation(fields: [courseOfferingId], references: [id])
+  classroomId      Int
+  classroom        Classroom      @relation(fields: [classroomId], references: [id])
+  professorId      Int?
+  professor        Professor?     @relation(fields: [professorId], references: [id])
+  dayOfWeek        Int            
+  startTime        String         
+  endTime          String         
+  sessionType      String         
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  attendances      Attendance[]
+
+  @@index([courseOfferingId])
+  @@index([classroomId])
+  @@index([professorId])
+}
+
+
+model Attendance {
+  id               Int            @id @default(autoincrement())
+  studentId        Int
+  student          Student        @relation(fields: [studentId], references: [id])
+  scheduleEntryId  Int
+  scheduleEntry    ScheduleEntry  @relation(fields: [scheduleEntryId], references: [id])
+  date             DateTime
+  status           String         @default("present") 
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@unique([studentId, scheduleEntryId, date])
+  @@index([studentId])
+  @@index([scheduleEntryId])
+}
+
+model Quiz {
+  id              Int              @id @default(autoincrement())
+  title           String
+  titleEn         String?
+  courseOfferingId Int
+  courseOffering  CourseOffering   @relation(fields: [courseOfferingId], references: [id])
+  duration        Int              @default(30)
+  totalMarks      Int
+  status          String           @default("published")
+  questions       QuizQuestion[]
+  submissions     QuizSubmission[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([courseOfferingId])
+}
+
+model QuizQuestion {
+  id            Int    @id @default(autoincrement())
+  quizId        Int
+  quiz          Quiz   @relation(fields: [quizId], references: [id])
+  question      String @db.Text
+  questionEn    String? @db.Text
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctAnswer String
+
+  @@index([quizId])
+}
+
+model QuizSubmission {
+  id          Int      @id @default(autoincrement())
+  quizId      Int
+  quiz        Quiz     @relation(fields: [quizId], references: [id])
+  studentId   Int
+  student     Student  @relation(fields: [studentId], references: [id])
+  score       Int
+  totalMarks  Int
+  answers     String   @db.Text
+  submittedAt DateTime @default(now())
+
+  @@unique([quizId, studentId])
+  @@index([quizId])
+  @@index([studentId])
+}
+
+model ExamSchedule {
+  id               Int            @id @default(autoincrement())
+  courseOfferingId Int
+  courseOffering   CourseOffering @relation(fields: [courseOfferingId], references: [id])
+  classroomId      Int
+  classroom        Classroom      @relation(fields: [classroomId], references: [id])
+  examType         String         
+  examDate         DateTime
+  startTime        String
+  endTime          String
+  duration         Int            
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([courseOfferingId])
+  @@index([classroomId])
+}
+
+model MilitaryStatus {
+  id               Int      @id @default(autoincrement())
+  studentId        Int      @unique
+  student          Student  @relation(fields: [studentId], references: [id])
+  status           String   @default("deferred") 
+  defermentNumber  String?
+  issueDate        DateTime?
+  expiryDate       DateTime?
+  militaryOffice   String?
+  notes            String?  @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([studentId])
+}
+
+model MilitaryDocument {
+  id          Int      @id @default(autoincrement())
+  studentId   Int
+  student     Student  @relation(fields: [studentId], references: [id])
+  nameAr      String
+  nameEn      String?
+  docType     String   @default("PDF")
+  docDate     DateTime
+  fileUrl     String?
+  status      String   @default("available") 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([studentId])
+}
+
+model MilitaryTimeline {
+  id          Int      @id @default(autoincrement())
+  studentId   Int
+  student     Student  @relation(fields: [studentId], references: [id])
+  eventAr     String
+  eventEn     String?
+  eventDate   DateTime
+  status      String   @default("done") 
+  createdAt   DateTime @default(now())
+
+  @@index([studentId])
+}
+
+model HousingBuilding {
+  id            Int                @id @default(autoincrement())
+  nameAr        String
+  nameEn        String
+  typeAr        String             
+  typeEn        String             
+  capacity      Int
+  pricePerSem   Decimal            @db.Decimal(10, 2)
+  facilitiesAr  String             @db.Text  
+  facilitiesEn  String             @db.Text  
+  isActive      Boolean            @default(true)
+  rooms         HousingRoom[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+}
+
+model HousingRoom {
+  id          Int              @id @default(autoincrement())
+  buildingId  Int
+  building    HousingBuilding  @relation(fields: [buildingId], references: [id])
+  roomNumber  String
+  floor       Int
+  capacity    Int              @default(2)
+  assignments HousingAssignment[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@unique([buildingId, roomNumber])
+  @@index([buildingId])
+}
+
+model HousingAssignment {
+  id          Int         @id @default(autoincrement())
+  studentId   Int
+  student     Student     @relation(fields: [studentId], references: [id])
+  roomId      Int
+  room        HousingRoom @relation(fields: [roomId], references: [id])
+  checkIn     DateTime
+  checkOut    DateTime
+  semFees     Decimal     @db.Decimal(10, 2)
+  paidAmount  Decimal     @db.Decimal(10, 2) @default(0)
+  status      String      @default("active") 
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([studentId])
+  @@index([roomId])
+}
+
+model MaintenanceRequest {
+  id          Int      @id @default(autoincrement())
+  studentId   Int
+  student     Student  @relation(fields: [studentId], references: [id])
+  typeAr      String
+  typeEn      String
+  descAr      String   @db.Text
+  descEn      String   @db.Text
+  status      String   @default("pending") 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([studentId])
+}
+
+model BusRoute {
+  id            Int              @id @default(autoincrement())
+  nameAr        String
+  nameEn        String
+  departureTime String
+  arrivalTime   String
+  returnDepTime String
+  returnArrTime String
+  pricePerDay   Decimal          @db.Decimal(8, 2)
+  capacity      Int              @default(50)
+  stopsAr       String           @db.Text  
+  stopsEn       String           @db.Text  
+  isActive      Boolean          @default(true)
+  subscriptions BusSubscription[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model BusSubscription {
+  id          Int       @id @default(autoincrement())
+  studentId   Int
+  student     Student   @relation(fields: [studentId], references: [id])
+  routeId     Int
+  route       BusRoute  @relation(fields: [routeId], references: [id])
+  startDate   DateTime
+  endDate     DateTime
+  totalPaid   Decimal   @db.Decimal(10, 2)
+  status      String    @default("active") 
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([studentId])
+  @@index([routeId])
+}
+
+model Activity {
+  id            Int                    @id @default(autoincrement())
+  titleAr       String
+  titleEn       String
+  descAr        String?                @db.Text
+  descEn        String?                @db.Text
+  categoryAr    String
+  categoryEn    String
+  date          DateTime
+  timeAr        String
+  timeEn        String
+  locationAr    String
+  locationEn    String
+  maxParticipants Int                  @default(50)
+  points        Int                    @default(10)
+  status        String                 @default("available") 
+  registrations ActivityRegistration[]
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+}
+
+model ActivityRegistration {
+  id         Int      @id @default(autoincrement())
+  activityId Int
+  activity   Activity @relation(fields: [activityId], references: [id])
+  studentId  Int
+  student    Student  @relation(fields: [studentId], references: [id])
+  status     String   @default("registered") 
+  createdAt  DateTime @default(now())
+
+  @@unique([activityId, studentId])
+  @@index([activityId])
+  @@index([studentId])
+}
+
+model ServiceRequest {
+  id          Int      @id @default(autoincrement())
+  studentId   Int
+  student     Student  @relation(fields: [studentId], references: [id])
+  serviceKey  String   
+  status      String   @default("pending") 
+  notes       String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([studentId])
+}
+
+model LoginSession {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  device      String   @default("Unknown")
+  location    String   @default("Unknown")
+  ipAddress   String?
+  isCurrent   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+model SecuritySettings {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  user         User     @relation(fields: [userId], references: [id])
+  twoFactor    Boolean  @default(false)
+  loginNotif   Boolean  @default(true)
+  activityLog  Boolean  @default(true)
+  updatedAt    DateTime @updatedAt
+}
+
+model Payment {
+  id              Int      @id @default(autoincrement())
+  studentId       Int
+  student         Student  @relation(fields: [studentId], references: [id])
+  amount          Decimal  @db.Decimal(10, 2)
+  paymentDate     DateTime @default(now())
+  paymentMethod   String   
+  paymentType     String   
+  semesterYear    String?
+  receiptNumber   String   @unique
+  status          String   @default("completed") 
+  notes           String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([studentId])
+}

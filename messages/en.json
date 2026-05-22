@@ -1,0 +1,813 @@
+{
+  "header": {
+    "home": "Home",
+    "about": "About",
+    "programs": "Academic Programs",
+    "contact": "Contact Us",
+    "login": "Login",
+    "whoWeAre": "Who We Are",
+    "programsAndSpecializations": "Programs & Specializations",
+    "admissionsAndRegistration": "Admissions & Registration",
+    "newsAndEvents": "News & Events",
+    "help": "Help",
+    "followUs": "Follow Us:",
+    "universityName": "Assiut National University",
+    "universityNameEn": "جامعة أسيوط الأهلية",
+    "facultyName": "Faculty of Computers and Information"
+  },
+  "home": {
+    "title": "Faculty of Computers and Information",
+    "subtitle": "Assiut National University",
+    "description": "Integrated system for managing the educational process according to the approved academic regulations",
+    "loginButton": "Login",
+    "aboutButton": "About Faculty",
+    "stats": {
+      "credits": "Credit Hours",
+      "creditsFor": "to Graduate",
+      "departments": "Departments",
+      "departmentsSub": "Specialized",
+      "levels": "Levels",
+      "levelsSub": "Academic",
+      "minGPA": "Minimum",
+      "gpa": "GPA"
+    },
+    "departmentsTitle": "Academic Departments",
+    "departments": {
+      "cs": {
+        "title": "Computer Science",
+        "titleEn": "Computer Science",
+        "description": "Covers algorithms, programming, databases, and information security to build comprehensive software solutions."
+      },
+      "se": {
+        "title": "Software Engineering",
+        "titleEn": "Software Engineering",
+        "description": "Focuses on software development methodologies, project management, quality assurance, and modern DevOps practices."
+      },
+      "ai": {
+        "title": "Artificial Intelligence",
+        "titleEn": "Artificial Intelligence",
+        "description": "Explores machine learning, deep learning, natural language processing, computer vision, and their real-world applications."
+      }
+    },
+    "featuresTitle": "System Features",
+    "features": {
+      "registration": {
+        "title": "Course Registration",
+        "description": "Smart registration system with automatic prerequisite calculation"
+      },
+      "grades": {
+        "title": "Grade Tracking",
+        "description": "Real-time display of grades and cumulative GPA"
+      },
+      "schedule": {
+        "title": "Class Schedule",
+        "description": "Interactive lecture and lab schedule"
+      },
+      "exams": {
+        "title": "Exam Schedule",
+        "description": "Accurate display of exam dates"
+      },
+      "payments": {
+        "title": "Payments",
+        "description": "Track fees and invoices"
+      },
+      "idCard": {
+        "title": "University ID Card",
+        "description": "View and print electronic ID card"
+      }
+    }
+  },
+  "about": {
+    "title": "About Faculty",
+    "subtitle": "Faculty of Computers and Information - Assiut National University",
+    "vision": {
+      "title": "Vision",
+      "content": "The faculty seeks to achieve excellence and innovation in education, scientific research, and community service locally and regionally, to be a leading center in the field of computers and information."
+    },
+    "mission": {
+      "title": "Mission",
+      "content": "Providing students with knowledge and scientific research in computer science and information systems and technology, and developing curricula in line with scientific development and labor market needs."
+    },
+    "objectivesTitle": "Faculty Objectives",
+    "objectives": {
+      "graduates": {
+        "title": "Graduate Preparation",
+        "description": "Preparing specialized graduates capable of competing locally and globally"
+      },
+      "research": {
+        "title": "Scientific Research",
+        "description": "Conducting advanced scientific research and studies in specialized fields"
+      },
+      "consulting": {
+        "title": "Consulting",
+        "description": "Providing consulting to institutions using technology"
+      },
+      "training": {
+        "title": "Staff Training",
+        "description": "Training technical staff in various state sectors"
+      },
+      "community": {
+        "title": "Community Service",
+        "description": "Spreading technological awareness and serving the local community"
+      },
+      "cooperation": {
+        "title": "International Cooperation",
+        "description": "Holding scientific conferences and international cooperation with global universities"
+      }
+    },
+    "departmentsTitle": "Academic Departments",
+    "departmentsSubtitle": "The faculty includes three specialized academic departments",
+    "departmentAreas": "Specialization Areas:",
+    "cs": {
+      "title": "Computer Science Department",
+      "titleEn": "Computer Science Department",
+      "areas": [
+        "Algorithms and Data Structures",
+        "Advanced Programming",
+        "Databases",
+        "Operating Systems",
+        "Networks and Communications",
+        "Information Security",
+        "Cloud Computing",
+        "Web and Mobile Applications"
+      ]
+    },
+    "se": {
+      "title": "Software Engineering Department",
+      "titleEn": "Software Engineering Department",
+      "areas": [
+        "Systems Analysis and Design",
+        "Requirements Engineering",
+        "Software Project Management",
+        "Quality Assurance and Testing",
+        "DevOps and CI/CD",
+        "Design Patterns",
+        "Agile and Scrum",
+        "Software Maintenance"
+      ]
+    },
+    "ai": {
+      "title": "Artificial Intelligence Department",
+      "titleEn": "Artificial Intelligence Department",
+      "areas": [
+        "Machine Learning",
+        "Deep Learning",
+        "Natural Language Processing",
+        "Computer Vision",
+        "Neural Networks",
+        "Reinforcement Learning",
+        "Image Processing",
+        "Intelligent Robotics"
+      ]
+    },
+    "studySystemTitle": "Study System",
+    "studySystem": {
+      "creditSystem": "Credit Hour System",
+      "totalCredits": "Credit Hours",
+      "totalCreditsDesc": "Total hours required for graduation",
+      "duration": "Study Duration",
+      "years": "Years",
+      "durationDesc": "Minimum for graduation (8 semesters)",
+      "gpa": "Cumulative GPA",
+      "minGPA": "GPA",
+      "gpaDesc": "Minimum required for graduation"
+    },
+    "creditsDistribution": "Credit Hours Distribution",
+    "credits": {
+      "general": "General Requirements",
+      "faculty": "Faculty Requirements",
+      "major": "Major Requirements",
+      "training": "Training and Projects",
+      "minor": "Minor Specialization",
+      "optional": "Optional"
+    },
+    "levelsTitle": "Academic Levels",
+    "levels": {
+      "level1": "First Level",
+      "level1En": "Freshman",
+      "level1Credits": "0-35 Hours",
+      "level2": "Second Level",
+      "level2En": "Sophomore",
+      "level2Credits": "36-71 Hours",
+      "level3": "Third Level",
+      "level3En": "Junior",
+      "level3Credits": "72-107 Hours",
+      "level4": "Fourth Level",
+      "level4En": "Senior",
+      "level4Credits": "108-144 Hours"
+    },
+    "joinTitle": "Join Us Today",
+    "joinSubtitle": "Be part of the future of technology and innovation",
+    "loginButton": "Login",
+    "contactButton": "Contact Us"
+  },
+  "programs": {
+    "title": "Academic Programs",
+    "subtitle": "Distinguished bachelor's programs in computers and information fields",
+    "degreesTitle": "Academic Degrees",
+    "degreesSubtitle": "The faculty grants bachelor's degrees in three main specializations, with the possibility of choosing a minor after completing 72 credit hours",
+    "stats": {
+      "programs": "Bachelor Programs",
+      "credits": "Credit Hours",
+      "years": "Academic Years"
+    },
+    "mainProgramsTitle": "Main Programs",
+    "cs": {
+      "title": "Bachelor of Computer Science",
+      "titleEn": "Bachelor of Computer Science",
+      "description": "Specialized program in theoretical and applied computer science",
+      "duration": "4 Years",
+      "credits": "144 Hours",
+      "features": [
+        "Algorithms and Data Structures",
+        "Advanced Programming",
+        "Databases",
+        "Operating Systems",
+        "Networks and Communications",
+        "Information Security and Cryptography"
+      ],
+      "careers": [
+        "Software Developer",
+        "Database Engineer",
+        "Information Security Engineer",
+        "Application Developer"
+      ]
+    },
+    "se": {
+      "title": "Bachelor of Software Engineering",
+      "titleEn": "Bachelor of Software Engineering",
+      "description": "Specialized program in software development and project management",
+      "duration": "4 Years",
+      "credits": "144 Hours",
+      "features": [
+        "Systems Analysis and Design",
+        "Requirements Engineering",
+        "Software Project Management",
+        "Quality Assurance and Testing",
+        "DevOps and CI/CD",
+        "Design Patterns"
+      ],
+      "careers": [
+        "Software Engineer",
+        "Technical Project Manager",
+        "DevOps Engineer",
+        "Quality Assurance Engineer"
+      ]
+    },
+    "ai": {
+      "title": "Bachelor of Artificial Intelligence",
+      "titleEn": "Bachelor of Artificial Intelligence",
+      "description": "Specialized program in artificial intelligence and machine learning technologies",
+      "duration": "4 Years",
+      "credits": "144 Hours",
+      "features": [
+        "Machine Learning",
+        "Deep Learning",
+        "Natural Language Processing",
+        "Computer Vision",
+        "Neural Networks",
+        "Reinforcement Learning"
+      ],
+      "careers": [
+        "AI Engineer",
+        "Data Scientist",
+        "Machine Learning Engineer",
+        "AI Researcher"
+      ]
+    },
+    "mainCourses": "Main Courses:",
+    "careerOpportunities": "Career Opportunities:",
+    "minorTitle": "Minor Specialization",
+    "minorSubtitle": "Students can choose an additional minor after completing 72 credit hours (15 additional hours)",
+    "minorCredits": "Credit Hours",
+    "admissionTitle": "Admission Requirements",
+    "admission": {
+      "highSchool": {
+        "title": "High School",
+        "description": "Mathematics division according to coordination office rules"
+      },
+      "minimum": {
+        "title": "Minimum",
+        "description": "According to the announced admission coordination"
+      },
+      "documents": {
+        "title": "Documents",
+        "description": "High school certificate + Photos + National ID"
+      }
+    },
+    "startJourneyTitle": "Start Your Academic Journey",
+    "startJourneySubtitle": "Choose the right program for you and join the Faculty of Computers and Information",
+    "loginButton": "Login",
+    "inquireButton": "Inquire Now"
+  },
+  "admissions": {
+    "title": "Admissions and Registration",
+    "subtitle": "Comprehensive information about admission requirements and registration procedures at the Faculty of Computers and Information",
+    "quickInfo": {
+      "applicationDate": {
+        "title": "Application Date",
+        "value": "July - August"
+      },
+      "admissionType": {
+        "title": "Admission Type",
+        "value": "Coordination Office"
+      },
+      "division": {
+        "title": "Division",
+        "value": "Mathematics"
+      },
+      "duration": {
+        "title": "Study Duration",
+        "value": "4 Years"
+      }
+    },
+    "requirementsTitle": "Admission Requirements",
+    "requirements": {
+      "highSchool": {
+        "title": "High School",
+        "items": [
+          "Mathematics division",
+          "According to announced admission coordination",
+          "Meeting minimum admission requirements"
+        ]
+      },
+      "medical": {
+        "title": "Medical Examination",
+        "items": [
+          "Medical fitness",
+          "Free from infectious diseases",
+          "Ability to continue studies"
+        ]
+      },
+      "documents": {
+        "title": "Required Documents",
+        "items": [
+          "Original high school certificate",
+          "Original birth certificate",
+          "National ID card",
+          "6 personal photos"
+        ]
+      }
+    },
+    "notesTitle": "Important Notes",
+    "notes": [
+      "Admission is according to the coordination office rules announced annually",
+      "All required documents must be submitted on time",
+      "Priority for students with highest grades"
+    ],
+    "stepsTitle": "Registration Steps",
+    "stepsSubtitle": "Follow these steps to complete the registration process successfully",
+    "steps": {
+      "step1": {
+        "title": "Online Application",
+        "description": "Fill out the application form via the coordination office website"
+      },
+      "step2": {
+        "title": "Submit Documents",
+        "description": "Submit original documents to the faculty on specified dates"
+      },
+      "step3": {
+        "title": "Medical Examination",
+        "description": "Undergo medical examination at the approved center"
+      },
+      "step4": {
+        "title": "Pay Fees",
+        "description": "Pay tuition fees and obtain receipt"
+      }
+    },
+    "feesTitle": "Tuition Fees",
+    "fees": {
+      "registration": {
+        "title": "Registration Fee",
+        "amount": "500",
+        "description": "Paid once upon registration"
+      },
+      "semester": {
+        "title": "Semester Fees",
+        "amount": "8,500",
+        "description": "Paid at the beginning of each semester"
+      },
+      "summer": {
+        "title": "Summer Semester",
+        "amount": "4,000",
+        "description": "Optional - 8 weeks"
+      },
+      "currency": "EGP",
+      "note": "Fees are subject to change according to university decisions"
+    },
+    "datesTitle": "Important Dates",
+    "dates": {
+      "applicationStart": {
+        "event": "Online Application Start",
+        "date": "July 1"
+      },
+      "applicationEnd": {
+        "event": "Online Application End",
+        "date": "July 31"
+      },
+      "resultsAnnouncement": {
+        "event": "Coordination Results Announcement",
+        "date": "August 15"
+      },
+      "documentsSubmission": {
+        "event": "Documents Submission",
+        "date": "August 20-25"
+      },
+      "studyStart": {
+        "event": "Study Start",
+        "date": "September 15"
+      }
+    },
+    "faqTitle": "Frequently Asked Questions",
+    "faq": [
+      {
+        "question": "Can I transfer from another faculty?",
+        "answer": "Yes, transfer is possible according to the rules governing transfer between faculties and universities"
+      },
+      {
+        "question": "What is the language of instruction?",
+        "answer": "Study is in both Arabic and English depending on the nature of the course"
+      },
+      {
+        "question": "Are there scholarships?",
+        "answer": "Yes, the university offers scholarships to outstanding students according to specific conditions"
+      },
+      {
+        "question": "How is the specialization chosen?",
+        "answer": "Specialization is chosen at the end of the first year based on student preference and cumulative GPA"
+      }
+    ],
+    "inquiryTitle": "Have a Question?",
+    "inquirySubtitle": "Contact us for more information",
+    "contactButton": "Contact Us",
+    "loginButton": "Login"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "overview": "Overview",
+    "students": "Students",
+    "courses": "Courses",
+    "schedule": "Schedule",
+    "grades": "Grades",
+    "reports": "Reports",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "student": {
+    "dashboard": "Dashboard",
+    "registration": "Course Registration",
+    "myCourses": "My Courses",
+    "myGrades": "My Grades",
+    "mySchedule": "My Schedule",
+    "exams": "Exam Schedule",
+    "idCard": "ID Card",
+    "payments": "Payments",
+    "profile": "Profile",
+    "gpa": "GPA",
+    "completedCredits": "Completed Credits",
+    "currentLevel": "Current Level",
+    "registeredCourses": "Registered Courses"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "print": "Print",
+    "loading": "Loading...",
+    "noData": "No data available",
+    "error": "An error occurred",
+    "success": "Operation completed successfully",
+    "confirm": "Confirm",
+    "close": "Close",
+    "note": "Note"
+  },
+  "footer": {
+    "aboutSection": "About Faculty",
+    "aboutLinks": {
+      "whoWeAre": "Who We Are",
+      "vision": "Vision & Mission",
+      "departments": "Academic Departments",
+      "faculty": "Faculty Members"
+    },
+    "usefulLinks": "Useful Links",
+    "usefulLinksItems": {
+      "admissions": "Admissions & Registration",
+      "programs": "Academic Programs",
+      "regulations": "Academic Regulations",
+      "careers": "Careers"
+    },
+    "studentServices": "Student Services",
+    "studentServicesItems": {
+      "login": "Login",
+      "registration": "Course Registration",
+      "grades": "Grades",
+      "support": "Technical Support"
+    },
+    "contactUs": "Contact Us",
+    "address": "Assiut, Egypt",
+    "copyright": "© 2026 Assiut National University",
+    "allRightsReserved": "All Rights Reserved",
+    "bottomLinks": {
+      "sitemap": "Sitemap",
+      "privacy": "Privacy Policy",
+      "terms": "Terms & Conditions",
+      "accessibility": "Accessibility",
+      "contact": "Contact Us"
+    },
+    "backToTop": "↑ Back to Top"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We're here to answer your questions and help you anytime",
+    "info": {
+      "address": { "title": "Address", "info": "Assiut, Egypt", "details": "Faculty of Computers and Information" },
+      "phone": { "title": "Phone", "info": "088-2411111", "details": "Saturday to Thursday" },
+      "email": { "title": "Email", "info": "info@aun.edu.eg", "details": "We reply within 24 hours" },
+      "hours": { "title": "Working Hours", "info": "9 AM - 5 PM", "details": "Saturday - Thursday" }
+    },
+    "formTitle": "Send a Message",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "email": "Email",
+    "emailPlaceholder": "email@example.com",
+    "phone": "Phone Number",
+    "phonePlaceholder": "01xxxxxxxxx",
+    "subject": "Subject",
+    "subjectPlaceholder": "Choose subject",
+    "subjects": ["General Inquiry", "Admissions & Registration", "Courses & Studies", "Payments", "Technical Support", "Complaint", "Suggestion"],
+    "message": "Message",
+    "messagePlaceholder": "Write your message here...",
+    "submit": "Send Message",
+    "required": "*",
+    "mapTitle": "Faculty Location",
+    "mapLocation": "Assiut, Egypt",
+    "viewMap": "View on Map",
+    "quickContactTitle": "Quick Contact",
+    "call": "Call Us",
+    "emailUs": "Email Us",
+    "chat": "Live Chat",
+    "startChat": "Start Chat",
+    "departmentsTitle": "Contact Departments",
+    "socialTitle": "Follow Us on Social Media",
+    "socialSubtitle": "Stay updated with latest news and events",
+    "inquiryTitle": "Have a Question?",
+    "inquirySubtitle": "We're here to help - contact us anytime",
+    "helpCenter": "Help Center"
+  },
+  "departments": {
+    "title": "Academic Departments",
+    "subtitle": "Three specialized academic departments covering all fields of computers and information",
+    "overviewTitle": "About Departments",
+    "overviewSubtitle": "The faculty includes three specialized academic departments, each offering a distinguished bachelor's program",
+    "stats": { "departments": "Departments", "credits": "Credit Hours", "years": "Academic Years" },
+    "cs": {
+      "description": "The Computer Science department focuses on the theoretical and applied foundations of computer science, aiming to prepare graduates capable of developing innovative software solutions and conducting advanced scientific research.",
+      "careers": ["Software Developer", "Database Engineer", "Information Security Engineer", "Application Developer", "Scientific Researcher"]
+    },
+    "se": {
+      "description": "The Software Engineering department focuses on modern methodologies and tools for software development, aiming to prepare engineers capable of building high-quality software systems.",
+      "careers": ["Software Engineer", "Technical Project Manager", "DevOps Engineer", "Quality Assurance Engineer", "Software Solutions Engineer"]
+    },
+    "ai": {
+      "description": "The Artificial Intelligence department specializes in AI and machine learning technologies, aiming to prepare specialists capable of developing innovative intelligent systems.",
+      "careers": ["AI Engineer", "Data Scientist", "Machine Learning Engineer", "AI Researcher", "Intelligent Systems Developer"]
+    },
+    "areasLabel": "Specialization Areas:",
+    "careersLabel": "Career Opportunities:",
+    "contactTitle": "Contact Departments",
+    "chooseTitle": "Choose Your Major",
+    "chooseSubtitle": "Discover the right academic program for you"
+  },
+  "vision": {
+    "title": "Vision and Mission",
+    "subtitle": "Towards a bright future in education, scientific research, and community service",
+    "visionTitle": "Vision",
+    "visionContent": "The faculty seeks to achieve excellence and innovation in education, scientific research, and community service locally and regionally, to be a leading center in the field of computers and information at the national and regional level.",
+    "missionTitle": "Mission",
+    "missionContent": "Providing students with knowledge and scientific research in computer science and information systems and technology, and developing curricula in line with scientific development and local and regional labor market needs.",
+    "missionAxesTitle": "Mission Pillars",
+    "missionAxes": {
+      "education": { "title": "Distinguished Education", "description": "Providing students with knowledge and scientific research in computer science and information systems and technology" },
+      "curriculum": { "title": "Curriculum Development", "description": "Developing curricula in line with scientific development and labor market needs" },
+      "selfLearning": { "title": "Self-Learning", "description": "Developing self-learning skills and using modern technologies" },
+      "research": { "title": "Scientific Research", "description": "Supporting scientific research and linking it to economic and social returns" },
+      "ethics": { "title": "Professional Values", "description": "Promoting professional values and ethics among students" },
+      "community": { "title": "Community Service", "description": "Providing community services in various faculty fields" }
+    },
+    "goalsTitle": "Strategic Goals",
+    "goalsSubtitle": "We strive to achieve a set of strategic goals that support our vision and mission",
+    "goals": {
+      "excellence": { "title": "Academic Excellence", "description": "Preparing specialized graduates in computers and information capable of competing locally and globally" },
+      "innovation": { "title": "Research and Innovation", "description": "Conducting advanced scientific research and studies in specialized fields" },
+      "partnerships": { "title": "Community Partnerships", "description": "Providing consulting to institutions and training technical staff in state sectors" },
+      "awareness": { "title": "Technological Awareness", "description": "Spreading technological awareness in society and providing distinguished community services" },
+      "cooperation": { "title": "International Cooperation", "description": "Holding scientific conferences and international cooperation with global universities and institutions" },
+      "development": { "title": "Continuous Development", "description": "Encouraging scientific research and creating new specializations and studies that keep pace with development" }
+    },
+    "valuesTitle": "Our Core Values",
+    "values": ["Excellence", "Innovation", "Cooperation", "Integrity", "Quality", "Creativity", "Commitment", "Responsibility"],
+    "joinTitle": "Be Part of Our Vision",
+    "joinSubtitle": "Join us on the journey of excellence and innovation"
+  },
+  "news": {
+    "title": "News and Events",
+    "subtitle": "Latest academic and scientific news and events at the Faculty of Computers and Information",
+    "latestNews": "Latest News",
+    "upcomingEvents": "Upcoming Events",
+    "achievements": "Faculty Achievements",
+    "browseByCategory": "Browse by Category",
+    "categories": { "facultyNews": "Faculty News", "events": "Events", "achievements": "Achievements", "research": "Scientific Research" },
+    "newsletterTitle": "Subscribe to Newsletter",
+    "newsletterSubtitle": "Get latest news and events directly in your email",
+    "emailPlaceholder": "Email",
+    "subscribe": "Subscribe",
+    "followTitle": "Follow Latest News",
+    "followSubtitle": "Stay updated with everything new in technology and education",
+    "newsCount": "news",
+    "dateLabel": "Date:"
+  },
+  "help": {
+    "title": "Help Center",
+    "subtitle": "We're here to help - find answers to your frequently asked questions",
+    "searchPlaceholder": "Search for a question...",
+    "categoriesTitle": "Help Categories",
+    "faqTitle": "Frequently Asked Questions",
+    "contactSupportTitle": "Need Additional Help?",
+    "contactSupportSubtitle": "Support team is ready to help you",
+    "contactSupport": "Contact Support"
+  },
+  "support": {
+    "title": "Technical Support",
+    "subtitle": "We're here to solve your technical problems and help you",
+    "myTickets": "My Support Tickets",
+    "createTicket": "Create New Ticket",
+    "quickSolutions": "Quick Solutions",
+    "status": { "open": "Open", "in-progress": "In Progress", "resolved": "Resolved", "closed": "Closed" },
+    "priority": { "low": "Low", "medium": "Medium", "high": "High", "urgent": "Urgent" },
+    "category": "Category",
+    "categories": ["Login", "Course Registration", "Grades", "Schedule", "Payments", "ID Card", "Other"],
+    "description": "Description",
+    "submit": "Submit",
+    "contactTitle": "Other Contact Methods",
+    "phone": "Phone",
+    "email": "Email",
+    "hours": "Working Hours"
+  },
+  "terms": {
+    "title": "Terms and Conditions",
+    "subtitle": "Terms of use for the Faculty of Computers and Information website and system",
+    "lastUpdated": "Last Updated:",
+    "sections": {
+      "introduction": { "title": "Introduction", "content": "Welcome to the Faculty of Computers and Information website - Assiut National University. By using this website and student management system, you agree to comply with the following terms and conditions." },
+      "usage": { "title": "Terms of Use", "items": ["The system must be used for academic purposes only", "Sharing login credentials with others is prohibited", "Password confidentiality must be maintained", "Attempting to hack the system or unauthorized access is prohibited"] },
+      "account": { "title": "User Account", "items": ["Each student is responsible for their personal account", "Personal data must be updated when changed", "In case of password loss, contact technical support", "The university is not responsible for any unauthorized use of the account"] },
+      "privacy": { "title": "Privacy", "items": ["We respect the privacy of your personal data", "We will not share your data with third parties without your permission", "We use your data for academic and administrative purposes only", "You can view the full privacy policy"] },
+      "conduct": { "title": "Code of Conduct", "items": ["All users and staff must be respected", "Posting offensive or inappropriate content is prohibited", "Using the system for commercial purposes is prohibited", "Intellectual property rules must be followed"] },
+      "liability": { "title": "Disclaimer", "items": ["The university is not responsible for any errors in user-entered data", "Service may be temporarily suspended for maintenance", "The university is not responsible for data loss due to technical problems", "Users should keep backups of their important data"] },
+      "changes": { "title": "Amendments", "content": "The university reserves the right to modify these terms and conditions at any time. Users will be notified of any material changes." }
+    },
+    "acceptButton": "I Accept Terms and Conditions",
+    "contactNote": "If you have any questions about these terms, please contact us."
+  },
+  "sitemap": {
+    "title": "Sitemap",
+    "subtitle": "Browse all website pages and sections",
+    "description": "The sitemap helps you easily navigate between all pages and sections of the Faculty of Computers and Information website. You can quickly access any page through the links below.",
+    "categories": {
+      "main": "Main Pages",
+      "academic": "Academic Programs",
+      "admissions": "Admissions & Registration",
+      "news": "News & Events",
+      "dashboards": "Dashboards",
+      "services": "Student Services",
+      "support": "Support & Help",
+      "legal": "Legal Information"
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "subtitle": "How we protect your personal data",
+    "lastUpdated": "Last Updated:",
+    "intro": "At the Faculty of Computers and Information, we are committed to protecting your privacy and personal data. This policy explains how we collect, use, and protect your information.",
+    "sections": {
+      "collection": {
+        "title": "Information Collection",
+        "content": "We collect the following information:",
+        "items": ["Personal information (name, email, phone number)", "Academic information (grades, registered courses)", "Login information", "Usage and browsing data"]
+      },
+      "usage": {
+        "title": "Information Usage",
+        "items": ["Managing your academic account", "Providing educational services", "Communicating with you about academic matters", "Improving our services"]
+      },
+      "protection": {
+        "title": "Data Protection",
+        "items": ["Using SSL encryption", "Secure data storage", "Limited access to authorized staff", "Regular backups"]
+      },
+      "rights": {
+        "title": "Your Rights",
+        "items": ["Access your data", "Correct incorrect data", "Delete your data (within legal limits)", "Object to data processing"]
+      }
+    }
+  },
+  "regulations": {
+    "title": "Academic Regulations",
+    "subtitle": "Faculty academic regulations and systems",
+    "description": "Learn about the academic regulations governing studies at the Faculty of Computers and Information",
+    "general": "General Regulations",
+    "programs": "Program Regulations",
+    "download": "Download Regulations",
+    "overview": "About Regulations",
+    "overviewText": "This page contains the approved academic regulations for studying at the Faculty of Computers and Information. You can download the regulation for your specialization to view all details and rules governing the study.",
+    "available": "Available Regulations",
+    "quickLinks": "Quick Links",
+    "importantNotes": "Important Notes",
+    "notes": [
+      "All students must comply with the approved academic regulations",
+      "Regulations are subject to updates - please review the latest version periodically",
+      "For any inquiries, please contact Student Affairs",
+      "It is recommended to print a copy of the regulations for reference when needed"
+    ],
+    "faqTitle": "Frequently Asked Questions",
+    "faq": [
+      { "q": "Can I download the regulations on my phone?", "a": "Yes, the files are in PDF format and can be downloaded and viewed on any device" },
+      { "q": "What is the difference between general regulations and software engineering regulations?", "a": "General regulations cover all specializations, while software engineering regulations are specific to the Software Engineering program only" },
+      { "q": "Are regulations mandatory for all students?", "a": "Yes, all students are required to comply with the approved academic regulations" },
+      { "q": "How do I know which regulations apply to me?", "a": "Regulations are applied according to your enrollment year. Consult your academic advisor to confirm" }
+    ],
+    "inquiryTitle": "Have questions about regulations?",
+    "inquirySubtitle": "Contact Student Affairs for more information",
+    "contents": "Regulation Contents:",
+    "fileSize": "File Size:",
+    "lastUpdate": "Last Update:",
+    "viewRegulation": "View Regulation"
+  },
+  "careers": {
+    "title": "Careers",
+    "subtitle": "Join our academic team",
+    "description": "We are looking for distinguished faculty members and staff to join our faculty",
+    "available": "Available Positions",
+    "requirements": "Requirements",
+    "apply": "Apply Now",
+    "noJobs": "No positions available currently"
+  },
+  "faculty": {
+    "title": "Faculty Members",
+    "subtitle": "Meet our distinguished faculty members",
+    "departments": "Departments",
+    "allDepartments": "All Departments",
+    "position": "Position",
+    "email": "Email",
+    "office": "Office",
+    "specialization": "Specialization"
+  },
+  "studentDashboard": {
+    "welcome": "Welcome",
+    "yourDashboard": "Your Dashboard",
+    "gpa": "GPA",
+    "enrolledCourses": "Enrolled Courses",
+    "completedCredits": "Completed Credits",
+    "attendanceRate": "Attendance Rate",
+    "gpaTrend": "GPA Trend",
+    "thisSemester": "+2 this semester",
+    "complete": "complete",
+    "excellent": "Excellent",
+    "improving": "Improving",
+    "myCourses": "My Courses",
+    "viewAll": "View All",
+    "instructor": "Instructor",
+    "progress": "Progress",
+    "weeklyActivity": "Weekly Activity",
+    "studyHours": "Study hours this week",
+    "todaySchedule": "Today's Schedule",
+    "fullSchedule": "Full Schedule",
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "upcoming": "Upcoming",
+    "progressOverview": "Progress Overview",
+    "completedLabel": "Completed",
+    "remaining": "Remaining",
+    "totalRequired": "Total Required",
+    "credits": "credits",
+    "quickActions": "Quick Actions",
+    "courseRegistration": "Course Registration",
+    "viewGrades": "View Grades",
+    "mySchedule": "My Schedule",
+    "payments": "Payments",
+    "notifications": "Notifications",
+    "gradesPosted": "Grades Posted",
+    "gradesAvailable": "grades are now available",
+    "registrationDeadline": "Registration Deadline",
+    "lastDay": "Last day: January 15",
+    "upcomingExam": "Upcoming Exam",
+    "examOnSunday": "CS201 exam on Sunday",
+    "ago1h": "1h ago",
+    "ago2d": "2d ago",
+    "ago3d": "3d ago",
+    "loading": "Loading..."
+  }
+}
