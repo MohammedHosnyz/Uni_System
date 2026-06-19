@@ -1,18 +1,19 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import DashboardLayout from '@/components/DashboardLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslations } from '@/lib/useTranslations';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { theme, darkTheme } from '@/lib/theme';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Bus, CheckCircle2, RefreshCw, Printer, MapPin, Clock, Users, ArrowLeftRight, AlertTriangle, X, GraduationCap, Hash, CalendarDays, Wifi } from 'lucide-react';
-
+import {
+  Bus, CheckCircle2, RefreshCw, Printer, MapPin, Clock,
+  Users, ArrowLeftRight, AlertTriangle, X, GraduationCap,
+} from 'lucide-react';
 
 function BusTransportCard({ sub, userName, studentNumber, loc }: {
   sub: { id: number; startDate: string; endDate: string; totalPaid: number; remainingDays: number; route: { nameAr: string; nameEn: string; departureTime: string; returnDepTime: string; stopsAr: string; stopsEn: string } };
@@ -20,115 +21,84 @@ function BusTransportCard({ sub, userName, studentNumber, loc }: {
   studentNumber?: string;
   loc: 'ar' | 'en';
 }) {
-  const gold   = '#D4A843';
-  const dark   = '#2F2415';
-  const light  = '#FFFDF8';
-  const muted  = '#7C6943';
   const fmtD   = (d: string) => new Date(d).toLocaleDateString(loc === 'ar' ? 'ar-EG' : 'en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
   const stops  = (() => { try { return JSON.parse(loc === 'ar' ? sub.route.stopsAr : sub.route.stopsEn) as string[]; } catch { return []; } })();
   const routeName = loc === 'ar' ? sub.route.nameAr : sub.route.nameEn;
   const cardId = `BUS-${String(sub.id).padStart(6, '0')}`;
 
   return (
-    <div className="bus-print-card" style={{
-      width: 340, height: 215, borderRadius: 16, overflow: 'hidden',
-      fontFamily: 'Cairo, Arial, sans-serif', position: 'relative',
-      background: light, border: `1px solid #DCCDAE`,
-      boxShadow: '0 8px 32px rgba(47,36,21,0.18)',
-      flexShrink: 0,
-    }}>
+    <div className="w-[340px] h-[215px] rounded-2xl overflow-hidden relative bg-white dark:bg-stone-900 border border-stone-250 dark:border-stone-800 flex flex-col justify-between shadow-md shrink-0">
       
-      <div style={{
-        background: `linear-gradient(135deg, ${gold} 0%, #B8902E 100%)`,
-        padding: '9px 14px 7px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,255,255,0.25)', border: '2px solid rgba(255,255,255,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Bus size={16} color="#fff" />
+      <div className="bg-gradient-to-r from-amber-500 to-amber-600 p-2.5 flex items-center justify-between text-white shrink-0">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-white/20 border border-white/40 flex items-center justify-center shrink-0">
+            <Bus className="w-4.5 h-4.5" />
           </div>
           <div>
-            <div style={{ color: '#fff', fontWeight: 800, fontSize: 10.5, letterSpacing: 0.3 }}>جامعة أسيوط الأهلية</div>
-            <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: 8 }}>Assiut National University</div>
+            <p className="font-bold text-[10px]">جامعة أسيوط الأهلية</p>
+            <p className="text-[7.5px] text-white/85">Assiut National University</p>
           </div>
         </div>
-        <div style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.4)', borderRadius: 6, padding: '2px 8px', color: '#fff', fontSize: 7.5, fontWeight: 700, letterSpacing: 1 }}>
+        <div className="bg-white/20 border border-white/40 rounded px-2 py-0.5 text-[7px] font-bold tracking-wider shrink-0">
           BUS PASS
         </div>
       </div>
 
-      
-      <div style={{ display: 'flex', padding: '10px 14px 0', gap: 12, height: 'calc(100% - 56px - 36px)' }}>
-        
-        <div style={{ width: 58, height: 72, borderRadius: 8, flexShrink: 0, background: '#F3EBDD', border: `2px solid ${gold}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-          <GraduationCap size={24} color={gold} />
-          <div style={{ fontSize: 6.5, color: muted, textAlign: 'center', lineHeight: 1.2 }}>صورة<br/>الطالب</div>
+      <div className="flex px-4 py-2.5 gap-3 flex-1 items-center">
+        <div className="w-14 h-18 rounded-lg bg-stone-50 dark:bg-stone-850 border border-stone-200 dark:border-stone-800 flex flex-col items-center justify-center gap-1 shrink-0 text-[#D97706]">
+          <GraduationCap className="w-7 h-7" />
+          <span className="text-[6.5px] text-stone-400 dark:text-stone-500 font-bold text-center leading-tight">PHOTO</span>
         </div>
 
-        
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-          
-          <div style={{ fontSize: 12, fontWeight: 800, color: dark, lineHeight: 1.2 }}>{userName}</div>
+        <div className="flex-1 space-y-1 min-w-0 text-start">
+          <p className="text-[11.5px] font-bold text-stone-800 dark:text-stone-150 leading-tight truncate">{userName}</p>
 
-          
-          <div style={{ display: 'flex', gap: 10 }}>
+          <div className="flex gap-4 text-[7px] font-bold text-stone-400">
             <div>
-              <div style={{ fontSize: 7, color: muted }}>رقم الطالب</div>
-              <div style={{ fontSize: 9.5, fontWeight: 700, color: gold, letterSpacing: 0.4 }}>{studentNumber ?? '—'}</div>
+              <span>رقم الطالب</span>
+              <span className="block text-[9.5px] text-[#D97706] mt-0.5">{studentNumber ?? '—'}</span>
             </div>
             <div>
-              <div style={{ fontSize: 7, color: muted }}>رقم الكارت</div>
-              <div style={{ fontSize: 9.5, fontWeight: 700, color: dark }}>{cardId}</div>
+              <span>رقم الكارت</span>
+              <span className="block text-[9.5px] text-stone-800 dark:text-stone-200 mt-0.5">{cardId}</span>
             </div>
           </div>
 
-          
-          <div style={{ background: '#F3EBDD', border: `1px solid #DCCDAE`, borderRadius: 6, padding: '3px 7px', display: 'flex', alignItems: 'center', gap: 5 }}>
-            <MapPin size={9} color={gold} />
-            <span style={{ fontSize: 9, fontWeight: 700, color: dark }}>{routeName}</span>
+          <div className="bg-stone-50 dark:bg-stone-850 border border-stone-150 dark:border-stone-800 rounded-lg px-2 py-1 flex items-center gap-1 shrink-0">
+            <MapPin className="w-3 h-3 text-[#D97706] shrink-0" />
+            <span className="text-[8.5px] font-bold text-stone-800 dark:text-stone-200 truncate">{routeName}</span>
           </div>
 
-          
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className="flex gap-4 text-[7px] text-stone-400 font-bold">
             <div>
-              <div style={{ fontSize: 7, color: muted }}>الذهاب</div>
-              <div style={{ fontSize: 9, fontWeight: 700, color: dark }}>{sub.route.departureTime}</div>
+              <span>الذهاب</span>
+              <span className="block text-[8.5px] text-stone-800 dark:text-stone-200">{sub.route.departureTime}</span>
             </div>
             <div>
-              <div style={{ fontSize: 7, color: muted }}>العودة</div>
-              <div style={{ fontSize: 9, fontWeight: 700, color: dark }}>{sub.route.returnDepTime}</div>
+              <span>العودة</span>
+              <span className="block text-[8.5px] text-stone-800 dark:text-stone-200">{sub.route.returnDepTime}</span>
             </div>
             <div>
-              <div style={{ fontSize: 7, color: muted }}>صالح حتى</div>
-              <div style={{ fontSize: 9, fontWeight: 700, color: gold }}>{fmtD(sub.endDate)}</div>
+              <span>صالح حتى</span>
+              <span className="block text-[8.5px] text-[#D97706]">{fmtD(sub.endDate)}</span>
             </div>
           </div>
 
-          
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-            {stops.slice(0, 4).map((s, i) => (
-              <span key={i} style={{ fontSize: 6.5, background: '#F3EBDD', border: `1px solid #DCCDAE`, borderRadius: 4, padding: '1px 5px', color: muted }}>{s}</span>
+          <div className="flex gap-1.5 flex-wrap pt-0.5">
+            {stops.slice(0, 3).map((s, i) => (
+              <span key={i} className="text-[6px] font-bold bg-stone-50 dark:bg-stone-850 border border-stone-150 dark:border-stone-800 rounded px-1 text-stone-500 dark:text-stone-400">{s}</span>
             ))}
           </div>
         </div>
       </div>
 
-      
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        background: `linear-gradient(135deg, ${gold} 0%, #B8902E 100%)`,
-        height: 36, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 14px',
-      }}>
-        
-        <svg viewBox="0 0 100 20" style={{ width: 90, height: 20 }}>
+      <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-1 h-9 flex items-center justify-between text-white shrink-0">
+        <svg viewBox="0 0 100 20" className="w-[90px] h-5 opacity-90">
           {[2,5,7,10,13,16,19,22,25,28,31,34,37,40,43,46,49,52,55,58,61,64,67,70,73,76,79,82,85,88,91,94,97].map((x, i) => (
-            <rect key={i} x={x} y={1} width={i % 4 === 0 ? 2.5 : i % 3 === 0 ? 1.5 : 1} height={18} fill="rgba(255,255,255,0.85)" />
+            <rect key={i} x={x} y={1} width={i % 4 === 0 ? 2.5 : i % 3 === 0 ? 1.5 : 1} height={18} className="fill-white" />
           ))}
         </svg>
-        <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: 7.5, fontWeight: 600, letterSpacing: 0.5, textAlign: 'end' }}>
-          هذا الكارت ملك جامعة أسيوط الأهلية
-        </div>
+        <span className="text-[7.5px] font-bold tracking-wide">هذا الكارت وثيقة رسمية ملك جامعة أسيوط الأهلية</span>
       </div>
     </div>
   );
@@ -136,68 +106,101 @@ function BusTransportCard({ sub, userName, studentNumber, loc }: {
 
 const i18n = {
   ar: {
-    title: 'خدمة الباص', subtitle: 'إدارة اشتراك النقل الجامعي',
-    mySubscription: 'اشتراكي الحالي', route: 'الخط',
-    startDate: 'تاريخ البداية', endDate: 'تاريخ الانتهاء',
-    remaining: 'الأيام المتبقية', totalPaid: 'إجمالي المدفوع',
-    day: 'يوم', egp: 'جنيه', statusActive: 'نشط',
-    renew: 'تجديد الاشتراك', changeRoute: 'تغيير الخط', printCard: 'طباعة الكارت',
-    weeklySchedule: 'الجدول الأسبوعي',
-    colDay: 'اليوم', colDepart: 'موعد الذهاب', colReturn: 'موعد العودة', colStatus: 'الحالة',
-    scheduled: 'مجدول',
+    title: 'اشتراكات وخدمات الباص',
+    subtitle: 'إدارة اشتراكات النقل الجامعي، تتبع الخطوط، وطباعة بطاقات المرور',
+    mySubscription: 'معلومات اشتراكي الحالي',
+    route: 'الخط التابع له',
+    startDate: 'تاريخ تفعيل الاشتراك',
+    endDate: 'تاريخ انتهاء الاشتراك',
+    remaining: 'الأيام المتبقية للاشتراك',
+    totalPaid: 'إجمالي الرسوم المدفوعة',
+    day: 'يوم',
+    egp: 'جنيه',
+    statusActive: 'نشط وصالح للاستخدام',
+    renew: 'تجديد الاشتراك الحالي',
+    changeRoute: 'طلب تغيير خط الباص',
+    printCard: 'إصدار كارت الباص الرقمي',
+    weeklySchedule: 'جدول رحلات الباص الأسبوعي',
+    colDay: 'اليوم',
+    colDepart: 'موعد الذهاب للجامعة',
+    colReturn: 'موعد العودة من الجامعة',
+    colStatus: 'حالة الرحلة',
+    scheduled: 'مجدولة',
     days: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'],
-    availableRoutes: 'الخطوط المتاحة', perDay: 'جنيه/يوم',
-    goTime: 'مواعيد الذهاب', returnTime: 'مواعيد العودة',
-    depart: 'الانطلاق:', arrive: 'الوصول:',
-    stops: 'المحطات', occupancy: 'الإشغال',
-    statusAvailable: 'متاح', statusFull: 'مكتمل',
-    subscribe: 'اشترك في هذا الخط', full: 'الخط مكتمل',
-    noSubscription: 'لا يوجد اشتراك نشط حالياً',
-    info: 'معلومات هامة',
-    i1: 'يجب الوصول لنقطة الانطلاق قبل الموعد بـ 10 دقائق',
-    i2: 'الاشتراك الشهري أوفر من الاشتراك اليومي',
-    i3: 'يمكن تغيير الخط مرة واحدة في الشهر',
-    i4: 'في حالة عدم الحضور لمدة أسبوع يتم إلغاء الاشتراك',
-    i5: 'للاستفسارات تواصل مع إدارة النقل: 088-1234567',
+    availableRoutes: 'خطوط الباص الجامعي المتاحة',
+    perDay: 'جنيه / يومياً',
+    goTime: 'رحلة الذهاب (صباحاً)',
+    returnTime: 'رحلة العودة (مساءً)',
+    depart: 'موعد التحرك:',
+    arrive: 'موعد الوصول المتوقع:',
+    stops: 'المحطات ونقاط التوقف للخط',
+    occupancy: 'نسبة إشغال الباص',
+    statusAvailable: 'متاح للاشتراك',
+    statusFull: 'مكتمل بالكامل',
+    subscribe: 'حجز واشتراك في الخط',
+    full: 'خط الباص مكتمل',
+    noSubscription: 'لا يوجد اشتراك نشط مسجل باسمك حالياً في خطوط النقل',
   },
   en: {
-    title: 'Bus Service', subtitle: 'Manage your university transport subscription',
-    mySubscription: 'My Subscription', route: 'Route',
-    startDate: 'Start Date', endDate: 'End Date',
-    remaining: 'Days Remaining', totalPaid: 'Total Paid',
-    day: 'days', egp: 'EGP', statusActive: 'Active',
-    renew: 'Renew Subscription', changeRoute: 'Change Route', printCard: 'Print Card',
-    weeklySchedule: 'Weekly Schedule',
-    colDay: 'Day', colDepart: 'Departure', colReturn: 'Return', colStatus: 'Status',
+    title: 'Bus Services & Passes',
+    subtitle: 'Manage dorm transport passes, route selections, and departures',
+    mySubscription: 'Current Subscription Details',
+    route: 'Assigned Route',
+    startDate: 'Subscription Activation Date',
+    endDate: 'Subscription Expiry Date',
+    remaining: 'Remaining Validity Period',
+    totalPaid: 'Total Paid Amount',
+    day: 'days',
+    egp: 'EGP',
+    statusActive: 'Active Bus Pass',
+    renew: 'Renew Subscription Period',
+    changeRoute: 'Request Route Change',
+    printCard: 'Issue Digital Bus Pass',
+    weeklySchedule: 'Weekly Transit Schedule',
+    colDay: 'Day',
+    colDepart: 'To University (AM)',
+    colReturn: 'From University (PM)',
+    colStatus: 'Transit Status',
     scheduled: 'Scheduled',
     days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'],
-    availableRoutes: 'Available Routes', perDay: 'EGP/day',
-    goTime: 'Departure Times', returnTime: 'Return Times',
-    depart: 'Depart:', arrive: 'Arrive:',
-    stops: 'Stops', occupancy: 'Occupancy',
-    statusAvailable: 'Available', statusFull: 'Full',
-    subscribe: 'Subscribe to Route', full: 'Route Full',
-    noSubscription: 'No active subscription',
-    info: 'Important Information',
-    i1: 'Arrive at the departure point 10 minutes early',
-    i2: 'Monthly subscription is more economical than daily',
-    i3: 'Route can be changed once per month',
-    i4: 'Subscription is cancelled after one week of absence',
-    i5: 'For inquiries contact transport office: 088-1234567',
+    availableRoutes: 'Available Bus Routes',
+    perDay: 'EGP / day',
+    goTime: 'Morning Shift (To Campus)',
+    returnTime: 'Evening Shift (From Campus)',
+    depart: 'Departure Time:',
+    arrive: 'Expected Arrival:',
+    stops: 'Scheduled Route Stops',
+    occupancy: 'Bus Seat Capacity',
+    statusAvailable: 'Seats Available',
+    statusFull: 'Fully Booked',
+    subscribe: 'Subscribe to Route',
+    full: 'Fully Occupied',
+    noSubscription: 'No active bus subscriptions found on your account',
   },
 } as const;
 
 type BusRoute = {
-  id: number; nameAr: string; nameEn: string;
-  departureTime: string; arrivalTime: string;
-  returnDepTime: string; returnArrTime: string;
-  pricePerDay: number; capacity: number;
-  stopsAr: string; stopsEn: string;
+  id: number;
+  nameAr: string;
+  nameEn: string;
+  departureTime: string;
+  arrivalTime: string;
+  returnDepTime: string;
+  returnArrTime: string;
+  pricePerDay: number;
+  capacity: number;
+  stopsAr: string;
+  stopsEn: string;
   currentSubscribers: number;
 };
+
 type Subscription = {
-  id: number; startDate: string; endDate: string;
-  totalPaid: number; status: string; remainingDays: number;
+  id: number;
+  startDate: string;
+  endDate: string;
+  totalPaid: number;
+  status: string;
+  remainingDays: number;
   route: BusRoute;
 };
 
@@ -214,7 +217,14 @@ export default function BusPage() {
   
   const [confirm, setConfirm] = useState<{ type: string; routeId?: number; routeName?: string } | null>(null);
 
-  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 3500); };
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 3500);
+  };
+
+  const loc = (locale as 'ar' | 'en') === 'en' ? 'en' : 'ar';
+  const t   = i18n[loc];
+  const dir = loc === 'ar' ? 'rtl' : 'ltr';
 
   const handlePrintCard = () => {
     if (!subscription || !user) return;
@@ -222,7 +232,6 @@ export default function BusPage() {
     const fmtD = (d: string) => new Date(d).toLocaleDateString(loc === 'ar' ? 'ar-EG' : 'en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
     const cardId = `BUS-${String(subscription.id).padStart(6, '0')}`;
     const routeName = loc === 'ar' ? subscription.route.nameAr : subscription.route.nameEn;
-    const gold = '#D4A843';
 
     const html = `<!DOCTYPE html>
 <html dir="rtl" lang="ar">
@@ -240,7 +249,7 @@ export default function BusPage() {
   .uni-sub  { color: rgba(255,255,255,0.8); font-size: 8px; }
   .badge    { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; padding: 2px 8px; color: #fff; font-size: 7.5px; font-weight: 700; letter-spacing: 1px; }
   .body     { display: flex; padding: 10px 14px 0; gap: 12px; height: calc(100% - 56px - 36px); }
-  .photo    { width: 58px; height: 72px; border-radius: 8px; flex-shrink: 0; background: #F3EBDD; border: 2px solid ${gold}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+  .photo    { width: 58px; height: 72px; border-radius: 8px; flex-shrink: 0; background: #F3EBDD; border: 2px solid #D4A843; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
   .photo-icon { font-size: 22px; }
   .photo-txt { font-size: 6.5px; color: #7C6943; text-align: center; line-height: 1.2; }
   .info     { flex: 1; display: flex; flex-direction: column; gap: 4px; }
@@ -249,7 +258,7 @@ export default function BusPage() {
   .field    { display: flex; flex-direction: column; }
   .flabel   { font-size: 7px; color: #7C6943; }
   .fval     { font-size: 9.5px; font-weight: 700; color: #2F2415; }
-  .fval-gold { font-size: 9.5px; font-weight: 700; color: ${gold}; }
+  .fval-gold { font-size: 9.5px; font-weight: 700; color: #D4A843; }
   .route-badge { background: #F3EBDD; border: 1px solid #DCCDAE; border-radius: 6px; padding: 3px 7px; display: flex; align-items: center; gap: 5px; font-size: 9px; font-weight: 700; color: #2F2415; }
   .stops    { display: flex; flex-wrap: wrap; gap: 3px; }
   .stop     { font-size: 6.5px; background: #F3EBDD; border: 1px solid #DCCDAE; border-radius: 4px; padding: 1px 5px; color: #7C6943; }
@@ -299,20 +308,11 @@ export default function BusPage() {
 </body></html>`;
 
     const win = window.open('', '_blank', 'width=380,height=260,toolbar=0,menubar=0,scrollbars=0');
-    if (win) { win.document.write(html); win.document.close(); }
+    if (win) {
+      win.document.write(html);
+      win.document.close();
+    }
   };
-
-  const loc      = (locale as 'ar' | 'en') === 'en' ? 'en' : 'ar';
-  const t        = i18n[loc];
-  const dir      = loc === 'ar' ? 'rtl' : 'ltr';
-  const th       = dark ? darkTheme : theme;
-  const card     = dark ? darkTheme.surface    : theme.white;
-  const bdr      = dark ? darkTheme.border     : theme.border;
-  const bdrL     = dark ? darkTheme.borderLight : theme.border;
-  const iconBg   = dark ? darkTheme.surfaceAlt : theme.surface;
-  const heroBg   = dark ? darkTheme.surface    : theme.primary;
-  const heroText = dark ? darkTheme.text       : '#1A1612';
-  const p        = th.primary;
 
   const fetchData = useCallback(async () => {
     if (!user) return;
@@ -329,7 +329,9 @@ export default function BusPage() {
     }
   }, [user]);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const doAction = useCallback(async (action: string, routeId?: number) => {
     if (!user) return;
@@ -365,163 +367,186 @@ export default function BusPage() {
   const fmtDate = (d: string) =>
     new Date(d).toLocaleDateString(loc === 'ar' ? 'ar-EG' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-  const parseStops = (json: string): string[] => { try { return JSON.parse(json); } catch { return []; } };
+  const parseStops = (json: string): string[] => {
+    try {
+      return JSON.parse(json);
+    } catch {
+      return [];
+    }
+  };
 
   if (loading || !user) return null;
 
   return (
     <DashboardLayout user={user} role="student">
-      <div dir={dir} className="max-w-7xl mx-auto space-y-6">
+      <div dir={dir} className="max-w-7xl mx-auto space-y-6 py-6 px-4 sm:px-6">
 
-        
         {toast && (
-          <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-xl shadow-xl font-bold text-sm"
-            style={{ background: p, color: dark ? '#1A1612' : '#fff' }}>
-            <CheckCircle2 className="w-5 h-5" />{toast}
+          <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-xl shadow-lg font-bold text-xs bg-[#FABA19] text-white">
+            <CheckCircle2 className="w-4.5 h-4.5" />
+            {toast}
           </div>
         )}
 
-        
-        {confirm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: 'rgba(0,0,0,0.5)' }}
-            onClick={() => setConfirm(null)}>
-            <div onClick={e => e.stopPropagation()}
-              style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, padding: '1.5rem', width: '100%', maxWidth: 400 }}>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div style={{ width: 40, height: 40, borderRadius: 12, background: `${p}18`, border: `1px solid ${p}33`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <AlertTriangle className="w-5 h-5" style={{ color: p }} />
+        {/* Confirmation Modal */}
+        <AnimatePresence>
+          {confirm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setConfirm(null)}>
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="bg-white dark:bg-stone-900 border border-stone-150 dark:border-stone-800 rounded-2xl p-6 w-full max-w-md shadow-xl space-y-4"
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between pb-2 border-b border-stone-100 dark:border-stone-800">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706]">
+                      <AlertTriangle className="w-5 h-5" />
+                    </div>
+                    <p className="font-bold text-sm text-stone-850 dark:text-stone-150">
+                      {confirm.type === 'renew'     && (loc === 'ar' ? 'تجديد الاشتراك' : 'Renew Bus Subscription')}
+                      {confirm.type === 'cancel'    && (loc === 'ar' ? 'إلغاء الاشتراك' : 'Cancel Bus Pass')}
+                      {confirm.type === 'subscribe' && (loc === 'ar' ? 'اشتراك جديد' : 'New Bus Pass')}
+                      {confirm.type === 'change'    && (loc === 'ar' ? 'تغيير الخط' : 'Change Bus Route')}
+                    </p>
                   </div>
-                  <p className="font-extrabold text-base" style={{ color: th.text }}>
-                    {confirm.type === 'renew'     && (loc === 'ar' ? 'تجديد الاشتراك' : 'Renew Subscription')}
-                    {confirm.type === 'cancel'    && (loc === 'ar' ? 'إلغاء الاشتراك' : 'Cancel Subscription')}
-                    {confirm.type === 'subscribe' && (loc === 'ar' ? 'اشتراك جديد' : 'New Subscription')}
-                    {confirm.type === 'change'    && (loc === 'ar' ? 'تغيير الخط' : 'Change Route')}
-                  </p>
+                  <button onClick={() => setConfirm(null)} className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-250">
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
-                <button onClick={() => setConfirm(null)} style={{ color: th.textMuted }}><X className="w-5 h-5" /></button>
-              </div>
 
-              <p className="text-sm mb-5" style={{ color: th.text }}>
-                {confirm.type === 'renew'  && (loc === 'ar' ? 'هل تريد تجديد اشتراكك لمدة شهر إضافي؟' : 'Renew your subscription for one more month?')}
-                {confirm.type === 'cancel' && (loc === 'ar' ? 'هل أنت متأكد من إلغاء الاشتراك؟ لا يمكن التراجع.' : 'Are you sure you want to cancel? This cannot be undone.')}
-                {confirm.type === 'subscribe' && (loc === 'ar' ? `هل تريد الاشتراك في خط "${confirm.routeName}"؟` : `Subscribe to route "${confirm.routeName}"?`)}
-                {confirm.type === 'change' && (loc === 'ar'
-                  ? `سيتم إلغاء اشتراكك الحالي والاشتراك في خط "${confirm.routeName}". هل تريد المتابعة؟`
-                  : `Your current subscription will be cancelled and you'll be subscribed to "${confirm.routeName}". Continue?`)}
-              </p>
+                <p className="text-xs text-stone-650 dark:text-stone-400 font-medium leading-relaxed">
+                  {confirm.type === 'renew'  && (loc === 'ar' ? 'هل تريد تجديد اشتراكك لمدة شهر إضافي؟' : 'Renew your subscription for one more month?')}
+                  {confirm.type === 'cancel' && (loc === 'ar' ? 'هل أنت متأكد من إلغاء الاشتراك؟ لا يمكن التراجع.' : 'Are you sure you want to cancel? This cannot be undone.')}
+                  {confirm.type === 'subscribe' && (loc === 'ar' ? `هل تريد الاشتراك في خط "${confirm.routeName}"؟` : `Subscribe to route "${confirm.routeName}"?`)}
+                  {confirm.type === 'change' && (loc === 'ar'
+                    ? `سيتم إلغاء اشتراكك الحالي والاشتراك في خط "${confirm.routeName}". هل تريد المتابعة؟`
+                    : `Your current subscription will be cancelled and you'll be subscribed to "${confirm.routeName}". Continue?`)}
+                </p>
 
-              <div className="flex gap-3">
-                <button onClick={() => setConfirm(null)}
-                  style={{ flex: 1, padding: '0.625rem', borderRadius: 10, border: `1px solid ${bdrL}`, background: 'transparent', color: th.textMuted, fontWeight: 700, cursor: 'pointer' }}>
-                  {loc === 'ar' ? 'إلغاء' : 'Cancel'}
-                </button>
-                <button
-                  disabled={!!loadingAction}
-                  onClick={async () => {
-                    if (confirm.type === 'renew')     await doAction('renew');
-                    if (confirm.type === 'cancel')    await doAction('cancel');
-                    if (confirm.type === 'subscribe') await doAction('subscribe', confirm.routeId);
-                    if (confirm.type === 'change') {
-                      await doAction('cancel');
-                      await doAction('subscribe', confirm.routeId);
-                    }
-                  }}
-                  style={{ flex: 1, padding: '0.625rem', borderRadius: 10, border: 'none', background: confirm.type === 'cancel' ? '#ef4444' : p, color: '#fff', fontWeight: 700, cursor: 'pointer', opacity: loadingAction ? 0.7 : 1 }}>
-                  {loadingAction ? '...' : (loc === 'ar' ? 'تأكيد' : 'Confirm')}
-                </button>
-              </div>
+                <div className="flex gap-3 pt-2">
+                  <Button
+                    onClick={async () => {
+                      if (confirm.type === 'renew')     await doAction('renew');
+                      if (confirm.type === 'cancel')    await doAction('cancel');
+                      if (confirm.type === 'subscribe') await doAction('subscribe', confirm.routeId);
+                      if (confirm.type === 'change') {
+                        await doAction('cancel');
+                        await doAction('subscribe', confirm.routeId);
+                      }
+                    }}
+                    disabled={!!loadingAction}
+                    className={`flex-1 font-bold text-xs py-2 rounded-xl border-0 shadow-sm disabled:opacity-50 text-white ${
+                      confirm.type === 'cancel' ? 'bg-red-500 hover:bg-red-600' : 'bg-[#FABA19] hover:bg-[#e5a816]'
+                    }`}
+                  >
+                    {loadingAction ? '...' : (loc === 'ar' ? 'تأكيد' : 'Confirm')}
+                  </Button>
+                  <Button
+                    onClick={() => setConfirm(null)}
+                    className="bg-stone-50 hover:bg-stone-100 dark:bg-stone-850 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 font-bold text-xs py-2 rounded-xl border border-stone-200 dark:border-stone-800 shadow-sm"
+                  >
+                    {loc === 'ar' ? 'إلغاء' : 'Cancel'}
+                  </Button>
+                </div>
+              </motion.div>
             </div>
-          </div>
-        )}
+          )}
+        </AnimatePresence>
 
-        
+        {/* Top Header Card */}
         <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
-          <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-            <div style={{ background: heroBg, padding: '1.25rem 1.5rem' }}>
+          <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-amber-500/10 via-amber-600/5 to-transparent p-6 border-b border-stone-100 dark:border-stone-800">
               <div className="flex items-center gap-4">
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: dark ? darkTheme.border : 'rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Bus className="w-6 h-6" style={{ color: heroText }} />
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                  <Bus className="w-6 h-6" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-extrabold" style={{ color: heroText }}>{t.title}</h1>
-                  <p className="text-sm font-semibold opacity-75" style={{ color: heroText }}>
+                  <h1 className="text-xl font-bold text-[#1C1917] dark:text-stone-100">{t.title}</h1>
+                  <p className="text-xs text-stone-500 dark:text-stone-400 font-semibold mt-0.5">
                     {user.firstName} {user.lastName} • {t.subtitle}
                   </p>
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
         </motion.div>
 
         {dataLoading ? (
-          <div className="flex justify-center py-16">
-            <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: `${p} transparent transparent transparent` }} />
+          <div className="flex items-center justify-center py-16 bg-white dark:bg-stone-900 rounded-2xl">
+            <div className="w-8 h-8 rounded-full border-2 border-[#FABA19] border-t-transparent animate-spin" />
           </div>
         ) : (
-          <>
-            
+          <div className="space-y-6">
+
+            {/* My Current Subscription Profile */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-              <Card style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16 }}>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-3">
-                    <div style={{ width: 40, height: 40, borderRadius: 12, background: iconBg, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <CheckCircle2 className="w-5 h-5" style={{ color: p }} />
+              <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+                <CardHeader className="pb-3 border-b border-stone-50 dark:border-stone-850">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706]">
+                      <CheckCircle2 className="w-5 h-5" />
                     </div>
-                    <CardTitle style={{ color: th.text }}>{t.mySubscription}</CardTitle>
+                    <CardTitle className="text-sm font-bold text-stone-850 dark:text-stone-150">{t.mySubscription}</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-5">
                   {!subscription ? (
-                    <p className="text-sm py-4 text-center" style={{ color: th.textMuted }}>{t.noSubscription}</p>
+                    <div className="py-8 text-center">
+                      <Bus className="w-10 h-10 text-stone-300 dark:text-stone-700 mx-auto mb-2" />
+                      <p className="text-xs text-stone-450 font-bold">{t.noSubscription}</p>
+                    </div>
                   ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                       <div className="space-y-4">
-                        <div className="flex items-center gap-4">
-                          <div style={{ width: 56, height: 56, borderRadius: 14, background: `${p}18`, border: `1px solid ${p}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <Bus className="w-7 h-7" style={{ color: p }} />
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                            <Bus className="w-5 h-5" />
                           </div>
                           <div>
-                            <p className="font-extrabold" style={{ color: th.text }}>
+                            <p className="text-xs font-bold text-stone-850 dark:text-stone-100">
                               {loc === 'ar' ? subscription.route.nameAr : subscription.route.nameEn}
                             </p>
-                            <Badge style={{ background: `${p}18`, color: p, border: `1px solid ${p}33`, marginTop: 4 }}>
+                            <Badge className="bg-amber-500/10 hover:bg-amber-500/15 text-[#D97706] border-0 text-[9px] font-bold shadow-none mt-1">
                               {t.statusActive}
                             </Badge>
                           </div>
                         </div>
-                        <div style={{ background: iconBg, border: `1px solid ${bdrL}`, borderRadius: 12, padding: '1rem' }} className="space-y-2">
+
+                        <div className="p-4 rounded-xl border border-stone-100 dark:border-stone-800 bg-stone-50/20 dark:bg-stone-850/5 space-y-2.5">
                           {[
                             { label: t.startDate, value: fmtDate(subscription.startDate) },
                             { label: t.endDate,   value: fmtDate(subscription.endDate) },
                             { label: t.remaining, value: `${subscription.remainingDays} ${t.day}`, highlight: true },
                             { label: t.totalPaid, value: `${subscription.totalPaid} ${t.egp}` },
-                          ].map(({ label, value, highlight }) => (
-                            <div key={label} className="flex items-center justify-between">
-                              <span className="text-sm" style={{ color: th.textMuted }}>{label}</span>
-                              <span className="font-extrabold text-sm" style={{ color: highlight ? p : th.text }}>{value}</span>
+                          ].map(({ label, value, highlight }, idx) => (
+                            <div key={idx} className="flex items-center justify-between text-xs font-semibold text-stone-500 dark:text-stone-400">
+                              <span>{label}</span>
+                              <span className={`font-bold ${highlight ? 'text-[#D97706]' : 'text-stone-850 dark:text-stone-100'}`}>{value}</span>
                             </div>
                           ))}
                         </div>
                       </div>
-                      
+
                       <div className="space-y-3">
                         {[
                           { icon: RefreshCw,      label: t.renew,       action: () => setConfirm({ type: 'renew' }),  key: 'renew'  },
                           { icon: ArrowLeftRight, label: t.changeRoute, action: () => {
-                              
                               document.getElementById('available-routes')?.scrollIntoView({ behavior: 'smooth' });
-                              showToast(loc === 'ar' ? 'اختر الخط الجديد من القائمة أدناه' : 'Select a new route from the list below');
+                              showToast(loc === 'ar' ? 'اختر خط السير الجديد من القائمة أدناه' : 'Select a new route below');
                             }, key: 'change' },
                           { icon: Printer,        label: t.printCard,   action: () => handlePrintCard(),              key: 'print'  },
-                        ].map(({ icon: Icon, label, action, key }) => (
-                          <Button key={label} className="w-full gap-2"
+                        ].map(({ icon: Icon, label, action, key }, idx) => (
+                          <Button
+                            key={idx}
                             onClick={action}
                             disabled={loadingAction === key}
-                            style={{ background: p, color: heroText }}>
-                            <Icon className={`w-4 h-4 ${loadingAction === key ? 'animate-spin' : ''}`} /> {label}
+                            className="w-full bg-[#FABA19] hover:bg-[#e5a816] text-white font-bold text-xs py-2 rounded-xl border-0 shadow-sm flex items-center justify-center gap-1.5"
+                          >
+                            <Icon className={`w-4 h-4 ${loadingAction === key ? 'animate-spin' : ''}`} />
+                            {label}
                           </Button>
                         ))}
                       </div>
@@ -531,37 +556,39 @@ export default function BusPage() {
               </Card>
             </motion.div>
 
-            
+            {/* Weekly Travel Timings Grid */}
             {subscription && (
-              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-                <Card style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-                  <CardHeader style={{ background: iconBg, borderBottom: `1px solid ${bdrL}` }} className="py-3 px-5">
-                    <div className="flex items-center gap-3">
-                      <div style={{ width: 40, height: 40, borderRadius: 12, background: card, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Clock className="w-5 h-5" style={{ color: p }} />
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+                  <CardHeader className="pb-3 border-b border-stone-50 dark:border-stone-850">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706]">
+                        <Clock className="w-5 h-5" />
                       </div>
-                      <CardTitle style={{ color: th.text }}>{t.weeklySchedule}</CardTitle>
+                      <CardTitle className="text-sm font-bold text-stone-850 dark:text-stone-150">{t.weeklySchedule}</CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent className="p-0">
                     <div className="overflow-x-auto">
-                      <table className="w-full">
+                      <table className="w-full text-xs">
                         <thead>
-                          <tr style={{ background: heroBg }}>
-                            {[t.colDay, t.colDepart, t.colReturn, t.colStatus].map(h => (
-                              <th key={h} className="px-4 py-3 text-center text-sm font-extrabold"
-                                style={{ color: heroText, borderRight: `1px solid rgba(0,0,0,0.1)` }}>{h}</th>
-                            ))}
+                          <tr className="border-b border-stone-100 dark:border-stone-800 bg-stone-50/40 dark:bg-stone-800/10 font-bold text-stone-400 dark:text-stone-500 text-start">
+                            <th className="px-5 py-3.5 font-bold text-center">{t.colDay}</th>
+                            <th className="px-4 py-3.5 font-bold text-center">{t.colDepart}</th>
+                            <th className="px-4 py-3.5 font-bold text-center">{t.colReturn}</th>
+                            <th className="px-4 py-3.5 font-bold text-center">{t.colStatus}</th>
                           </tr>
                         </thead>
-                        <tbody>
-                          {t.days.map((day, i) => (
-                            <tr key={i} style={{ background: i % 2 === 0 ? iconBg : card, borderBottom: `1px solid ${bdrL}` }}>
-                              <td className="px-4 py-3 text-center font-extrabold text-sm" style={{ color: th.text, borderRight: `1px solid ${bdrL}` }}>{day}</td>
-                              <td className="px-4 py-3 text-center text-sm" style={{ color: th.text, borderRight: `1px solid ${bdrL}` }}>{subscription.route.departureTime}</td>
-                              <td className="px-4 py-3 text-center text-sm" style={{ color: th.text, borderRight: `1px solid ${bdrL}` }}>{subscription.route.returnDepTime}</td>
-                              <td className="px-4 py-3 text-center">
-                                <Badge style={{ background: `${p}18`, color: p, border: `1px solid ${p}33` }}>{t.scheduled}</Badge>
+                        <tbody className="divide-y divide-stone-100 dark:divide-stone-800 text-center font-semibold text-stone-650 dark:text-stone-400">
+                          {t.days.map((day, idx) => (
+                            <tr key={idx} className="hover:bg-stone-50/30 dark:hover:bg-stone-850/10 transition-colors">
+                              <td className="px-4 py-3 font-bold text-stone-850 dark:text-stone-250">{day}</td>
+                              <td className="px-4 py-3">{subscription.route.departureTime}</td>
+                              <td className="px-4 py-3">{subscription.route.returnDepTime}</td>
+                              <td className="px-4 py-3">
+                                <Badge className="bg-amber-500/10 hover:bg-amber-500/15 text-[#D97706] border-0 text-[9px] font-bold shadow-none px-2 py-0.5">
+                                  {t.scheduled}
+                                </Badge>
                               </td>
                             </tr>
                           ))}
@@ -573,104 +600,124 @@ export default function BusPage() {
               </motion.div>
             )}
 
-            
-            <motion.div id="available-routes" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <Card style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-                <CardHeader style={{ background: iconBg, borderBottom: `1px solid ${bdrL}` }} className="py-3 px-5">
-                  <div className="flex items-center gap-3">
-                    <div style={{ width: 40, height: 40, borderRadius: 12, background: card, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <MapPin className="w-5 h-5" style={{ color: p }} />
+            {/* Available Routes Directory */}
+            <motion.div id="available-routes" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+              <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+                <CardHeader className="pb-3 border-b border-stone-50 dark:border-stone-850">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706]">
+                      <MapPin className="w-5 h-5" />
                     </div>
-                    <CardTitle style={{ color: th.text }}>{t.availableRoutes}</CardTitle>
+                    <CardTitle className="text-sm font-bold text-stone-850 dark:text-stone-150">{t.availableRoutes}</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-5 space-y-4">
-                  {routes.map((r, i) => {
+                <CardContent className="p-5 space-y-6">
+                  {routes.map((r, idx) => {
                     const pct       = Math.min(100, Math.round((r.currentSubscribers / r.capacity) * 100));
                     const isFull    = pct >= 100;
                     const isMyRoute = subscription?.route.id === r.id;
                     const stops     = parseStops(loc === 'ar' ? r.stopsAr : r.stopsEn);
                     return (
-                      <div key={r.id}>
-                        <div style={{ border: `1px solid ${isMyRoute ? p : bdrL}`, borderRadius: 12, padding: '1.25rem' }}>
-                          <div className="flex items-start justify-between gap-3 mb-4">
+                      <div key={r.id} className="space-y-4">
+                        <div className={`p-5 rounded-2xl border transition-all ${
+                          isMyRoute
+                            ? 'border-[#FABA19] bg-amber-500/5'
+                            : 'border-stone-150 dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-amber-200/50'
+                        }`}>
+                          <div className="flex items-start justify-between gap-3">
                             <div>
-                              <p className="font-extrabold" style={{ color: th.text }}>{loc === 'ar' ? r.nameAr : r.nameEn}</p>
-                              <p className="text-sm font-extrabold mt-0.5" style={{ color: p }}>{r.pricePerDay} {t.perDay}</p>
+                              <p className="text-sm font-bold text-stone-850 dark:text-stone-100">{loc === 'ar' ? r.nameAr : r.nameEn}</p>
+                              <p className="text-xs font-bold text-[#D97706] mt-0.5">{r.pricePerDay} {t.perDay}</p>
                             </div>
-                            <Badge style={{ background: `${p}18`, color: isFull ? th.textMuted : p, border: `1px solid ${p}33`, flexShrink: 0 }}>
+                            <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold border ${
+                              !isFull
+                                ? 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100/40'
+                                : 'text-red-500 bg-red-50 dark:bg-red-950/20 border-red-100/40'
+                            }`}>
                               {isFull ? t.statusFull : t.statusAvailable}
-                            </Badge>
+                            </span>
                           </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             {[
                               { label: t.goTime,     dep: r.departureTime, arr: r.arrivalTime },
                               { label: t.returnTime, dep: r.returnDepTime, arr: r.returnArrTime },
-                            ].map(({ label, dep, arr }) => (
-                              <div key={label} style={{ background: iconBg, border: `1px solid ${bdrL}`, borderRadius: 10, padding: '0.75rem' }}>
-                                <p className="text-xs font-extrabold mb-1" style={{ color: p }}>{label}</p>
-                                <p className="text-sm" style={{ color: th.textMuted }}>{t.depart} {dep}</p>
-                                <p className="text-sm" style={{ color: th.textMuted }}>{t.arrive} {arr}</p>
+                            ].map(({ label, dep, arr }, i) => (
+                              <div key={i} className="bg-stone-50/20 dark:bg-stone-850/5 border border-stone-100 dark:border-stone-800 rounded-xl p-3">
+                                <p className="text-[10px] font-bold text-[#D97706] mb-1.5">{label}</p>
+                                <p className="text-xs font-semibold text-stone-500 dark:text-stone-400">{t.depart} <span className="font-bold text-stone-800 dark:text-stone-200">{dep}</span></p>
+                                <p className="text-xs font-semibold text-stone-500 dark:text-stone-400 mt-1">{t.arrive} <span className="font-bold text-stone-800 dark:text-stone-200">{arr}</span></p>
                               </div>
                             ))}
                           </div>
 
-                          <div className="mb-4">
-                            <p className="text-xs font-extrabold mb-2" style={{ color: th.textMuted }}>
-                              <MapPin className="w-3 h-3 inline me-1" style={{ color: p }} />{t.stops}
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {stops.map(s => (
-                                <span key={s} className="px-2 py-1 rounded-full text-xs"
-                                  style={{ background: iconBg, color: th.textMuted, border: `1px solid ${bdrL}` }}>{s}</span>
+                          <div className="mt-4 pt-3 border-t border-stone-50 dark:border-stone-850/60">
+                            <p className="text-[10px] text-stone-400 dark:text-stone-500 font-bold mb-2">{t.stops}</p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {stops.map((s, i) => (
+                                <span
+                                  key={i}
+                                  className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-stone-50 hover:bg-stone-100 dark:bg-stone-850 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-800"
+                                >
+                                  {s}
+                                </span>
                               ))}
                             </div>
                           </div>
 
-                          <div className="mb-4">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-xs flex items-center gap-1" style={{ color: th.textMuted }}>
-                                <Users className="w-3 h-3" style={{ color: p }} />{t.occupancy}
+                          {/* Seat Fill Ratio */}
+                          <div className="mt-4 space-y-1.5">
+                            <div className="flex items-center justify-between text-[10px] font-bold text-stone-450 dark:text-stone-500">
+                              <span className="flex items-center gap-1">
+                                <Users className="w-3.5 h-3.5 text-[#D97706]" />
+                                {t.occupancy}
                               </span>
-                              <span className="text-xs font-extrabold" style={{ color: th.text }}>{r.currentSubscribers}/{r.capacity}</span>
+                              <span>{r.currentSubscribers} / {r.capacity}</span>
                             </div>
-                            <div style={{ background: bdrL, borderRadius: 99, height: 6 }}>
-                              <div style={{ width: `${pct}%`, height: 6, borderRadius: 99, background: p, transition: 'width 0.4s' }} />
+                            <div className="h-1 rounded-full bg-stone-100 dark:bg-stone-800 overflow-hidden">
+                              <div className="h-1 rounded-full bg-[#FABA19]" style={{ width: `${pct}%` }} />
                             </div>
                           </div>
 
-                          <Button disabled={isFull || isMyRoute} className="w-full"
-                            onClick={() => {
-                              if (isFull || isMyRoute) return;
-                              const routeName = loc === 'ar' ? r.nameAr : r.nameEn;
-                              if (subscription && !isMyRoute) {
-                                
-                                setConfirm({ type: 'change', routeId: r.id, routeName });
-                              } else {
-                                setConfirm({ type: 'subscribe', routeId: r.id, routeName });
-                              }
-                            }}
-                            style={{ background: (isFull || isMyRoute) ? iconBg : p, color: (isFull || isMyRoute) ? th.textMuted : heroText, border: `1px solid ${(isFull || isMyRoute) ? bdrL : p}`, cursor: (isFull || isMyRoute) ? 'not-allowed' : 'pointer' }}>
-                            {isMyRoute ? t.statusActive : isFull ? t.full : t.subscribe}
-                          </Button>
+                          <div className="mt-5">
+                            <Button
+                              disabled={isFull || isMyRoute}
+                              onClick={() => {
+                                if (isFull || isMyRoute) return;
+                                const routeName = loc === 'ar' ? r.nameAr : r.nameEn;
+                                if (subscription && !isMyRoute) {
+                                  setConfirm({ type: 'change', routeId: r.id, routeName });
+                                } else {
+                                  setConfirm({ type: 'subscribe', routeId: r.id, routeName });
+                                }
+                              }}
+                              className={`w-full font-bold text-xs py-2 rounded-xl transition-all shadow-sm ${
+                                isMyRoute
+                                  ? 'bg-amber-500/10 text-[#D97706] hover:bg-amber-500/15 border border-[#FABA19]/20'
+                                  : 'bg-[#FABA19] hover:bg-[#e5a816] text-white border-0 disabled:opacity-50'
+                              }`}
+                            >
+                              {isMyRoute ? t.statusActive : isFull ? t.full : t.subscribe}
+                            </Button>
+                          </div>
                         </div>
-                        {i < routes.length - 1 && <Separator className="mt-4" style={{ background: bdrL }} />}
+                        {idx < routes.length - 1 && <Separator className="bg-stone-100 dark:bg-stone-800" />}
                       </div>
                     );
                   })}
                 </CardContent>
               </Card>
             </motion.div>
-          </>
+
+          </div>
         )}
 
       </div>
 
-      
+      {/* Hidden print area for physical ticket generation */}
       {subscription && (
-        <div id="bus-card-print-area" style={{ display: 'none' }}>
-          <div style={{ fontFamily: 'Cairo, Arial, sans-serif', textAlign: 'center', marginBottom: 8, fontSize: 13, color: '#7C6943' }}>
+        <div id="bus-card-print-area" className="hidden">
+          <div className="font-bold text-center mb-2 text-stone-500">
             كارت النقل الجامعي — جامعة أسيوط الأهلية
           </div>
           <BusTransportCard
@@ -679,12 +726,8 @@ export default function BusPage() {
             studentNumber={user.studentNumber}
             loc={loc}
           />
-          <div style={{ marginTop: 10, fontSize: 10, color: '#7C6943', textAlign: 'center' }}>
-            يجب إبراز هذا الكارت عند ركوب الباص • للاستفسار: 088-1234567
-          </div>
         </div>
       )}
-
     </DashboardLayout>
   );
 }

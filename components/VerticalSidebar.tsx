@@ -8,13 +8,31 @@ import { Cairo } from 'next/font/google';
 import { useTranslations } from '@/lib/useTranslations';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { theme, darkTheme } from '@/lib/theme';
+import {
+  LayoutDashboard,
+  UserCheck,
+  BookOpen,
+  GraduationCap,
+  FileQuestion,
+  FileText,
+  Calendar,
+  CalendarDays,
+  ClipboardCheck,
+  Settings,
+  User,
+  Shield,
+  Award,
+  Bus,
+  Home,
+  Contact,
+  CreditCard,
+  Mail,
+  LogOut,
+  ChevronLeft,
+  ChevronRight
+} from 'lucide-react';
 
 const cairo = Cairo({ subsets: ['arabic'], weight: ['400', '600', '700'] });
-
-const MI = ({ name, className = '', style }: { name: string; className?: string; style?: React.CSSProperties }) => (
-  <span className={`material-symbols-outlined leading-none ${className}`} style={style} aria-hidden="true">{name}</span>
-);
-
 
 const i18n = {
   ar: {
@@ -25,23 +43,23 @@ const i18n = {
     hideMenu: 'إخفاء القائمة',
     goHome: 'الذهاب للصفحة الرئيسية',
     links: [
-      { href: '/student/dashboard',         label: 'الرئيسية',              icon: 'space_dashboard' },
-      { href: '/student/registration',      label: 'تسجيل المقررات',        icon: 'how_to_reg' },
-      { href: '/student/courses',           label: 'مقرراتي الدراسية',      icon: 'menu_book' },
-      { href: '/student/grades',            label: 'نتائجي الدراسية',       icon: 'grade' },
-      { href: '/student/quizzes',           label: 'الاختبارات',            icon: 'quiz' },
-      { href: '/student/academic-record',   label: 'ملفي الأكاديمي',        icon: 'description' },
-      { href: '/student/schedule',          label: 'الجدول الأسبوعي',       icon: 'calendar_month' },
-      { href: '/student/exams',             label: 'جداول الاختبارات',      icon: 'event_note' },
-      { href: '/student/absence',           label: 'الحضور والانصراف',      icon: 'fact_check' },
-      { href: '/student/services',          label: 'الخدمات الإلكترونية',  icon: 'handyman' },
-      { href: '/student/academic-guidance', label: 'المرشد الأكاديمي',      icon: 'school' },
-      { href: '/student/military-status',   label: 'حالة التجنيد',          icon: 'verified_user' },
-      { href: '/student/activities',        label: 'الأنشطة والفعاليات',    icon: 'emoji_events' },
-      { href: '/student/bus',               label: 'مواصلات الجامعة',       icon: 'directions_bus' },
-      { href: '/student/housing',           label: 'السكن الجامعي',         icon: 'apartment' },
-      { href: '/student/id-card',           label: 'بطاقة الطالب الجامعية', icon: 'badge' },
-      { href: '/student/payments',          label: 'الرسوم والمدفوعات',     icon: 'payments' },
+      { href: '/student/dashboard',         label: 'الرئيسية',              icon: LayoutDashboard },
+      { href: '/student/registration',      label: 'تسجيل المقررات',        icon: UserCheck },
+      { href: '/student/courses',           label: 'مقرراتي الدراسية',      icon: BookOpen },
+      { href: '/student/grades',            label: 'نتائجي الدراسية',       icon: GraduationCap },
+      { href: '/student/quizzes',           label: 'الاختبارات',            icon: FileQuestion },
+      { href: '/student/academic-record',   label: 'ملفي الأكاديمي',        icon: FileText },
+      { href: '/student/schedule',          label: 'الجدول الأسبوعي',       icon: Calendar },
+      { href: '/student/exams',             label: 'جداول الاختبارات',      icon: CalendarDays },
+      { href: '/student/absence',           label: 'الحضور والانصراف',      icon: ClipboardCheck },
+      { href: '/student/services',          label: 'الخدمات الإلكترونية',  icon: Settings },
+      { href: '/student/academic-guidance', label: 'المرشد الأكاديمي',      icon: User },
+      { href: '/student/military-status',   label: 'حالة التجنيد',          icon: Shield },
+      { href: '/student/activities',        label: 'الأنشطة والفعاليات',    icon: Award },
+      { href: '/student/bus',               label: 'مواصلات الجامعة',       icon: Bus },
+      { href: '/student/housing',           label: 'السكن الجامعي',         icon: Home },
+      { href: '/student/id-card',           label: 'بطاقة الطالب الجامعية', icon: Contact },
+      { href: '/student/payments',          label: 'الرسوم والمدفوعات',     icon: CreditCard },
     ],
   },
   en: {
@@ -52,23 +70,23 @@ const i18n = {
     hideMenu: 'Hide menu',
     goHome: 'Go to dashboard',
     links: [
-      { href: '/student/dashboard',         label: 'Dashboard',           icon: 'space_dashboard' },
-      { href: '/student/registration',      label: 'Course Registration', icon: 'how_to_reg' },
-      { href: '/student/courses',           label: 'My Courses',          icon: 'menu_book' },
-      { href: '/student/grades',            label: 'My Grades',           icon: 'grade' },
-      { href: '/student/quizzes',           label: 'Quizzes',             icon: 'quiz' },
-      { href: '/student/academic-record',   label: 'Academic Record',     icon: 'description' },
-      { href: '/student/schedule',          label: 'Weekly Schedule',     icon: 'calendar_month' },
-      { href: '/student/exams',             label: 'Exam Schedules',      icon: 'event_note' },
-      { href: '/student/absence',           label: 'Attendance',          icon: 'fact_check' },
-      { href: '/student/services',          label: 'E-Services',          icon: 'handyman' },
-      { href: '/student/academic-guidance', label: 'Academic Advisor',    icon: 'school' },
-      { href: '/student/military-status',   label: 'Military Status',     icon: 'verified_user' },
-      { href: '/student/activities',        label: 'Activities & Events', icon: 'emoji_events' },
-      { href: '/student/bus',               label: 'University Transport',icon: 'directions_bus' },
-      { href: '/student/housing',           label: 'University Housing',  icon: 'apartment' },
-      { href: '/student/id-card',           label: 'Student ID Card',     icon: 'badge' },
-      { href: '/student/payments',          label: 'Fees & Payments',     icon: 'payments' },
+      { href: '/student/dashboard',         label: 'Dashboard',           icon: LayoutDashboard },
+      { href: '/student/registration',      label: 'Course Registration', icon: UserCheck },
+      { href: '/student/courses',           label: 'My Courses',          icon: BookOpen },
+      { href: '/student/grades',            label: 'My Grades',           icon: GraduationCap },
+      { href: '/student/quizzes',           label: 'Quizzes',             icon: FileQuestion },
+      { href: '/student/academic-record',   label: 'Academic Record',     icon: FileText },
+      { href: '/student/schedule',          label: 'Weekly Schedule',     icon: Calendar },
+      { href: '/student/exams',             label: 'Exam Schedules',      icon: CalendarDays },
+      { href: '/student/absence',           label: 'Attendance',          icon: ClipboardCheck },
+      { href: '/student/services',          label: 'E-Services',          icon: Settings },
+      { href: '/student/academic-guidance', label: 'Academic Advisor',    icon: User },
+      { href: '/student/military-status',   label: 'Military Status',     icon: Shield },
+      { href: '/student/activities',        label: 'Activities & Events', icon: Award },
+      { href: '/student/bus',               label: 'University Transport',icon: Bus },
+      { href: '/student/housing',           label: 'University Housing',  icon: Home },
+      { href: '/student/id-card',           label: 'Student ID Card',     icon: Contact },
+      { href: '/student/payments',          label: 'Fees & Payments',     icon: CreditCard },
     ],
   },
 } as const;
@@ -98,7 +116,6 @@ export default function VerticalSidebar({
   const navScrollRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLAnchorElement>(null);
 
-  
   useEffect(() => {
     const el = activeItemRef.current;
     const container = navScrollRef.current;
@@ -122,21 +139,21 @@ export default function VerticalSidebar({
   const bg  = dark ? darkTheme.surface     : theme.white;
   const bdr = dark ? darkTheme.border      : theme.border;
   const navHoverBg  = dark ? darkTheme.surfaceAlt : '#FAF7F2';
-  const headerBg    = dark ? darkTheme.surfaceAlt : theme.primary;
-  const headerText  = dark ? darkTheme.text       : theme.text;
-  const tooltipBg   = dark ? darkTheme.surface    : theme.primary;
-  const tooltipText = dark ? darkTheme.text       : theme.text;
-  const tooltipBdr  = dark ? darkTheme.border     : theme.white;
+  const headerBg    = dark ? darkTheme.surfaceAlt : '#1C1917'; // Match Admin dark sidebar/header theme
+  const headerText  = '#FFFFFF';
+  const tooltipBg   = '#1C1917';
+  const tooltipText = '#FFFFFF';
+  const tooltipBdr  = '#3A3228';
 
   const avatar = userAvatarUrl ?? (userGender === 'female' ? '/default-avatar-female.png' : '/default-avatar.png');
 
   const navLinks = userRole === 'student'
     ? tx.links
-    : [{ href: `/${userRole}/dashboard`, label: tx.links[0].label, icon: 'space_dashboard' }];
+    : [{ href: `/${userRole}/dashboard`, label: tx.links[0].label, icon: LayoutDashboard }];
 
   return (
-    <div className={`${cairo.className} sticky top-0 h-screen overflow-hidden flex flex-col z-40 transition-all duration-300 ease-in-out shadow-lg ${isCollapsed ? 'w-16' : 'w-full'}`}
-      style={{ background: bg }}>
+    <div className={`${cairo.className} sticky top-0 h-screen overflow-hidden flex flex-col z-40 transition-all duration-300 ease-in-out shadow-md border-l ${isCollapsed ? 'w-16' : 'w-full'}`}
+      style={{ background: bg, borderColor: bdr }}>
 
       <style>{`
         @keyframes tooltipSlide {
@@ -144,49 +161,44 @@ export default function VerticalSidebar({
           to   { opacity: 1; transform: translateY(-50%) translateX(0); }
         }
         .tooltip-slide { animation: tooltipSlide 0.25s ease-out; }
-        .text-shadow-gold {
-          text-shadow: 0 2px 4px rgba(0,0,0,0.4), 0 0 16px rgba(255,204,0,0.25);
-        }
       `}</style>
 
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,600,0,0" />
-
-      {}
+      {/* Collapse button */}
       <button
         onClick={onToggleCollapse}
         title={isCollapsed ? tx.showMenu : tx.hideMenu}
-        className="absolute top-4 left-2 z-50 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 shadow-md hover:opacity-80"
-        style={{ background: th.primary, color: headerText }}>
-        <MI name={isCollapsed ? 'chevron_right' : 'chevron_left'} className="text-[18px]" />
+        className="absolute top-4 left-2 z-50 w-8 h-8 rounded-full flex items-center justify-center bg-[#FABA19] hover:bg-[#e5a816] text-[#1C1917] transition-all duration-200 shadow-md"
+      >
+        {isCollapsed ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
       </button>
 
-      {}
+      {/* User / Org Header Info */}
       <div className="overflow-hidden transition-all duration-300" style={{ background: headerBg }}>
         {!isCollapsed ? (
           <div className="p-5 pt-6">
             <Link href={`/${userRole}/dashboard`} className="flex items-center gap-3 mb-4 hover:opacity-90 transition-opacity">
-              <div className="relative w-14 h-14 flex-shrink-0">
+              <div className="relative w-11 h-11 flex-shrink-0">
                 <Image src="/logo.png" alt="Logo" fill
-                  className="object-contain rounded-full border-2 border-white p-1"
+                  className="object-contain rounded-full border border-white/20 p-0.5"
                   style={{ background: '#FFFDF8' }} />
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-bold truncate" style={{ color: headerText }}>
+                <p className="text-xs font-bold truncate text-white">
                   {locale === 'ar' ? 'جامعة أسيوط الأهلية' : 'Assiut National University'}
                 </p>
-                <p className="text-xs truncate" style={{ color: headerText, opacity: 0.75 }}>
+                <p className="text-[10px] truncate text-stone-400 font-medium">
                   {locale === 'ar' ? 'كلية الحاسبات والمعلومات' : 'Faculty of Computers & Info'}
                 </p>
               </div>
             </Link>
-            <div className="border-t pt-3" style={{ borderColor: dark ? darkTheme.border : `${theme.text}25` }}>
+            <div className="border-t border-stone-800 pt-3">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 border-2 border-white/40">
+                <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 border border-white/10">
                   <img src={avatar} alt="avatar" className="w-full h-full object-cover" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-bold truncate" style={{ color: headerText }}>{userName}</p>
-                  <p className="text-xs" style={{ color: headerText, opacity: 0.75 }}>{tx.student}</p>
+                  <p className="text-xs font-bold truncate text-white">{userName}</p>
+                  <p className="text-[10px] text-amber-500 font-bold">{tx.student}</p>
                 </div>
               </div>
             </div>
@@ -194,47 +206,57 @@ export default function VerticalSidebar({
         ) : (
           <div className="flex flex-col items-center gap-3 pt-10 pb-4">
             <Link href={`/${userRole}/dashboard`} title={tx.goHome}
-              className="relative w-10 h-10 hover:scale-110 transition-transform duration-200">
+              className="relative w-10 h-10 hover:scale-115 transition-transform duration-200">
               <Image src="/logo.png" alt="Logo" fill
-                className="object-contain rounded-full border-2 border-white p-0.5"
+                className="object-contain rounded-full border border-white/20 p-0.5"
                 style={{ background: '#FFFDF8' }} />
             </Link>
-            <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white/40">
+            <div className="w-8 h-8 rounded-full overflow-hidden border border-white/10">
               <img src={avatar} alt="avatar" className="w-full h-full object-cover" />
             </div>
           </div>
         )}
       </div>
 
-      {}
+      {/* Navigation Links */}
       <div ref={navScrollRef} className="flex-1 py-3 px-2 overflow-y-auto">
-        <nav className="space-y-0.5">
+        <nav className="space-y-1">
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
+            const LinkIcon = link.icon;
             return (
               <Link key={link.href} href={link.href}
                 ref={isActive ? activeItemRef : null}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm font-semibold relative group ${isCollapsed ? 'justify-center' : ''}`}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-xs font-bold relative group ${isCollapsed ? 'justify-center' : ''}`}
                 style={{
-                  background: isActive ? th.primary : 'transparent',
-                  color: isActive ? headerText : th.text,
+                  background: isActive ? 'rgba(250, 186, 25, 0.15)' : 'transparent',
+                  color: isActive ? '#D97706' : '#78716C',
                 }}
-                onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = navHoverBg; e.currentTarget.style.color = th.primary; } }}
-                onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = th.text; } }}>
-
-                {}
+                onMouseEnter={e => { 
+                  if (!isActive) { 
+                    e.currentTarget.style.background = 'rgba(250, 186, 25, 0.05)'; 
+                    e.currentTarget.style.color = '#D97706'; 
+                  } 
+                }}
+                onMouseLeave={e => { 
+                  if (!isActive) { 
+                    e.currentTarget.style.background = 'transparent'; 
+                    e.currentTarget.style.color = '#78716C'; 
+                  } 
+                }}
+              >
                 <div className="relative group/icon flex-shrink-0">
-                  <MI name={link.icon}
-                    className={`transition-transform duration-200 group-hover:scale-110 ${isCollapsed ? 'text-[22px]' : 'text-[20px]'}`}
-                    style={{ color: isActive ? headerText : th.primary } as React.CSSProperties} />
+                  <LinkIcon
+                    className={`h-4.5 w-4.5 transition-transform duration-200 group-hover:scale-110`}
+                    style={{ color: isActive ? '#D97706' : '#78716C' }}
+                  />
 
                   {isCollapsed && (
-                    <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-4 py-2.5 rounded-xl opacity-0 invisible group-hover/icon:opacity-100 group-hover/icon:visible transition-all duration-200 delay-75 whitespace-nowrap shadow-2xl pointer-events-none z-[9999] min-w-[180px] text-center tooltip-slide"
-                      style={{ background: tooltipBg, color: tooltipText, border: `1px solid ${tooltipBdr}`, filter: 'drop-shadow(0 8px 20px rgba(187,142,44,0.35))' }}>
-                      <span className="text-sm font-extrabold text-shadow-gold">{link.label}</span>
-                      {}
+                    <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg opacity-0 invisible group-hover/icon:opacity-100 group-hover/icon:visible transition-all duration-200 delay-75 whitespace-nowrap shadow-md pointer-events-none z-[9999] text-center tooltip-slide"
+                      style={{ background: tooltipBg, color: tooltipText, border: `1px solid ${tooltipBdr}` }}>
+                      <span className="text-xs font-bold">{link.label}</span>
                       <div className="absolute right-full top-1/2 -translate-y-1/2 -mr-px">
-                        <div className="w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-r-[8px]"
+                        <div className="w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[6px]"
                           style={{ borderRightColor: tooltipBg }} />
                       </div>
                     </div>
@@ -243,35 +265,47 @@ export default function VerticalSidebar({
 
                 {!isCollapsed && <span className="truncate">{link.label}</span>}
 
-                {}
                 {isActive && !isCollapsed && (
-                  <span className="ms-auto w-1 h-5 rounded-full flex-shrink-0" style={{ background: `${headerText}80` }} />
+                  <span className="ms-auto w-1 h-4 rounded-full bg-[#D97706] flex-shrink-0" />
                 )}
               </Link>
             );
           })}
 
-          {}
-          <div className="my-3 mx-1 border-t" style={{ borderColor: bdr }} />
+          <div className="my-2 mx-1 border-t border-stone-150" />
 
+          {/* Profile link */}
           {(() => {
             const profileHref = `/${userRole}/profile`;
             const isActive = pathname === profileHref;
             return (
               <Link href={profileHref}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm font-semibold relative group ${isCollapsed ? 'justify-center' : ''}`}
-                style={{ background: isActive ? th.primary : 'transparent', color: isActive ? headerText : th.text }}
-                onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = navHoverBg; e.currentTarget.style.color = th.primary; } }}
-                onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = th.text; } }}>
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-xs font-bold relative group ${isCollapsed ? 'justify-center' : ''}`}
+                style={{
+                  background: isActive ? 'rgba(250, 186, 25, 0.15)' : 'transparent',
+                  color: isActive ? '#D97706' : '#78716C',
+                }}
+                onMouseEnter={e => { 
+                  if (!isActive) { 
+                    e.currentTarget.style.background = 'rgba(250, 186, 25, 0.05)'; 
+                    e.currentTarget.style.color = '#D97706'; 
+                  } 
+                }}
+                onMouseLeave={e => { 
+                  if (!isActive) { 
+                    e.currentTarget.style.background = 'transparent'; 
+                    e.currentTarget.style.color = '#78716C'; 
+                  } 
+                }}
+              >
                 <div className="relative group/icon flex-shrink-0">
-                  <MI name="person" className="text-[20px] transition-transform duration-200 group-hover:scale-110"
-                    style={{ color: isActive ? headerText : th.primary } as React.CSSProperties} />
+                  <User className="h-4.5 w-4.5 transition-transform duration-200 group-hover:scale-110" style={{ color: isActive ? '#D97706' : '#78716C' }} />
                   {isCollapsed && (
-                    <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-4 py-2.5 rounded-xl opacity-0 invisible group-hover/icon:opacity-100 group-hover/icon:visible transition-all duration-200 delay-75 whitespace-nowrap shadow-2xl pointer-events-none z-[9999] min-w-[180px] text-center tooltip-slide"
-                      style={{ background: tooltipBg, color: tooltipText, border: `1px solid ${tooltipBdr}`, filter: 'drop-shadow(0 8px 20px rgba(187,142,44,0.35))' }}>
-                      <span className="text-sm font-extrabold text-shadow-gold">{tx.profile}</span>
+                    <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg opacity-0 invisible group-hover/icon:opacity-100 group-hover/icon:visible transition-all duration-200 delay-75 whitespace-nowrap shadow-md pointer-events-none z-[9999] text-center tooltip-slide"
+                      style={{ background: tooltipBg, color: tooltipText, border: `1px solid ${tooltipBdr}` }}>
+                      <span className="text-xs font-bold">{tx.profile}</span>
                       <div className="absolute right-full top-1/2 -translate-y-1/2 -mr-px">
-                        <div className="w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-r-[8px]"
+                        <div className="w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[6px]"
                           style={{ borderRightColor: tooltipBg }} />
                       </div>
                     </div>
@@ -284,29 +318,29 @@ export default function VerticalSidebar({
         </nav>
       </div>
 
-      {}
-      <div className="p-3 border-t" style={{ borderColor: bdr }}>
+      {/* Footer / Logout */}
+      <div className="p-3 border-t border-stone-150" style={{ background: bg }}>
         {!isCollapsed && (
-          <div className="flex items-center gap-2 text-xs mb-2 px-1" style={{ color: th.textMuted }}>
-            <MI name="mail" className="text-[16px]" style={{ color: th.primary } as React.CSSProperties} />
+          <div className="flex items-center gap-2 text-[10px] mb-2 px-1 text-stone-500 font-bold">
+            <Mail className="h-3.5 w-3.5 text-[#D97706]" />
             <span>info@aun.edu.eg</span>
           </div>
         )}
 
         <button onClick={onLogout}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm font-semibold group relative ${isCollapsed ? 'justify-center' : ''}`}
-          style={{ color: th.primary }}
-          onMouseEnter={e => (e.currentTarget.style.background = navHoverBg)}
-          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-xs font-bold group relative ${isCollapsed ? 'justify-center' : ''}`}
+          style={{ color: '#D97706' }}
+          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(250, 186, 25, 0.05)')}
+          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+        >
           <div className="relative group/icon flex-shrink-0">
-            <MI name="logout" className="text-[22px] transition-transform duration-200 group-hover:scale-110"
-              style={{ color: th.primary } as React.CSSProperties} />
+            <LogOut className="h-4.5 w-4.5 transition-transform duration-200 group-hover:scale-110" style={{ color: '#D97706' }} />
             {isCollapsed && (
-              <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-4 py-2.5 rounded-xl opacity-0 invisible group-hover/icon:opacity-100 group-hover/icon:visible transition-all duration-200 delay-75 whitespace-nowrap shadow-2xl pointer-events-none z-[9999] min-w-[180px] text-center tooltip-slide"
-                style={{ background: tooltipBg, color: tooltipText, border: `1px solid ${tooltipBdr}`, filter: 'drop-shadow(0 8px 20px rgba(187,142,44,0.35))' }}>
-                <span className="text-sm font-extrabold text-shadow-gold">{tx.logout}</span>
+              <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg opacity-0 invisible group-hover/icon:opacity-100 group-hover/icon:visible transition-all duration-200 delay-75 whitespace-nowrap shadow-md pointer-events-none z-[9999] text-center tooltip-slide"
+                style={{ background: tooltipBg, color: tooltipText, border: `1px solid ${tooltipBdr}` }}>
+                <span className="text-xs font-bold">{tx.logout}</span>
                 <div className="absolute right-full top-1/2 -translate-y-1/2 -mr-px">
-                  <div className="w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-r-[8px]"
+                  <div className="w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[6px]"
                     style={{ borderRightColor: tooltipBg }} />
                 </div>
               </div>

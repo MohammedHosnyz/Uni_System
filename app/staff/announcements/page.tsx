@@ -3,19 +3,25 @@
 import { useState } from 'react';
 import { Cairo } from 'next/font/google';
 import StaffLayout from '@/components/StaffLayout';
+import { 
+  Megaphone, 
+  Users, 
+  Calendar, 
+  Eye, 
+  Plus, 
+  Bell, 
+  Edit, 
+  Send, 
+  Trash2, 
+  CheckCircle2, 
+  FileText, 
+  X 
+} from 'lucide-react';
 
 const cairo = Cairo({
   subsets: ['arabic'],
   weight: ['400', '600', '700'],
 });
-
-function MaterialIcon({ name, className = '' }: { name: string; className?: string }) {
-  return (
-    <span className={`material-symbols-outlined leading-none ${className}`} aria-hidden="true">
-      {name}
-    </span>
-  );
-}
 
 export default function AnnouncementsManagement() {
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -44,7 +50,7 @@ export default function AnnouncementsManagement() {
     {
       id: 'ANN003',
       title: 'ورشة عمل عن الذكاء الاصطناعي',
-      content: 'ندعوكم لحضور ورشة عمل عن تطبيقات الذكاء الاصطناعي',
+      content: 'ندعوكم لحضور ورشة عمل عن تطبيقات الذكاء الاصطناعي في علوم الحاسب والتكنولوجيا الحديثة',
       target: 'جميع الطلاب',
       priority: 'normal',
       date: '2024-02-08',
@@ -55,84 +61,82 @@ export default function AnnouncementsManagement() {
 
   return (
     <StaffLayout userName="أ. أحمد محمد">
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,600,0,0"
-      />
-
-      <div className="py-8">
-        <div className="max-w-7xl mx-auto px-4">
+      <div className={`${cairo.className} py-6`}>
+        <div className="max-w-7xl mx-auto px-1">
           
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-[#121110] mb-2 flex items-center gap-3">
-              <MaterialIcon name="campaign" className="text-[36px] text-[#BB8E2C]" />
-              إدارة الإعلانات
-            </h1>
-            <p className="text-[#62615F]">إنشاء وإدارة الإعلانات وإرسال الإشعارات</p>
+          {/* Header */}
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-[#1C1917] flex items-center gap-2">
+                <Megaphone className="h-7 w-7 text-[#D97706]" />
+                إدارة الإعلانات
+              </h1>
+              <p className="text-sm text-stone-500 font-medium">إنشاء وإدارة الإعلانات العامة وتوجيه الإشعارات للفئات المستهدفة</p>
+            </div>
+            <button 
+              onClick={() => setShowCreateModal(true)}
+              className="self-start sm:self-center px-4 py-2 bg-[#FABA19] text-[#1C1917] hover:bg-[#e5a816] rounded-xl font-bold transition-all shadow-sm flex items-center gap-2 text-sm"
+            >
+              <Plus className="h-4 w-4" />
+              إنشاء إعلان جديد
+            </button>
           </div>
 
-          
-          <div className="grid md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-xl p-6 shadow-md border border-[#E8DFD3]">
+          {/* Stats Grid */}
+          <div className="grid md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#62615F] mb-1">إجمالي الإعلانات</p>
-                  <p className="text-3xl font-bold text-[#121110]">156</p>
+                  <p className="text-xs text-stone-500 font-bold mb-1">إجمالي الإعلانات</p>
+                  <p className="text-2xl font-bold text-[#1C1917]">156</p>
                 </div>
-                <div className="w-12 h-12 bg-[#BB8E2C] rounded-xl flex items-center justify-center">
-                  <MaterialIcon name="campaign" className="text-[28px] text-white" />
+                <div className="w-10 h-10 bg-amber-50 border border-amber-100 rounded-xl flex items-center justify-center">
+                  <Megaphone className="h-5 w-5 text-[#D97706]" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-md border border-[#E8DFD3]">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#62615F] mb-1">منشورة</p>
-                  <p className="text-3xl font-bold text-[#121110]">142</p>
+                  <p className="text-xs text-stone-500 font-bold mb-1">منشورة</p>
+                  <p className="text-2xl font-bold text-[#1C1917]">142</p>
                 </div>
-                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                  <MaterialIcon name="check_circle" className="text-[28px] text-green-600" />
+                <div className="w-10 h-10 bg-green-50 border border-green-100 rounded-xl flex items-center justify-center">
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-md border border-[#E8DFD3]">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#62615F] mb-1">مسودات</p>
-                  <p className="text-3xl font-bold text-[#121110]">14</p>
+                  <p className="text-xs text-stone-500 font-bold mb-1">مسودات</p>
+                  <p className="text-2xl font-bold text-[#1C1917]">14</p>
                 </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                  <MaterialIcon name="draft" className="text-[28px] text-blue-600" />
+                <div className="w-10 h-10 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center">
+                  <FileText className="h-5 w-5 text-blue-600" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-md border border-[#E8DFD3]">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#62615F] mb-1">إجمالي المشاهدات</p>
-                  <p className="text-3xl font-bold text-[#121110]">12.5K</p>
+                  <p className="text-xs text-stone-500 font-bold mb-1">إجمالي المشاهدات</p>
+                  <p className="text-2xl font-bold text-[#1C1917]">12.5K</p>
                 </div>
-                <div className="w-12 h-12 bg-[#D6AE45] rounded-xl flex items-center justify-center">
-                  <MaterialIcon name="visibility" className="text-[28px] text-white" />
+                <div className="w-10 h-10 bg-amber-50 border border-amber-100 rounded-xl flex items-center justify-center">
+                  <Eye className="h-5 w-5 text-[#D97706]" />
                 </div>
               </div>
             </div>
           </div>
 
-          
-          <div className="bg-white rounded-2xl shadow-lg border border-[#E8DFD3] overflow-hidden">
-            <div className="p-6 border-b border-[#E8DFD3] flex items-center justify-between">
-              <h2 className="text-xl font-bold text-[#121110]">الإعلانات الأخيرة</h2>
-              <button 
-                onClick={() => setShowCreateModal(true)}
-                className="px-4 py-2 bg-gradient-to-r from-[#BB8E2C] to-[#D6AE45] text-white rounded-lg font-semibold hover:from-[#D6AE45] hover:to-[#FCCC03] transition-all flex items-center gap-2"
-              >
-                <MaterialIcon name="add" />
-                إنشاء إعلان جديد
-              </button>
+          {/* List Section */}
+          <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+            <div className="px-6 py-5 border-b border-stone-150">
+              <h2 className="text-base font-bold text-[#1C1917]">الإعلانات الأخيرة</h2>
             </div>
 
             <div className="p-6">
@@ -140,19 +144,19 @@ export default function AnnouncementsManagement() {
                 {announcements.map((announcement) => (
                   <div
                     key={announcement.id}
-                    className="p-6 bg-[#F6F2E6] rounded-xl border border-[#E8DFD3] hover:shadow-md transition-all"
+                    className="p-5 bg-stone-50/30 rounded-xl border border-stone-150 hover:bg-stone-50/60 hover:shadow-sm transition-all"
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-bold text-[#121110]">{announcement.title}</h3>
+                        <div className="flex flex-wrap items-center gap-2 mb-2.5">
+                          <h3 className="text-base font-bold text-[#1C1917]">{announcement.title}</h3>
                           <span
-                            className={`px-3 py-1 rounded-full text-xs font-bold ${
+                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                               announcement.priority === 'urgent'
-                                ? 'bg-red-100 text-red-700'
+                                ? 'bg-red-50 text-red-700 border border-red-100'
                                 : announcement.priority === 'high'
-                                ? 'bg-orange-100 text-orange-700'
-                                : 'bg-blue-100 text-blue-700'
+                                ? 'bg-orange-50 text-orange-700 border border-orange-100'
+                                : 'bg-blue-50 text-blue-700 border border-blue-100'
                             }`}
                           >
                             {announcement.priority === 'urgent'
@@ -162,50 +166,51 @@ export default function AnnouncementsManagement() {
                               : 'عادي'}
                           </span>
                           <span
-                            className={`px-3 py-1 rounded-full text-xs font-bold ${
+                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                               announcement.status === 'published'
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-gray-100 text-gray-700'
+                                ? 'bg-green-50 text-green-700 border border-green-100'
+                                : 'bg-stone-100 text-stone-600 border border-stone-200'
                             }`}
                           >
                             {announcement.status === 'published' ? 'منشور' : 'مسودة'}
                           </span>
                         </div>
-                        <p className="text-sm text-[#62615F] mb-3">{announcement.content}</p>
-                        <div className="flex items-center gap-4 text-xs text-[#62615F]">
+                        <p className="text-sm text-stone-650 font-medium mb-3 leading-relaxed">{announcement.content}</p>
+                        
+                        <div className="flex items-center gap-4 text-xs text-stone-500 font-medium">
                           <span className="flex items-center gap-1">
-                            <MaterialIcon name="group" className="text-[14px]" />
+                            <Users className="h-3.5 w-3.5 text-stone-400" />
                             {announcement.target}
                           </span>
                           <span className="flex items-center gap-1">
-                            <MaterialIcon name="calendar_today" className="text-[14px]" />
+                            <Calendar className="h-3.5 w-3.5 text-stone-400" />
                             {announcement.date}
                           </span>
                           <span className="flex items-center gap-1">
-                            <MaterialIcon name="visibility" className="text-[14px]" />
+                            <Eye className="h-3.5 w-3.5 text-stone-400" />
                             {announcement.views} مشاهدة
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex gap-3">
-                      <button className="flex-1 px-4 py-2 bg-white border border-[#E8DFD3] text-[#121110] rounded-lg font-semibold hover:bg-[#F6F2E6] transition-all flex items-center justify-center gap-2">
-                        <MaterialIcon name="edit" />
+                    <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-stone-150">
+                      <button className="flex-1 min-w-[100px] px-3.5 py-2 bg-white border border-stone-200 text-stone-700 hover:bg-stone-50 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                        <Edit className="h-3.5 w-3.5" />
                         تعديل
                       </button>
                       {announcement.status === 'draft' && (
-                        <button className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-all flex items-center justify-center gap-2">
-                          <MaterialIcon name="publish" />
+                        <button className="flex-1 min-w-[100px] px-3.5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                          <Send className="h-3.5 w-3.5" />
                           نشر
                         </button>
                       )}
-                      <button className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all flex items-center justify-center gap-2">
-                        <MaterialIcon name="notifications" />
+                      <button className="flex-1 min-w-[100px] px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                        <Bell className="h-3.5 w-3.5 text-[#D97706]" />
                         إرسال إشعار
                       </button>
-                      <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-all">
-                        <MaterialIcon name="delete" />
+                      <button className="px-3.5 py-2 bg-red-50 hover:bg-red-100 text-red-650 border border-red-100 rounded-xl transition-all" title="حذف">
+                        <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     </div>
                   </div>
@@ -214,43 +219,43 @@ export default function AnnouncementsManagement() {
             </div>
           </div>
 
-          
+          {/* Create Modal */}
           {showCreateModal && (
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                <div className="p-6 border-b border-[#E8DFD3] flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-[#121110]">إنشاء إعلان جديد</h2>
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-2xl shadow-xl max-w-xl w-full overflow-hidden border border-stone-200">
+                <div className="px-6 py-5 border-b border-stone-150 flex items-center justify-between">
+                  <h2 className="text-lg font-bold text-[#1C1917]">إنشاء إعلان جديد</h2>
                   <button
                     onClick={() => setShowCreateModal(false)}
-                    className="p-2 hover:bg-[#F6F2E6] rounded-lg transition-colors"
+                    className="p-1.5 hover:bg-stone-100 rounded-lg text-stone-500 hover:text-stone-700 transition-colors"
                   >
-                    <MaterialIcon name="close" className="text-[#62615F]" />
+                    <X className="h-5 w-5" />
                   </button>
                 </div>
 
                 <div className="p-6 space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold text-[#121110] mb-2">عنوان الإعلان</label>
+                    <label className="block text-xs font-bold text-stone-600 mb-2">عنوان الإعلان</label>
                     <input
                       type="text"
                       placeholder="أدخل عنوان الإعلان"
-                      className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB8E2C]"
+                      className="w-full px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FABA19]/35 focus:border-[#FABA19] text-sm text-[#1C1917] font-semibold"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-[#121110] mb-2">المحتوى</label>
+                    <label className="block text-xs font-bold text-stone-600 mb-2">المحتوى</label>
                     <textarea
-                      rows={5}
-                      placeholder="أدخل محتوى الإعلان"
-                      className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB8E2C]"
+                      rows={4}
+                      placeholder="أدخل محتوى الإعلان بالتفصيل..."
+                      className="w-full px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FABA19]/35 focus:border-[#FABA19] text-sm text-[#1C1917] font-medium"
                     ></textarea>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-[#121110] mb-2">الفئة المستهدفة</label>
-                      <select className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB8E2C]">
+                      <label className="block text-xs font-bold text-stone-600 mb-2">الفئة المستهدفة</label>
+                      <select className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FABA19]/35 focus:border-[#FABA19] text-sm text-[#1C1917] font-semibold">
                         <option>جميع الطلاب</option>
                         <option>السنة الأولى</option>
                         <option>السنة الثانية</option>
@@ -260,8 +265,8 @@ export default function AnnouncementsManagement() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-[#121110] mb-2">الأولوية</label>
-                      <select className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB8E2C]">
+                      <label className="block text-xs font-bold text-stone-600 mb-2">الأولوية</label>
+                      <select className="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FABA19]/35 focus:border-[#FABA19] text-sm text-[#1C1917] font-semibold">
                         <option>عادي</option>
                         <option>مهم</option>
                         <option>عاجل</option>
@@ -269,18 +274,18 @@ export default function AnnouncementsManagement() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 p-4 bg-[#F6F2E6] rounded-lg">
-                    <input type="checkbox" id="sendNotification" className="w-5 h-5" />
-                    <label htmlFor="sendNotification" className="text-sm font-semibold text-[#121110]">
-                      إرسال إشعار فوري للطلاب
+                  <div className="flex items-center gap-2.5 p-3 bg-stone-50 border border-stone-150 rounded-xl">
+                    <input type="checkbox" id="sendNotification" className="w-4 h-4 rounded text-[#FABA19] focus:ring-[#FABA19]" />
+                    <label htmlFor="sendNotification" className="text-xs font-bold text-stone-700">
+                      إرسال إشعار فوري وتنبيه للطلاب
                     </label>
                   </div>
 
-                  <div className="flex gap-3 pt-4">
-                    <button className="flex-1 px-6 py-3 bg-gradient-to-r from-[#BB8E2C] to-[#D6AE45] text-white rounded-lg font-semibold hover:from-[#D6AE45] hover:to-[#FCCC03] transition-all">
+                  <div className="flex gap-2.5 pt-4 border-t border-stone-150">
+                    <button className="flex-1 px-5 py-2.5 bg-[#FABA19] text-[#1C1917] hover:bg-[#e5a816] rounded-xl font-bold text-xs transition-all shadow-sm">
                       نشر الإعلان
                     </button>
-                    <button className="flex-1 px-6 py-3 bg-white border border-[#E8DFD3] text-[#121110] rounded-lg font-semibold hover:bg-[#F6F2E6] transition-all">
+                    <button className="flex-1 px-5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-bold text-xs transition-all">
                       حفظ كمسودة
                     </button>
                   </div>

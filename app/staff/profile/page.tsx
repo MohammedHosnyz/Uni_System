@@ -2,157 +2,158 @@
 
 import { Cairo } from 'next/font/google';
 import StaffLayout from '@/components/StaffLayout';
+import { 
+  User, 
+  Mail, 
+  Phone, 
+  Building, 
+  Calendar, 
+  Lock, 
+  Shield 
+} from 'lucide-react';
 
 const cairo = Cairo({
   subsets: ['arabic'],
   weight: ['400', '600', '700'],
 });
 
-function MaterialIcon({ name, className = '' }: { name: string; className?: string }) {
-  return (
-    <span className={`material-symbols-outlined leading-none ${className}`} aria-hidden="true">
-      {name}
-    </span>
-  );
-}
-
 export default function StaffProfile() {
   return (
     <StaffLayout userName="أ. أحمد محمد">
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,600,0,0"
-      />
-
-      <div className="py-8">
-        <div className="max-w-4xl mx-auto px-4">
+      <div className={`${cairo.className} py-6`}>
+        <div className="max-w-4xl mx-auto px-1">
           
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-[#121110] mb-2 flex items-center gap-3">
-              <MaterialIcon name="person" className="text-[36px] text-[#BB8E2C]" />
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-[#1C1917] flex items-center gap-2">
+              <User className="h-7 w-7 text-[#D97706]" />
               الملف الشخصي
             </h1>
-            <p className="text-[#62615F]">عرض وتعديل معلوماتك الشخصية</p>
+            <p className="text-sm text-stone-500 font-medium">عرض وإدارة وتحديث بيانات الموظف الشخصية والأمان</p>
           </div>
 
-          
-          <div className="bg-white rounded-2xl shadow-lg border border-[#E8DFD3] overflow-hidden mb-6">
-            <div className="bg-gradient-to-r from-[#BB8E2C] via-[#D6AE45] to-[#FCCC03] p-8">
-              <div className="flex items-center gap-6">
-                <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center">
-                  <MaterialIcon name="person" className="text-[48px] text-[#BB8E2C]" />
+          {/* Profile header card */}
+          <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden mb-6">
+            <div className="bg-[#1C1917] p-8 relative overflow-hidden">
+              {/* Subtle background glow */}
+              <div className="absolute right-0 top-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+              
+              <div className="flex flex-col sm:flex-row items-center gap-6 relative z-10">
+                <div className="w-20 h-20 bg-amber-50 border border-amber-200 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="h-10 w-10 text-[#D97706]" />
                 </div>
-                <div className="text-[#121110]">
-                  <h2 className="text-2xl font-bold mb-1">أ. أحمد محمد علي</h2>
-                  <p className="text-lg opacity-90">موظف شؤون الطلاب</p>
-                  <p className="text-sm opacity-80">رقم الموظف: EMP2024001</p>
+                <div className="text-center sm:text-right">
+                  <h2 className="text-xl font-bold text-white mb-1.5">أ. أحمد محمد علي</h2>
+                  <p className="text-sm text-stone-400 font-semibold mb-1">موظف شؤون الطلاب</p>
+                  <p className="text-xs text-amber-400 font-bold">رقم الموظف: EMP2024001</p>
                 </div>
               </div>
             </div>
 
+            {/* Profile fields */}
             <div className="p-8">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-[#121110] mb-2">الاسم الأول</label>
+                  <label className="block text-xs font-bold text-stone-600 mb-2">الاسم الأول</label>
                   <input
                     type="text"
-                    value="أحمد"
-                    className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB8E2C]"
+                    defaultValue="أحمد"
+                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FABA19]/35 focus:border-[#FABA19] text-sm text-[#1C1917] font-semibold"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-[#121110] mb-2">اسم العائلة</label>
+                  <label className="block text-xs font-bold text-stone-600 mb-2">اسم العائلة</label>
                   <input
                     type="text"
-                    value="محمد علي"
-                    className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB8E2C]"
+                    defaultValue="محمد علي"
+                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FABA19]/35 focus:border-[#FABA19] text-sm text-[#1C1917] font-semibold"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-[#121110] mb-2">البريد الإلكتروني</label>
+                  <label className="block text-xs font-bold text-stone-600 mb-2">البريد الإلكتروني</label>
                   <input
                     type="email"
-                    value="ahmed.mohamed@aun.edu.eg"
-                    className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB8E2C]"
+                    defaultValue="ahmed.mohamed@aun.edu.eg"
+                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FABA19]/35 focus:border-[#FABA19] text-sm text-[#1C1917] font-semibold"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-[#121110] mb-2">رقم الهاتف</label>
+                  <label className="block text-xs font-bold text-stone-600 mb-2">رقم الهاتف</label>
                   <input
                     type="tel"
-                    value="01012345678"
-                    className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB8E2C]"
+                    defaultValue="01012345678"
+                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FABA19]/35 focus:border-[#FABA19] text-sm text-[#1C1917] font-semibold"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-[#121110] mb-2">القسم</label>
+                  <label className="block text-xs font-bold text-stone-600 mb-2">القسم</label>
                   <input
                     type="text"
-                    value="شؤون الطلاب"
-                    className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg bg-[#F6F2E6]"
+                    defaultValue="شؤون الطلاب"
+                    className="w-full px-4 py-2.5 bg-stone-100 border border-stone-200 rounded-xl text-stone-500 font-semibold cursor-not-allowed"
                     disabled
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-[#121110] mb-2">تاريخ التعيين</label>
+                  <label className="block text-xs font-bold text-stone-600 mb-2">تاريخ التعيين</label>
                   <input
                     type="text"
-                    value="2020-09-01"
-                    className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg bg-[#F6F2E6]"
+                    defaultValue="2020-09-01"
+                    className="w-full px-4 py-2.5 bg-stone-100 border border-stone-200 rounded-xl text-stone-500 font-semibold cursor-not-allowed"
                     disabled
                   />
                 </div>
               </div>
 
-              <div className="mt-6 flex gap-3">
-                <button className="px-6 py-3 bg-gradient-to-r from-[#BB8E2C] to-[#D6AE45] text-white rounded-lg font-semibold hover:from-[#D6AE45] hover:to-[#FCCC03] transition-all">
+              <div className="mt-6 pt-6 border-t border-stone-150 flex gap-2">
+                <button className="px-5 py-2.5 bg-[#FABA19] text-[#1C1917] hover:bg-[#e5a816] rounded-xl font-bold text-xs transition-all shadow-sm">
                   حفظ التغييرات
                 </button>
-                <button className="px-6 py-3 bg-white border border-[#E8DFD3] text-[#121110] rounded-lg font-semibold hover:bg-[#F6F2E6] transition-all">
+                <button className="px-5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-bold text-xs transition-all">
                   إلغاء
                 </button>
               </div>
             </div>
           </div>
 
-          
-          <div className="bg-white rounded-2xl shadow-lg border border-[#E8DFD3] p-8">
-            <h3 className="text-xl font-bold text-[#121110] mb-6 flex items-center gap-2">
-              <MaterialIcon name="lock" className="text-[#BB8E2C]" />
+          {/* Change password card */}
+          <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-8">
+            <h3 className="text-base font-bold text-[#1C1917] mb-6 flex items-center gap-2">
+              <Lock className="h-5 w-5 text-[#D97706]" />
               تغيير كلمة المرور
             </h3>
 
-            <div className="space-y-4">
+            <div className="space-y-4 max-w-xl">
               <div>
-                <label className="block text-sm font-semibold text-[#121110] mb-2">كلمة المرور الحالية</label>
+                <label className="block text-xs font-bold text-stone-600 mb-2">كلمة المرور الحالية</label>
                 <input
                   type="password"
-                  className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB8E2C]"
+                  className="w-full px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FABA19]/35 focus:border-[#FABA19] text-sm text-[#1C1917]"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#121110] mb-2">كلمة المرور الجديدة</label>
+                <label className="block text-xs font-bold text-stone-600 mb-2">كلمة المرور الجديدة</label>
                 <input
                   type="password"
-                  className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB8E2C]"
+                  className="w-full px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FABA19]/35 focus:border-[#FABA19] text-sm text-[#1C1917]"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#121110] mb-2">تأكيد كلمة المرور</label>
+                <label className="block text-xs font-bold text-stone-600 mb-2">تأكيد كلمة المرور الجديدة</label>
                 <input
                   type="password"
-                  className="w-full px-4 py-3 border border-[#E8DFD3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB8E2C]"
+                  className="w-full px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FABA19]/35 focus:border-[#FABA19] text-sm text-[#1C1917]"
                 />
               </div>
 
-              <button className="px-6 py-3 bg-gradient-to-r from-[#BB8E2C] to-[#D6AE45] text-white rounded-lg font-semibold hover:from-[#D6AE45] hover:to-[#FCCC03] transition-all">
+              <button className="px-5 py-2.5 bg-stone-850 hover:bg-stone-900 text-white rounded-xl font-bold text-xs transition-all shadow-sm">
                 تحديث كلمة المرور
               </button>
             </div>

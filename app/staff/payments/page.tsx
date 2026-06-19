@@ -3,19 +3,22 @@
 import { useState } from 'react';
 import { Cairo } from 'next/font/google';
 import StaffLayout from '@/components/StaffLayout';
+import { 
+  CreditCard, 
+  Clock, 
+  CheckCircle2, 
+  TrendingUp, 
+  Plus, 
+  Printer, 
+  Eye, 
+  Check, 
+  Search 
+} from 'lucide-react';
 
 const cairo = Cairo({
   subsets: ['arabic'],
   weight: ['400', '600', '700'],
 });
-
-function MaterialIcon({ name, className = '' }: { name: string; className?: string }) {
-  return (
-    <span className={`material-symbols-outlined leading-none ${className}`} aria-hidden="true">
-      {name}
-    </span>
-  );
-}
 
 export default function PaymentsManagement() {
   const [activeTab, setActiveTab] = useState<'all' | 'pending' | 'completed'>('all');
@@ -62,171 +65,170 @@ export default function PaymentsManagement() {
 
   return (
     <StaffLayout userName="أ. أحمد محمد">
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,600,0,0"
-      />
-
-      <div className="py-8">
-        <div className="max-w-7xl mx-auto px-4">
+      <div className={`${cairo.className} py-6`}>
+        <div className="max-w-7xl mx-auto px-1">
           
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-[#121110] mb-2 flex items-center gap-3">
-              <MaterialIcon name="payments" className="text-[36px] text-[#BB8E2C]" />
-              إدارة الدفعات
-            </h1>
-            <p className="text-[#62615F]">متابعة المدفوعات وإصدار الإيصالات</p>
+          {/* Header */}
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-[#1C1917] flex items-center gap-2">
+                <CreditCard className="h-7 w-7 text-[#D97706]" />
+                إدارة الدفعات والرسوم
+              </h1>
+              <p className="text-sm text-stone-500 font-medium">متابعة المدفوعات والرسوم الدراسية وإصدار الإيصالات الرسمية</p>
+            </div>
+            <button className="self-start sm:self-center px-4 py-2 bg-[#FABA19] text-[#1C1917] hover:bg-[#e5a816] rounded-xl font-bold transition-all shadow-sm flex items-center gap-2 text-sm">
+              <Plus className="h-4 w-4" />
+              تسجيل دفعة جديدة
+            </button>
           </div>
 
-          
-          <div className="grid md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-xl p-6 shadow-md border border-[#E8DFD3]">
+          {/* Stats Grid */}
+          <div className="grid md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#62615F] mb-1">إجمالي اليوم</p>
-                  <p className="text-3xl font-bold text-[#121110]">156</p>
-                  <p className="text-xs text-[#BB8E2C] font-semibold mt-1">3,900,000 جنيه</p>
+                  <p className="text-xs text-stone-500 font-bold mb-1">إجمالي اليوم</p>
+                  <p className="text-2xl font-bold text-[#1C1917]">156</p>
+                  <p className="text-xs text-[#D97706] font-bold mt-1">3,900,000 ج.م</p>
                 </div>
-                <div className="w-12 h-12 bg-[#BB8E2C] rounded-xl flex items-center justify-center">
-                  <MaterialIcon name="payments" className="text-[28px] text-white" />
+                <div className="w-10 h-10 bg-amber-50 border border-amber-100 rounded-xl flex items-center justify-center">
+                  <CreditCard className="h-5 w-5 text-[#D97706]" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-md border border-[#E8DFD3]">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#62615F] mb-1">قيد الانتظار</p>
-                  <p className="text-3xl font-bold text-[#121110]">23</p>
-                  <p className="text-xs text-blue-600 font-semibold mt-1">575,000 جنيه</p>
+                  <p className="text-xs text-stone-500 font-bold mb-1">قيد الانتظار</p>
+                  <p className="text-2xl font-bold text-[#1C1917]">23</p>
+                  <p className="text-xs text-blue-600 font-bold mt-1">575,000 ج.م</p>
                 </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                  <MaterialIcon name="pending" className="text-[28px] text-blue-600" />
+                <div className="w-10 h-10 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center">
+                  <Clock className="h-5 w-5 text-blue-600" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-md border border-[#E8DFD3]">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#62615F] mb-1">مكتملة</p>
-                  <p className="text-3xl font-bold text-[#121110]">133</p>
-                  <p className="text-xs text-green-600 font-semibold mt-1">3,325,000 جنيه</p>
+                  <p className="text-xs text-stone-500 font-bold mb-1">مكتملة</p>
+                  <p className="text-2xl font-bold text-[#1C1917]">133</p>
+                  <p className="text-xs text-green-600 font-bold mt-1">3,325,000 ج.م</p>
                 </div>
-                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                  <MaterialIcon name="check_circle" className="text-[28px] text-green-600" />
+                <div className="w-10 h-10 bg-green-50 border border-green-100 rounded-xl flex items-center justify-center">
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-md border border-[#E8DFD3]">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#62615F] mb-1">هذا الشهر</p>
-                  <p className="text-3xl font-bold text-[#121110]">1,245</p>
-                  <p className="text-xs text-[#BB8E2C] font-semibold mt-1">31,125,000 جنيه</p>
+                  <p className="text-xs text-stone-500 font-bold mb-1">هذا الشهر</p>
+                  <p className="text-2xl font-bold text-[#1C1917]">1,245</p>
+                  <p className="text-xs text-[#D97706] font-bold mt-1">31,125,000 ج.م</p>
                 </div>
-                <div className="w-12 h-12 bg-[#D6AE45] rounded-xl flex items-center justify-center">
-                  <MaterialIcon name="trending_up" className="text-[28px] text-white" />
+                <div className="w-10 h-10 bg-amber-50 border border-amber-100 rounded-xl flex items-center justify-center">
+                  <TrendingUp className="h-5 w-5 text-[#D97706]" />
                 </div>
               </div>
             </div>
           </div>
 
-          
-          <div className="bg-white rounded-2xl shadow-lg border border-[#E8DFD3] overflow-hidden">
-            <div className="p-6 border-b border-[#E8DFD3] flex items-center justify-between">
-              <div className="flex gap-2">
+          {/* List Card */}
+          <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+            
+            {/* Tabs & Top bar */}
+            <div className="p-5 border-b border-stone-150 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex gap-1.5 p-1 bg-stone-100/80 rounded-xl">
                 <button
                   onClick={() => setActiveTab('all')}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                  className={`px-4 py-2 rounded-lg font-bold text-xs transition-all ${
                     activeTab === 'all'
-                      ? 'bg-gradient-to-r from-[#BB8E2C] to-[#D6AE45] text-white'
-                      : 'text-[#62615F] hover:bg-[#F6F2E6]'
+                      ? 'bg-white text-[#D97706] shadow-sm'
+                      : 'text-stone-500 hover:text-stone-700'
                   }`}
                 >
                   الكل ({payments.length})
                 </button>
                 <button
                   onClick={() => setActiveTab('pending')}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                  className={`px-4 py-2 rounded-lg font-bold text-xs transition-all ${
                     activeTab === 'pending'
-                      ? 'bg-gradient-to-r from-[#BB8E2C] to-[#D6AE45] text-white'
-                      : 'text-[#62615F] hover:bg-[#F6F2E6]'
+                      ? 'bg-white text-[#D97706] shadow-sm'
+                      : 'text-stone-500 hover:text-stone-700'
                   }`}
                 >
                   قيد الانتظار (1)
                 </button>
                 <button
                   onClick={() => setActiveTab('completed')}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                  className={`px-4 py-2 rounded-lg font-bold text-xs transition-all ${
                     activeTab === 'completed'
-                      ? 'bg-gradient-to-r from-[#BB8E2C] to-[#D6AE45] text-white'
-                      : 'text-[#62615F] hover:bg-[#F6F2E6]'
+                      ? 'bg-white text-[#D97706] shadow-sm'
+                      : 'text-stone-500 hover:text-stone-700'
                   }`}
                 >
                   مكتملة (2)
                 </button>
               </div>
-
-              <button className="px-4 py-2 bg-gradient-to-r from-[#BB8E2C] to-[#D6AE45] text-white rounded-lg font-semibold hover:from-[#D6AE45] hover:to-[#FCCC03] transition-all flex items-center gap-2">
-                <MaterialIcon name="add" />
-                تسجيل دفعة جديدة
-              </button>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-[#F6F2E6]">
+                <thead className="bg-stone-50/70 border-b border-stone-150">
                   <tr>
-                    <th className="px-6 py-4 text-right text-sm font-bold text-[#121110]">رقم الدفعة</th>
-                    <th className="px-6 py-4 text-right text-sm font-bold text-[#121110]">الطالب</th>
-                    <th className="px-6 py-4 text-right text-sm font-bold text-[#121110]">النوع</th>
-                    <th className="px-6 py-4 text-right text-sm font-bold text-[#121110]">المبلغ</th>
-                    <th className="px-6 py-4 text-right text-sm font-bold text-[#121110]">طريقة الدفع</th>
-                    <th className="px-6 py-4 text-right text-sm font-bold text-[#121110]">التاريخ</th>
-                    <th className="px-6 py-4 text-right text-sm font-bold text-[#121110]">الحالة</th>
-                    <th className="px-6 py-4 text-right text-sm font-bold text-[#121110]">الإجراءات</th>
+                    <th className="px-6 py-3.5 text-right text-xs font-bold text-stone-600 uppercase tracking-wider">رقم الدفعة</th>
+                    <th className="px-6 py-3.5 text-right text-xs font-bold text-stone-600 uppercase tracking-wider">الطالب</th>
+                    <th className="px-6 py-3.5 text-right text-xs font-bold text-stone-600 uppercase tracking-wider">النوع</th>
+                    <th className="px-6 py-3.5 text-right text-xs font-bold text-stone-600 uppercase tracking-wider">المبلغ</th>
+                    <th className="px-6 py-3.5 text-right text-xs font-bold text-stone-600 uppercase tracking-wider">طريقة الدفع</th>
+                    <th className="px-6 py-3.5 text-right text-xs font-bold text-stone-600 uppercase tracking-wider">التاريخ</th>
+                    <th className="px-6 py-3.5 text-right text-xs font-bold text-stone-600 uppercase tracking-wider">الحالة</th>
+                    <th className="px-6 py-3.5 text-right text-xs font-bold text-stone-600 uppercase tracking-wider">الإجراءات</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E8DFD3]">
+                <tbody className="divide-y divide-stone-150">
                   {filteredPayments.map((payment) => (
-                    <tr key={payment.id} className="hover:bg-[#FAF7F2] transition-colors">
-                      <td className="px-6 py-4 text-sm font-semibold text-[#121110]">{payment.id}</td>
+                    <tr key={payment.id} className="hover:bg-stone-50/40 transition-colors">
+                      <td className="px-6 py-4 text-sm font-semibold text-[#1C1917]">{payment.id}</td>
                       <td className="px-6 py-4">
                         <div>
-                          <p className="text-sm font-semibold text-[#121110]">{payment.studentName}</p>
-                          <p className="text-xs text-[#62615F]">{payment.studentId}</p>
+                          <p className="text-sm font-semibold text-[#1C1917]">{payment.studentName}</p>
+                          <p className="text-xs text-stone-500 font-medium">{payment.studentId}</p>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-[#3A3937]">{payment.type}</td>
-                      <td className="px-6 py-4 text-sm font-bold text-[#BB8E2C]">
-                        {payment.amount.toLocaleString()} جنيه
+                      <td className="px-6 py-4 text-sm text-stone-700 font-medium">{payment.type}</td>
+                      <td className="px-6 py-4 text-sm font-bold text-[#D97706]">
+                        {payment.amount.toLocaleString()} ج.م
                       </td>
-                      <td className="px-6 py-4 text-sm text-[#3A3937]">{payment.method}</td>
-                      <td className="px-6 py-4 text-sm text-[#62615F]">{payment.date}</td>
+                      <td className="px-6 py-4 text-sm text-stone-700 font-medium">{payment.method}</td>
+                      <td className="px-6 py-4 text-sm text-stone-500 font-medium">{payment.date}</td>
                       <td className="px-6 py-4">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-bold ${
+                          className={`px-2.5 py-1 rounded-full text-[11px] font-bold ${
                             payment.status === 'completed'
-                              ? 'bg-green-100 text-green-700'
-                              : 'bg-blue-100 text-blue-700'
+                              ? 'bg-green-50 text-green-700 border border-green-100'
+                              : 'bg-blue-50 text-blue-700 border border-blue-100'
                           }`}
                         >
                           {payment.status === 'completed' ? 'مكتملة' : 'قيد الانتظار'}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <button className="p-2 hover:bg-[#F6F2E6] rounded-lg transition-colors" title="طباعة إيصال">
-                            <MaterialIcon name="print" className="text-[#BB8E2C]" />
+                        <div className="flex items-center gap-1">
+                          <button className="p-1.5 hover:bg-stone-100 rounded-lg text-stone-500 hover:text-[#D97706] transition-colors" title="طباعة إيصال">
+                            <Printer className="h-4 w-4" />
                           </button>
-                          <button className="p-2 hover:bg-[#F6F2E6] rounded-lg transition-colors" title="عرض التفاصيل">
-                            <MaterialIcon name="visibility" className="text-blue-600" />
+                          <button className="p-1.5 hover:bg-stone-100 rounded-lg text-stone-500 hover:text-blue-600 transition-colors" title="عرض التفاصيل">
+                            <Eye className="h-4 w-4" />
                           </button>
                           {payment.status === 'pending' && (
-                            <button className="p-2 hover:bg-[#F6F2E6] rounded-lg transition-colors" title="تأكيد الدفع">
-                              <MaterialIcon name="check_circle" className="text-green-600" />
+                            <button className="p-1.5 hover:bg-stone-100 rounded-lg text-stone-500 hover:text-green-600 transition-colors" title="تأكيد الدفع">
+                              <Check className="h-4 w-4" />
                             </button>
                           )}
                         </div>
@@ -237,17 +239,14 @@ export default function PaymentsManagement() {
               </table>
             </div>
 
-            
-            <div className="p-6 border-t border-[#E8DFD3] flex items-center justify-between">
-              <p className="text-sm text-[#62615F]">عرض 1-{filteredPayments.length} من {filteredPayments.length} دفعة</p>
+            {/* Pagination / Total count summary */}
+            <div className="px-6 py-4 border-t border-stone-150 flex items-center justify-between">
+              <p className="text-xs text-stone-500 font-medium">عرض 1-{filteredPayments.length} من {filteredPayments.length} دفعة</p>
               <div className="flex gap-2">
-                <button className="px-4 py-2 border border-[#E8DFD3] rounded-lg text-sm font-semibold text-[#62615F] hover:bg-[#F6F2E6] transition-colors">
+                <button className="px-4 py-2 border border-stone-200 rounded-xl text-xs font-bold text-stone-500 hover:bg-stone-50 transition-colors">
                   السابق
                 </button>
-                <button className="px-4 py-2 bg-gradient-to-r from-[#BB8E2C] to-[#D6AE45] text-white rounded-lg text-sm font-semibold">
-                  1
-                </button>
-                <button className="px-4 py-2 border border-[#E8DFD3] rounded-lg text-sm font-semibold text-[#62615F] hover:bg-[#F6F2E6] transition-colors">
+                <button className="px-4 py-2 border border-stone-200 rounded-xl text-xs font-bold text-stone-500 hover:bg-stone-50 transition-colors">
                   التالي
                 </button>
               </div>

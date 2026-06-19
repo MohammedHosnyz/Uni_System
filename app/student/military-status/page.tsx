@@ -6,64 +6,97 @@ import DashboardLayout from '@/components/DashboardLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslations } from '@/lib/useTranslations';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { theme, darkTheme } from '@/lib/theme';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import {
   Shield, FileText, RefreshCw, Headphones, Download,
-  CheckCircle2, Clock, AlertTriangle, CalendarDays, Hash, Building2,
+  CheckCircle2, Clock, AlertTriangle, CalendarDays, Hash, Building2, X,
 } from 'lucide-react';
 
 const i18n = {
   ar: {
-    title: 'الوضع العسكري', subtitle: 'متابعة حالة التأجيل والمستندات',
-    currentStatus: 'الحالة الحالية', activeStatus: 'الحالة النشطة',
-    defermentNum: 'رقم التأجيل', issueDate: 'تاريخ الإصدار',
-    expiryDate: 'تاريخ الانتهاء', militaryOffice: 'مكتب التجنيد',
-    nextAction: 'الإجراء التالي', renewBefore: 'يجب تجديد التأجيل قبل تاريخ',
-    startRenewal: 'بدء إجراءات التجديد',
-    requestCert: 'طلب شهادة تأجيل', requestCertDesc: 'احصل على شهادة تأجيل جديدة',
-    renew: 'تجديد التأجيل', renewDesc: 'تجديد فترة التأجيل',
-    contactOffice: 'التواصل مع المكتب', contactOfficeDesc: 'تواصل مع مكتب التجنيد',
-    documents: 'المستندات', statusAvailable: 'متاح', download: 'تحميل',
-    timeline: 'الجدول الزمني', statusDone: 'مكتمل', statusUpcoming: 'قادم',
-    alert: 'تنبيه هام',
-    alertText: 'يجب تجديد التأجيل قبل انتهاء صلاحيته بشهر على الأقل. عدم التجديد في الوقت المحدد قد يؤدي إلى مشاكل قانونية.',
-    alertTip1: 'احتفظ بنسخة من شهادة التأجيل دائماً',
-    alertTip2: 'تأكد من صحة البيانات في جميع المستندات',
-    alertTip3: 'راجع مكتب شؤون الطلاب عند الحاجة للمساعدة',
-    deferred: 'مؤجل للدراسة', exempt: 'معفى', completed: 'أتم الخدمة', pending: 'قيد المراجعة',
-    noData: 'لا توجد بيانات عسكرية مسجلة',
+    title: 'الموقف والوضع التجنيدي الميداني',
+    subtitle: 'متابعة وتحديث مستندات تأجيل الخدمة العسكرية للطلاب الذكور',
+    currentStatus: 'حالة القيد والوضع الحالي',
+    activeStatus: 'تأجيل ساري المفعول',
+    defermentNum: 'رقم قرار التأجيل (نموذج 2 جند)',
+    issueDate: 'تاريخ بدء التأجيل الأكاديمي',
+    expiryDate: 'تاريخ انتهاء صلاحية التأجيل',
+    militaryOffice: 'منطقة التجنيد والتعبئة التابع لها',
+    nextAction: 'الإجراء والالتزام القادم المطلوب',
+    renewBefore: 'يجب تقديم طلب تجديد التأجيل قبل حلول تاريخ',
+    startRenewal: 'بدء إجراءات تجديد التأجيل الآن',
+    requestCert: 'إصدار شهادة إثبات تجنيدية',
+    requestCertDesc: 'طلب شهادة موجهة لمنطقة التجنيد تثبت القيد بالدراسة',
+    renew: 'تقديم نموذج تجديد التأجيل',
+    renewDesc: 'طلب تمديد فترة التأجيل بناء على الانتقال لمستوى أعلى',
+    contactOffice: 'التواصل مع شؤون التجنيد بالكلية',
+    contactOfficeDesc: 'إرسال استفسار مباشر للموظف المختص بالكلية',
+    documents: 'سجل النماذج والمستندات المرفوعة',
+    statusAvailable: 'جاهز للتحميل',
+    download: 'تحميل المستند',
+    timeline: 'المخطط الزمني للمعاملات التجنيدية',
+    statusDone: 'مكتمل ومعتمد',
+    statusUpcoming: 'مستحق قريباً',
+    alert: 'تنبيه عسكري هام وجدي',
+    alertText: 'يرجى تقديم طلب التجديد قبل انتهاء التأجيل الحالي بـ 30 يوماً على الأقل لتفادي المساءلة أو وقف القيد.',
+    alertTip1: 'احتفظ دائماً بنسخة ورقية مصدقة من نموذج 2/3 جند بمحفظتك.',
+    alertTip2: 'تأكد من مطابقة اسمك الرباعي والرقم القومي بالرقم العسكري.',
+    alertTip3: 'مراجعة الموظف المسؤول بالكلية فور إتمام سن الـ 22.',
+    deferred: 'مؤجل مؤقتاً لغرض الدراسة والتعليم',
+    exempt: 'معفى نهائياً من الخدمة العسكرية',
+    completed: 'أدى الخدمة العسكرية بنجاح',
+    pending: 'الطلب قيد المراجعة الأمنية',
+    noData: 'لا توجد أي بيانات تجنيدية مسجلة باسمك في النظام حالياً',
   },
   en: {
-    title: 'Military Status', subtitle: 'Track deferment status and documents',
-    currentStatus: 'Current Status', activeStatus: 'Active Status',
-    defermentNum: 'Deferment Number', issueDate: 'Issue Date',
-    expiryDate: 'Expiry Date', militaryOffice: 'Military Office',
-    nextAction: 'Next Action', renewBefore: 'Deferment must be renewed before',
-    startRenewal: 'Start Renewal Process',
-    requestCert: 'Request Certificate', requestCertDesc: 'Get a new deferment certificate',
-    renew: 'Renew Deferment', renewDesc: 'Renew the deferment period',
-    contactOffice: 'Contact Office', contactOfficeDesc: 'Contact the military recruitment office',
-    documents: 'Documents', statusAvailable: 'Available', download: 'Download',
-    timeline: 'Timeline', statusDone: 'Completed', statusUpcoming: 'Upcoming',
-    alert: 'Important Notice',
-    alertText: 'Deferment must be renewed at least one month before expiry. Failure to renew on time may lead to legal issues.',
-    alertTip1: 'Always keep a copy of your deferment certificate',
-    alertTip2: 'Verify all data in your documents is correct',
-    alertTip3: 'Visit the student affairs office if you need assistance',
-    deferred: 'Deferred for Study', exempt: 'Exempt', completed: 'Service Completed', pending: 'Pending Review',
-    noData: 'No military records found',
+    title: 'Military Conscription Status',
+    subtitle: 'Track military deferment progress, official cards, and actions',
+    currentStatus: 'Current Military Deferment Status',
+    activeStatus: 'Active Deferment Status',
+    defermentNum: 'Decision / Deferment Number',
+    issueDate: 'Deferment Start Date',
+    expiryDate: 'Expiration Date',
+    militaryOffice: 'Assigned Conscription District Office',
+    nextAction: 'Upcoming Required Military Action',
+    renewBefore: 'You must submit renewal documents before',
+    startRenewal: 'Start Military Deferment Renewal',
+    requestCert: 'Request Proof of Deferment',
+    requestCertDesc: 'Get a formal certificate showing you are enrolled in active study',
+    renew: 'Submit Renewal Form',
+    renewDesc: 'Renew the deferment period upon moving to the next level',
+    contactOffice: 'Contact Recruitment Liaison Office',
+    contactOfficeDesc: 'Directly contact the military student affairs clerk',
+    documents: 'Recruitment Forms & Digital Documents',
+    statusAvailable: 'Ready to Download',
+    download: 'Download Doc',
+    timeline: 'Military Actions & Events Timeline',
+    statusDone: 'Approved & Completed',
+    statusUpcoming: 'Upcoming Action',
+    alert: 'Critical Military Conscription Notice',
+    alertText: 'Deferment forms must be updated at least 30 days prior to expiry to prevent enrollment locks or legal actions.',
+    alertTip1: 'Keep physical copies of your military forms in your record.',
+    alertTip2: 'Make sure your national ID matches your military ID prefix.',
+    alertTip3: 'Visit the campus recruitment office when you turn 22.',
+    deferred: 'Deferred for Active Academic Studies',
+    exempt: 'Officially Exempt from Military Service',
+    completed: 'Completed Active Duty Military Service',
+    pending: 'Request Under Security Review',
+    noData: 'No military service or deferment records found in your profile',
   },
 } as const;
 
 type MilitaryStatusData = {
-  status: string; defermentNumber: string | null;
-  issueDate: string | null; expiryDate: string | null; militaryOffice: string | null;
+  status: string;
+  defermentNumber: string | null;
+  issueDate: string | null;
+  expiryDate: string | null;
+  militaryOffice: string | null;
 };
-type MilitaryDoc   = { id: number; nameAr: string; nameEn: string | null; docType: string; docDate: string; status: string };
+
+type MilitaryDoc = { id: number; nameAr: string; nameEn: string | null; docType: string; docDate: string; status: string };
 type MilitaryEvent = { id: number; eventAr: string; eventEn: string | null; eventDate: string; status: string };
 
 export default function MilitaryStatusPage() {
@@ -80,21 +113,14 @@ export default function MilitaryStatusPage() {
   const [contactModal, setContactModal]     = useState(false);
   const [contactNote, setContactNote]       = useState('');
 
-  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 3500); };
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 3500);
+  };
 
-  const loc      = (locale as 'ar' | 'en') === 'en' ? 'en' : 'ar';
-  const t        = i18n[loc];
-  const dir      = loc === 'ar' ? 'rtl' : 'ltr';
-  const th       = dark ? darkTheme : theme;
-  const card     = dark ? darkTheme.surface    : theme.white;
-  const bdr      = dark ? darkTheme.border     : theme.border;
-  const bdrL     = dark ? darkTheme.borderLight : theme.border;
-  const iconBg   = dark ? darkTheme.surfaceAlt : theme.surface;
-  const heroBg   = dark ? darkTheme.surface    : theme.primary;
-  const heroText = dark ? darkTheme.text       : '#1A1612';
-
-  
-  const p = th.primary; 
+  const loc = (locale as 'ar' | 'en') === 'en' ? 'en' : 'ar';
+  const t   = i18n[loc];
+  const dir = loc === 'ar' ? 'rtl' : 'ltr';
 
   const fetchData = useCallback(async () => {
     if (!user) return;
@@ -112,7 +138,9 @@ export default function MilitaryStatusPage() {
     }
   }, [user]);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const doAction = useCallback(async (action: string, notes?: string) => {
     if (!user) return;
@@ -150,238 +178,258 @@ export default function MilitaryStatusPage() {
 
   const nextUpcoming = timeline.find(e => e.status === 'upcoming');
 
-  const item = { hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1, transition: { type: 'spring' as const, stiffness: 160, damping: 20 } } };
-
   if (loading || !user) return null;
 
   return (
     <DashboardLayout user={user} role="student">
-      <div dir={dir} className="max-w-7xl mx-auto space-y-6">
+      <div dir={dir} className="max-w-7xl mx-auto space-y-6 py-6 px-4 sm:px-6">
 
-        
         {toast && (
-          <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-xl shadow-xl font-bold text-sm"
-            style={{ background: th.primary, color: dark ? '#1A1612' : '#fff' }}>
-            <CheckCircle2 className="w-5 h-5" />{toast}
+          <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-xl shadow-lg font-bold text-xs bg-[#FABA19] text-white">
+            <CheckCircle2 className="w-4.5 h-4.5" />
+            {toast}
           </div>
         )}
 
-        
+        {/* Contact Liaison Office Modal */}
         {contactModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: 'rgba(0,0,0,0.5)' }}
-            onClick={() => setContactModal(false)}>
-            <div onClick={e => e.stopPropagation()}
-              style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, padding: '1.5rem', width: '100%', maxWidth: 420 }}>
-              <div className="flex items-center gap-3 mb-4">
-                <div style={{ width: 40, height: 40, borderRadius: 12, background: `${p}18`, border: `1px solid ${p}33`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Headphones className="w-5 h-5" style={{ color: p }} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setContactModal(false)}>
+            <div
+              onClick={e => e.stopPropagation()}
+              className="bg-white dark:bg-stone-900 border border-stone-150 dark:border-stone-800 rounded-2xl p-6 w-full max-w-md shadow-xl space-y-4"
+            >
+              <div className="flex items-center justify-between pb-2 border-b border-stone-100 dark:border-stone-800">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706]">
+                    <Headphones className="w-5 h-5" />
+                  </div>
+                  <p className="font-bold text-sm text-stone-850 dark:text-stone-150">{t.contactOffice}</p>
                 </div>
-                <p className="font-extrabold text-lg" style={{ color: th.text }}>{t.contactOffice}</p>
+                <button onClick={() => setContactModal(false)} className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-250">
+                  <X className="w-5 h-5" />
+                </button>
               </div>
-              <textarea
-                value={contactNote}
-                onChange={e => setContactNote(e.target.value)}
-                placeholder={loc === 'ar' ? 'اكتب رسالتك أو استفسارك هنا...' : 'Write your message or inquiry here...'}
-                rows={4}
-                style={{ width: '100%', background: iconBg, border: `1px solid ${bdrL}`, borderRadius: 10, padding: '0.75rem', color: th.text, fontSize: 14, resize: 'none', outline: 'none', fontFamily: 'inherit' }}
-              />
-              <div className="flex gap-3 mt-4">
-                <button onClick={() => setContactModal(false)}
-                  style={{ flex: 1, padding: '0.625rem', borderRadius: 10, border: `1px solid ${bdrL}`, background: 'transparent', color: th.textMuted, fontWeight: 700, cursor: 'pointer' }}>
-                  {loc === 'ar' ? 'إلغاء' : 'Cancel'}
-                </button>
-                <button onClick={() => doAction('contact', contactNote)}
+
+              <div className="space-y-2">
+                <textarea
+                  value={contactNote}
+                  onChange={e => setContactNote(e.target.value)}
+                  placeholder={loc === 'ar' ? 'اكتب رسالتك أو استفسارك هنا لمشرف التجنيد...' : 'Write your message or inquiry here...'}
+                  rows={4}
+                  className="w-full rounded-xl p-3 text-xs font-semibold border border-stone-200 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-900 text-stone-800 dark:text-stone-150 outline-none resize-none"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <Button
+                  onClick={() => doAction('contact', contactNote)}
                   disabled={loadingAction === 'contact'}
-                  style={{ flex: 1, padding: '0.625rem', borderRadius: 10, border: 'none', background: p, color: dark ? '#1A1612' : '#fff', fontWeight: 700, cursor: 'pointer', opacity: loadingAction === 'contact' ? 0.7 : 1 }}>
-                  {loadingAction === 'contact' ? '...' : (loc === 'ar' ? 'إرسال' : 'Send')}
-                </button>
+                  className="flex-1 bg-[#FABA19] hover:bg-[#e5a816] text-white font-bold text-xs py-2 rounded-xl border-0 shadow-sm disabled:opacity-50"
+                >
+                  {loadingAction === 'contact' ? '...' : (loc === 'ar' ? 'إرسال الرسالة' : 'Send Message')}
+                </Button>
+                <Button
+                  onClick={() => setContactModal(false)}
+                  className="bg-stone-50 hover:bg-stone-100 dark:bg-stone-850 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 font-bold text-xs py-2 rounded-xl border border-stone-200 dark:border-stone-800 shadow-sm"
+                >
+                  {loc === 'ar' ? 'إلغاء' : 'Cancel'}
+                </Button>
               </div>
             </div>
           </div>
         )}
 
-        
+        {/* Top Header Card */}
         <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
-          <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-            <div style={{ background: heroBg, padding: '1.25rem 1.5rem' }}>
+          <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-amber-500/10 via-amber-600/5 to-transparent p-6 border-b border-stone-100 dark:border-stone-800">
               <div className="flex items-center gap-4">
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: dark ? darkTheme.border : 'rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Shield className="w-6 h-6" style={{ color: heroText }} />
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                  <Shield className="w-6 h-6" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-extrabold" style={{ color: heroText }}>{t.title}</h1>
-                  <p className="text-sm font-semibold opacity-75" style={{ color: heroText }}>
+                  <h1 className="text-xl font-bold text-[#1C1917] dark:text-stone-100">{t.title}</h1>
+                  <p className="text-xs text-stone-500 dark:text-stone-400 font-semibold mt-0.5">
                     {user.firstName} {user.lastName} • {t.subtitle}
                   </p>
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
         </motion.div>
 
         {dataLoading ? (
-          <div className="flex items-center justify-center py-16">
-            <div className="w-8 h-8 rounded-full border-2 animate-spin"
-              style={{ borderColor: `${p} transparent transparent transparent` }} />
+          <div className="flex items-center justify-center py-16 bg-white dark:bg-stone-900 rounded-2xl">
+            <div className="w-8 h-8 rounded-full border-2 border-[#FABA19] border-t-transparent animate-spin" />
           </div>
         ) : !militaryStatus ? (
-          <Card style={{ background: card, border: `1px solid ${bdr}` }}>
-            <CardContent className="flex items-center justify-center py-16">
-              <p className="font-semibold" style={{ color: th.textMuted }}>{t.noData}</p>
-            </CardContent>
+          <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl p-12 text-center flex flex-col items-center justify-center space-y-2">
+            <Shield className="w-12 h-12 text-stone-300 dark:text-stone-700" />
+            <p className="text-xs font-bold text-stone-450 dark:text-stone-550">{t.noData}</p>
           </Card>
         ) : (
-          <>
-            
+          <div className="space-y-6">
+
+            {/* Current Status Section */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-              <Card style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16 }}>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-3">
-                    <div style={{ width: 40, height: 40, borderRadius: 12, background: iconBg, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Shield className="w-5 h-5" style={{ color: p }} />
-                    </div>
-                    <CardTitle style={{ color: th.text }}>{t.currentStatus}</CardTitle>
+              <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl p-5 space-y-4">
+                <div className="flex items-center gap-2.5 pb-2.5 border-b border-stone-100 dark:border-stone-800">
+                  <div className="w-8 h-8 rounded-lg bg-stone-50 dark:bg-stone-800 border border-stone-100 dark:border-stone-800 flex items-center justify-center text-[#D97706]">
+                    <Shield className="w-4.5 h-4.5" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-4">
-                        <div style={{ width: 64, height: 64, borderRadius: 16, background: `${p}18`, border: `1px solid ${p}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <CheckCircle2 className="w-8 h-8" style={{ color: p }} />
-                        </div>
-                        <div>
-                          <p className="font-extrabold text-lg" style={{ color: th.text }}>{statusLabel(militaryStatus.status)}</p>
-                          <Badge style={{ background: `${p}18`, color: p, border: `1px solid ${p}44`, marginTop: 4 }}>
-                            {t.activeStatus}
-                          </Badge>
-                        </div>
-                      </div>
+                  <CardTitle className="text-sm font-bold text-stone-850 dark:text-stone-150">{t.currentStatus}</CardTitle>
+                </div>
 
-                      <div style={{ background: iconBg, border: `1px solid ${bdrL}`, borderRadius: 12, padding: '1rem' }} className="space-y-3">
-                        {[
-                          { icon: Hash,         label: t.defermentNum,  value: militaryStatus.defermentNumber ?? '—', highlight: false },
-                          { icon: CalendarDays, label: t.issueDate,      value: fmtDate(militaryStatus.issueDate),     highlight: false },
-                          { icon: CalendarDays, label: t.expiryDate,     value: fmtDate(militaryStatus.expiryDate),    highlight: true  },
-                          { icon: Building2,    label: t.militaryOffice, value: militaryStatus.militaryOffice ?? '—',  highlight: false },
-                        ].map(({ icon: Icon, label, value, highlight }) => (
-                          <div key={label} className="flex items-center justify-between gap-3">
-                            <div className="flex items-center gap-2">
-                              <Icon className="w-4 h-4" style={{ color: th.textMuted }} />
-                              <span className="text-sm" style={{ color: th.textMuted }}>{label}</span>
-                            </div>
-                            <span className="font-extrabold text-sm" style={{ color: highlight ? p : th.text }}>{value}</span>
-                          </div>
-                        ))}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  
+                  {/* Left Column Status Details */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4 p-3 rounded-xl bg-stone-50/50 dark:bg-stone-850/20 border border-stone-100 dark:border-stone-800">
+                      <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                        <CheckCircle2 className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-stone-800 dark:text-stone-150">{statusLabel(militaryStatus.status)}</p>
+                        <Badge className="bg-amber-500/10 hover:bg-amber-500/15 text-[#D97706] border-0 text-[9px] font-bold mt-1 shadow-none">
+                          {t.activeStatus}
+                        </Badge>
                       </div>
                     </div>
 
-                    
-                    {nextUpcoming && (
-                      <div>
-                        <p className="font-extrabold mb-3" style={{ color: th.text }}>{t.nextAction}</p>
-                        <div style={{ background: `${p}12`, border: `1px solid ${p}44`, borderRadius: 12, padding: '1rem' }}>
-                          <div className="flex items-start gap-3">
-                            <AlertTriangle className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: p }} />
-                            <div>
-                              <p className="font-extrabold text-sm" style={{ color: p }}>
-                                {loc === 'ar' ? nextUpcoming.eventAr : (nextUpcoming.eventEn ?? nextUpcoming.eventAr)}
-                              </p>
-                              <p className="text-sm mt-1" style={{ color: th.text }}>
-                                {t.renewBefore} {fmtDate(nextUpcoming.eventDate)}
-                              </p>
-                              <Button size="sm" className="mt-3 gap-2"
-                                onClick={() => doAction('renew')}
-                                disabled={loadingAction === 'renew'}
-                                style={{ background: p, color: heroText, opacity: loadingAction === 'renew' ? 0.7 : 1 }}>
-                                <RefreshCw className={`w-4 h-4 ${loadingAction === 'renew' ? 'animate-spin' : ''}`} />
-                                {loadingAction === 'renew' ? '...' : t.startRenewal}
-                              </Button>
-                            </div>
+                    <div className="p-4 rounded-xl border border-stone-100 dark:border-stone-800 bg-stone-50/20 dark:bg-stone-850/5 space-y-2.5">
+                      {[
+                        { icon: Hash,         label: t.defermentNum,  value: militaryStatus.defermentNumber ?? '—', highlight: false },
+                        { icon: CalendarDays, label: t.issueDate,      value: fmtDate(militaryStatus.issueDate),     highlight: false },
+                        { icon: CalendarDays, label: t.expiryDate,     value: fmtDate(militaryStatus.expiryDate),    highlight: true  },
+                        { icon: Building2,    label: t.militaryOffice, value: militaryStatus.militaryOffice ?? '—',  highlight: false },
+                      ].map(({ icon: Icon, label, value, highlight }, idx) => (
+                        <div key={idx} className="flex items-center justify-between gap-3 text-xs">
+                          <div className="flex items-center gap-2">
+                            <Icon className="w-4 h-4 text-stone-400" />
+                            <span className="font-semibold text-stone-450 dark:text-stone-500">{label}</span>
+                          </div>
+                          <span className={`font-bold ${highlight ? 'text-[#D97706]' : 'text-stone-800 dark:text-stone-200'}`}>{value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Right Column Alerts / Next Action */}
+                  <div className="space-y-4">
+                    {nextUpcoming ? (
+                      <div className="p-4 rounded-xl border border-amber-200/50 bg-amber-500/5 space-y-3">
+                        <div className="flex items-start gap-2.5">
+                          <AlertTriangle className="w-5 h-5 text-[#D97706] shrink-0 mt-0.5" />
+                          <div>
+                            <p className="text-xs font-bold text-[#D97706]">
+                              {loc === 'ar' ? nextUpcoming.eventAr : (nextUpcoming.eventEn ?? nextUpcoming.eventAr)}
+                            </p>
+                            <p className="text-[11px] font-semibold text-stone-600 dark:text-stone-400 mt-1 leading-relaxed">
+                              {t.renewBefore} {fmtDate(nextUpcoming.eventDate)}
+                            </p>
                           </div>
                         </div>
+                        <Button
+                          onClick={() => doAction('renew')}
+                          disabled={loadingAction === 'renew'}
+                          className="w-full bg-[#FABA19] hover:bg-[#e5a816] text-white font-bold text-xs py-2 rounded-xl border-0 shadow-sm flex items-center justify-center gap-2"
+                        >
+                          <RefreshCw className={`w-3.5 h-3.5 ${loadingAction === 'renew' ? 'animate-spin' : ''}`} />
+                          {loadingAction === 'renew' ? '...' : t.startRenewal}
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="p-4 rounded-xl border border-stone-150 dark:border-stone-800 bg-stone-50/30 dark:bg-stone-850/5 space-y-2">
+                        <p className="text-xs font-bold text-stone-700 dark:text-stone-300">{t.alert}</p>
+                        <p className="text-[11px] text-stone-450 dark:text-stone-500 leading-relaxed font-semibold">{t.alertText}</p>
+                        <ul className="text-[10px] text-stone-400 dark:text-stone-500 space-y-1 pt-1 font-semibold">
+                          <li>• {t.alertTip1}</li>
+                          <li>• {t.alertTip2}</li>
+                          <li>• {t.alertTip3}</li>
+                        </ul>
                       </div>
                     )}
                   </div>
-                </CardContent>
+
+                </div>
               </Card>
             </motion.div>
 
-            
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Quick Actions Buttons */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 { icon: FileText,   label: t.requestCert,   desc: t.requestCertDesc,   action: () => doAction('request_cert'), key: 'request_cert' },
                 { icon: RefreshCw,  label: t.renew,         desc: t.renewDesc,         action: () => doAction('renew'),        key: 'renew'        },
                 { icon: Headphones, label: t.contactOffice, desc: t.contactOfficeDesc, action: () => setContactModal(true),    key: 'contact'      },
-              ].map(({ icon: Icon, label, desc, action, key }) => (
-                <motion.div key={label} variants={item} initial="hidden" animate="visible">
-                  <Card style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, cursor: 'pointer' }}
-                    className="hover:opacity-80 transition-opacity h-full"
-                    onClick={action}>
-                    <CardContent className="pt-6 text-center">
-                      <div style={{ width: 56, height: 56, borderRadius: 14, background: `${p}18`, border: `1px solid ${p}33`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.75rem' }}>
-                        <Icon className={`w-7 h-7 ${loadingAction === key ? 'animate-spin' : ''}`} style={{ color: p }} />
-                      </div>
-                      <p className="font-extrabold mb-1" style={{ color: th.text }}>{label}</p>
-                      <p className="text-sm" style={{ color: th.textMuted }}>{desc}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+              ].map(({ icon: Icon, label, desc, action, key }, idx) => (
+                <Card
+                  key={idx}
+                  onClick={action}
+                  className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden p-5 flex flex-col items-center justify-center text-center space-y-3 cursor-pointer hover:bg-stone-50/50 dark:hover:bg-stone-850/30 transition-all border border-transparent hover:border-amber-200/50"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                    <Icon className={`w-6 h-6 ${loadingAction === key ? 'animate-spin' : ''}`} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-stone-850 dark:text-stone-150">{label}</p>
+                    <p className="text-[10px] text-stone-450 dark:text-stone-550 leading-relaxed mt-0.5">{desc}</p>
+                  </div>
+                </Card>
               ))}
-            </motion.div>
+            </div>
 
-            
+            {/* Documents History List */}
             {documents.length > 0 && (
-              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                <Card style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-                  <CardHeader style={{ background: iconBg, borderBottom: `1px solid ${bdrL}` }} className="py-3 px-5">
-                    <div className="flex items-center gap-3">
-                      <div style={{ width: 40, height: 40, borderRadius: 12, background: card, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <FileText className="w-5 h-5" style={{ color: p }} />
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+                  <CardHeader className="pb-3 border-b border-stone-50 dark:border-stone-850">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706]">
+                        <FileText className="w-5 h-5" />
                       </div>
-                      <CardTitle style={{ color: th.text }}>{t.documents}</CardTitle>
+                      <CardTitle className="text-sm font-bold text-stone-850 dark:text-stone-150">{t.documents}</CardTitle>
                     </div>
                   </CardHeader>
-                  <CardContent className="p-5 space-y-3">
-                    {documents.map((doc, i) => (
-                      <div key={doc.id}>
-                        <div style={{ background: iconBg, border: `1px solid ${bdrL}`, borderRadius: 12, padding: '1rem' }}
-                          className="flex items-center justify-between gap-4">
+                  <CardContent className="p-4 space-y-3">
+                    {documents.map((doc, idx) => (
+                      <div key={doc.id} className="space-y-3">
+                        <div className="p-3.5 rounded-xl border border-stone-100 dark:border-stone-800 bg-stone-50/20 dark:bg-stone-850/5 flex items-center justify-between gap-4 flex-wrap">
                           <div className="flex items-center gap-3">
-                            <div style={{ width: 44, height: 44, borderRadius: 10, background: `${p}18`, border: `1px solid ${p}33`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                              <FileText className="w-5 h-5" style={{ color: p }} />
+                            <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                              <FileText className="w-5 h-5" />
                             </div>
                             <div>
-                              <p className="font-extrabold text-sm" style={{ color: th.text }}>
+                              <p className="text-xs font-bold text-stone-800 dark:text-stone-150">
                                 {loc === 'ar' ? doc.nameAr : (doc.nameEn ?? doc.nameAr)}
                               </p>
-                              <p className="text-xs" style={{ color: th.textMuted }}>{doc.docType} • {fmtDate(doc.docDate)}</p>
+                              <p className="text-[10px] text-stone-400 dark:text-stone-500 font-semibold mt-0.5">{doc.docType} • {fmtDate(doc.docDate)}</p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 flex-shrink-0">
-                            <Badge style={{ background: `${p}18`, color: p, border: `1px solid ${p}33` }}>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <Badge className="bg-amber-500/10 text-[#D97706] border-0 text-[9px] font-bold shadow-none">
                               {t.statusAvailable}
                             </Badge>
-                            <Button size="sm" className="gap-1.5"
+                            <Button
+                              size="sm"
+                              className="bg-[#FABA19] hover:bg-[#e5a816] text-white font-bold text-[10px] px-3 py-1.5 rounded-lg shadow-sm border-0 flex items-center gap-1"
                               onClick={() => {
                                 const content = `${loc === 'ar' ? doc.nameAr : (doc.nameEn ?? doc.nameAr)}\n${doc.docType} - ${fmtDate(doc.docDate)}`;
                                 const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
                                 const url = URL.createObjectURL(blob);
                                 const a = document.createElement('a');
-                                a.href = url; a.download = `${doc.nameAr}.txt`; a.click();
+                                a.href = url;
+                                a.download = `${doc.nameAr}.txt`;
+                                a.click();
                                 URL.revokeObjectURL(url);
                                 showToast(loc === 'ar' ? 'تم تحميل المستند' : 'Document downloaded');
                               }}
-                              style={{ background: p, color: heroText }}>
+                            >
                               <Download className="w-3.5 h-3.5" />
                               {t.download}
                             </Button>
                           </div>
                         </div>
-                        {i < documents.length - 1 && <Separator className="mt-3" style={{ background: bdrL }} />}
+                        {idx < documents.length - 1 && <Separator className="bg-stone-100 dark:bg-stone-800" />}
                       </div>
                     ))}
                   </CardContent>
@@ -389,44 +437,50 @@ export default function MilitaryStatusPage() {
               </motion.div>
             )}
 
-            
+            {/* Timeline of events */}
             {timeline.length > 0 && (
-              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-                <Card style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-                  <CardHeader style={{ background: iconBg, borderBottom: `1px solid ${bdrL}` }} className="py-3 px-5">
-                    <div className="flex items-center gap-3">
-                      <div style={{ width: 40, height: 40, borderRadius: 12, background: card, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Clock className="w-5 h-5" style={{ color: p }} />
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+                  <CardHeader className="pb-3 border-b border-stone-50 dark:border-stone-850">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706]">
+                        <Clock className="w-5 h-5" />
                       </div>
-                      <CardTitle style={{ color: th.text }}>{t.timeline}</CardTitle>
+                      <CardTitle className="text-sm font-bold text-stone-850 dark:text-stone-150">{t.timeline}</CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent className="p-5">
                     <div className="relative">
-                      <div style={{ position: 'absolute', [dir === 'rtl' ? 'right' : 'left']: 7, top: 8, bottom: 8, width: 2, background: bdrL }} />
-                      <div className="space-y-5">
-                        {timeline.map(ev => {
+                      <div
+                        className="absolute top-2 bottom-2 w-0.5 bg-stone-100 dark:bg-stone-800"
+                        style={{ [dir === 'rtl' ? 'right' : 'left']: '7px' }}
+                      />
+                      <div className="space-y-6">
+                        {timeline.map((ev, idx) => {
                           const isDone = ev.status === 'done';
-                          
-                          const dotColor  = isDone ? p : th.textMuted;
-                          const textColor = isDone ? th.text : th.textMuted;
-                          const offset    = dir === 'rtl' ? { paddingRight: '1.75rem' } : { paddingLeft: '1.75rem' };
+                          const dotColor = isDone ? 'bg-[#FABA19]' : 'bg-stone-300 dark:bg-stone-750';
                           return (
-                            <div key={ev.id} className="relative flex items-start gap-3" style={offset}>
-                              <div style={{ position: 'absolute', [dir === 'rtl' ? 'right' : 'left']: 0, top: 4, width: 16, height: 16, borderRadius: '50%', background: dotColor, border: `2px solid ${card}`, boxShadow: `0 0 0 2px ${dotColor}` }} />
-                              <div className="flex-1 flex items-center justify-between gap-3">
+                            <div
+                              key={ev.id}
+                              className="relative"
+                              style={{ [dir === 'rtl' ? 'paddingRight' : 'paddingLeft']: '24px' }}
+                            >
+                              <div
+                                className={`absolute top-1.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-stone-900 shadow-sm ${dotColor}`}
+                                style={{ [dir === 'rtl' ? 'right' : 'left']: '1px' }}
+                              />
+                              <div className="flex items-center justify-between gap-4 flex-wrap text-xs">
                                 <div>
-                                  <p className="font-extrabold text-sm" style={{ color: textColor }}>
+                                  <p className={`font-bold ${isDone ? 'text-stone-800 dark:text-stone-200' : 'text-stone-400 dark:text-stone-500'}`}>
                                     {loc === 'ar' ? ev.eventAr : (ev.eventEn ?? ev.eventAr)}
                                   </p>
-                                  <p className="text-xs mt-0.5" style={{ color: th.textMuted }}>{fmtDate(ev.eventDate)}</p>
+                                  <p className="text-[10px] text-stone-400 dark:text-stone-500 font-semibold mt-0.5">{fmtDate(ev.eventDate)}</p>
                                 </div>
-                                <Badge style={{
-                                  background: isDone ? `${p}18` : `${th.textMuted}18`,
-                                  color: isDone ? p : th.textMuted,
-                                  border: `1px solid ${isDone ? p : th.textMuted}33`,
-                                  flexShrink: 0,
-                                }}>
+                                <Badge className={`border-0 shadow-none text-[9px] font-bold ${
+                                  isDone
+                                    ? 'bg-amber-500/10 text-[#D97706]'
+                                    : 'bg-stone-50 dark:bg-stone-800 text-stone-400 dark:text-stone-600'
+                                }`}>
                                   {isDone ? t.statusDone : t.statusUpcoming}
                                 </Badge>
                               </div>
@@ -439,7 +493,8 @@ export default function MilitaryStatusPage() {
                 </Card>
               </motion.div>
             )}
-          </>
+
+          </div>
         )}
 
       </div>

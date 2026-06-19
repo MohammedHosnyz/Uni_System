@@ -2,76 +2,96 @@
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
 import DashboardLayout from '@/components/DashboardLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslations } from '@/lib/useTranslations';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { theme, darkTheme } from '@/lib/theme';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   FileText, BarChart2, GraduationCap, PauseCircle, LogOut, ArrowLeftRight,
-  CreditCard, Wallet, HelpCircle, Link2, CalendarDays, SlidersHorizontal,
+  CreditCard, Wallet, SlidersHorizontal,
   Clock, CheckCircle, XCircle, Send, X, ChevronDown, ChevronUp,
 } from 'lucide-react';
 
 const i18n = {
   ar: {
-    title: 'الخدمات الطلابية', subtitle: 'جميع الخدمات في مكان واحد',
-    totalServices: 'إجمالي الخدمات', available: 'متاح', unavailable: 'غير متاح',
-    filterBy: 'تصفية حسب', category: 'التصنيف',
-    all: 'جميع الخدمات', certs: 'الشهادات', academic: 'الطلبات الأكاديمية', financial: 'الخدمات المالية',
-    statusAvailable: 'متاح', statusUnavailable: 'غير متاح',
-    responseTime: 'يتم الرد خلال 24-48 ساعة',
-    requestService: 'طلب الخدمة', notAvailable: 'غير متاح حالياً',
-    quickLinks: 'روابط سريعة',
-    payments: 'المدفوعات', paymentsDesc: 'عرض ودفع الرسوم',
-    schedule: 'الجدول الدراسي', scheduleDesc: 'عرض الجدول الأسبوعي',
-    grades: 'الدرجات', gradesDesc: 'عرض النتائج والدرجات',
-    needHelp: 'تحتاج مساعدة؟',
-    helpDesc: 'إذا كنت تواجه صعوبة في استخدام أي من الخدمات، يمكنك التواصل مع الدعم الفني أو زيارة مكتب شؤون الطلاب.',
-    support: 'الدعم الفني', contact: 'اتصل بنا',
-    myRequests: 'طلباتي', noRequests: 'لا توجد طلبات مقدمة بعد',
-    pending: 'قيد المراجعة', approved: 'مقبول', rejected: 'مرفوض',
-    submitRequest: 'تقديم الطلب', cancel: 'إلغاء',
-    notes: 'ملاحظات (اختياري)', notesPlaceholder: 'أضف أي تفاصيل إضافية...',
-    submitting: 'جاري التقديم...', submitted: 'تم تقديم الطلب بنجاح',
-    gpa: 'المعدل التراكمي', level: 'المستوى', program: 'البرنامج',
-    requestedAt: 'تاريخ الطلب',
+    title: 'الخدمات الطلابية الإلكترونية',
+    subtitle: 'نافذة تقديم المعاملات والطلبات الرسمية',
+    totalServices: 'إجمالي الخدمات',
+    available: 'متاح للتقديم',
+    unavailable: 'موقف مؤقتاً',
+    filterBy: 'تصفية الخدمات حسب',
+    category: 'التصنيف',
+    all: 'جميع الخدمات المتاحة',
+    certs: 'الوثائق والشهادات',
+    academic: 'الشؤون التعليمية',
+    financial: 'المعاملات المالية',
+    statusAvailable: 'متاح للتقديم',
+    statusUnavailable: 'غير متوفر حالياً',
+    responseTime: 'متوسط الرد: 24 - 48 ساعة',
+    requestService: 'تقديم طلب الخدمة',
+    notAvailable: 'الخدمة غير متاحة',
+    myRequests: 'سجل الطلبات والالتماسات السابقة',
+    noRequests: 'لا توجد طلبات مسجلة باسمك بعد',
+    pending: 'قيد المراجعة',
+    approved: 'تم القبول والاعتماد',
+    rejected: 'تم الرفض والاعتراض',
+    submitRequest: 'تأكيد وإرسال الطلب',
+    cancel: 'إلغاء الطلب',
+    notes: 'ملاحظات وتفاصيل إضافية (اختياري)',
+    notesPlaceholder: 'يرجى كتابة أي معلومات تود إرفاقها مع الطلب...',
+    submitting: 'جاري إرسال الطلب...',
+    submitted: 'تم تقديم طلب الخدمة بنجاح ✓',
+    gpa: 'المعدل التراكمي',
+    level: 'المستوى الأكاديمي',
+    program: 'البرنامج الدراسي',
+    requestedAt: 'تاريخ التقديم',
   },
   en: {
-    title: 'Student Services', subtitle: 'All services in one place',
-    totalServices: 'Total Services', available: 'Available', unavailable: 'Unavailable',
-    filterBy: 'Filter by', category: 'Category',
-    all: 'All Services', certs: 'Certificates', academic: 'Academic Requests', financial: 'Financial Services',
-    statusAvailable: 'Available', statusUnavailable: 'Unavailable',
-    responseTime: 'Response within 24-48 hours',
-    requestService: 'Request Service', notAvailable: 'Not Available',
-    quickLinks: 'Quick Links',
-    payments: 'Payments', paymentsDesc: 'View and pay fees',
-    schedule: 'Schedule', scheduleDesc: 'View weekly schedule',
-    grades: 'Grades', gradesDesc: 'View results and grades',
-    needHelp: 'Need Help?',
-    helpDesc: 'If you have difficulty using any service, contact technical support or visit the student affairs office.',
-    support: 'Technical Support', contact: 'Contact Us',
-    myRequests: 'My Requests', noRequests: 'No requests submitted yet',
-    pending: 'Pending', approved: 'Approved', rejected: 'Rejected',
-    submitRequest: 'Submit Request', cancel: 'Cancel',
-    notes: 'Notes (optional)', notesPlaceholder: 'Add any additional details...',
-    submitting: 'Submitting...', submitted: 'Request submitted successfully',
-    gpa: 'GPA', level: 'Level', program: 'Program',
-    requestedAt: 'Requested At',
+    title: 'Online Student Services',
+    subtitle: 'Portal for submitting official requests and transcripts',
+    totalServices: 'Total Services',
+    available: 'Available',
+    unavailable: 'Suspended',
+    filterBy: 'Filter services by',
+    category: 'Category',
+    all: 'All Available Services',
+    certs: 'Certificates & Documents',
+    academic: 'Academic Petitions',
+    financial: 'Financial Services',
+    statusAvailable: 'Available',
+    statusUnavailable: 'Not Available',
+    responseTime: 'Response: 24 - 48 hours',
+    requestService: 'Submit Request',
+    notAvailable: 'Not Available',
+    myRequests: 'Your Previous Requests Log',
+    noRequests: 'No requests submitted under your account yet',
+    pending: 'Pending Review',
+    approved: 'Approved & Issued',
+    rejected: 'Rejected / Declined',
+    submitRequest: 'Confirm & Send Request',
+    cancel: 'Cancel',
+    notes: 'Additional notes or details (optional)',
+    notesPlaceholder: 'Write any details you wish to attach to this request...',
+    submitting: 'Sending request...',
+    submitted: 'Request submitted successfully ✓',
+    gpa: 'Cumulative GPA',
+    level: 'Academic Level',
+    program: 'Academic Program',
+    requestedAt: 'Submitted At',
   },
 } as const;
 
 const SERVICES = [
-  { key: 'enrollment_cert',    titleAr: 'طلب شهادة قيد',       titleEn: 'Enrollment Certificate',  descAr: 'طلب شهادة قيد للطالب',              descEn: 'Request student enrollment certificate', icon: FileText,       status: 'available', catKey: 'certs' },
-  { key: 'grade_transcript',   titleAr: 'طلب كشف درجات',       titleEn: 'Grade Transcript',         descAr: 'طلب كشف درجات رسمي',                descEn: 'Request official grade transcript',      icon: BarChart2,      status: 'available', catKey: 'certs' },
-  { key: 'graduation_cert',    titleAr: 'طلب إفادة تخرج',      titleEn: 'Graduation Certificate',   descAr: 'طلب إفادة تخرج مؤقتة',              descEn: 'Request temporary graduation letter',    icon: GraduationCap,  status: 'unavailable', catKey: 'certs' },
-  { key: 'study_deferral',     titleAr: 'طلب تأجيل دراسة',     titleEn: 'Study Deferral',           descAr: 'طلب تأجيل الدراسة لفصل دراسي',      descEn: 'Request study deferral for a semester',  icon: PauseCircle,    status: 'available', catKey: 'academic' },
-  { key: 'course_withdrawal',  titleAr: 'طلب انسحاب من مادة', titleEn: 'Course Withdrawal',        descAr: 'طلب انسحاب من مادة دراسية',         descEn: 'Request withdrawal from a course',       icon: LogOut,         status: 'available', catKey: 'academic' },
-  { key: 'faculty_transfer',   titleAr: 'طلب تحويل كلية',      titleEn: 'Faculty Transfer',         descAr: 'طلب تحويل إلى كلية أخرى',           descEn: 'Request transfer to another faculty',    icon: ArrowLeftRight, status: 'available', catKey: 'academic' },
-  { key: 'fee_refund',         titleAr: 'طلب استرداد رسوم',    titleEn: 'Fee Refund',               descAr: 'طلب استرداد الرسوم الدراسية',        descEn: 'Request tuition fee refund',             icon: Wallet,         status: 'available', catKey: 'financial' },
-  { key: 'fee_installment',    titleAr: 'طلب تقسيط رسوم',     titleEn: 'Fee Installment',          descAr: 'طلب تقسيط الرسوم الدراسية',         descEn: 'Request tuition fee installment plan',   icon: CreditCard,     status: 'available', catKey: 'financial' },
+  { key: 'enrollment_cert',    titleAr: 'طلب شهادة قيد',       titleEn: 'Enrollment Certificate',  descAr: 'طلب شهادة قيد رسمية لإثبات القيد بالجامعة.',              descEn: 'Request official student enrollment certificate to verify status.', icon: FileText,       status: 'available', catKey: 'certs' },
+  { key: 'grade_transcript',   titleAr: 'طلب كشف درجات',       titleEn: 'Grade Transcript',         descAr: 'طلب كشف درجات رسمي معتمد للمواد والتقديرات.',                descEn: 'Request official cumulative grade transcript and credits record.',      icon: BarChart2,      status: 'available', catKey: 'certs' },
+  { key: 'graduation_cert',    titleAr: 'طلب إفادة تخرج',      titleEn: 'Graduation Certificate',   descAr: 'طلب إفادة تخرج مؤقتة للطلاب الخريجين.',              descEn: 'Request temporary graduation letter for graduated students.',    icon: GraduationCap,  status: 'unavailable', catKey: 'certs' },
+  { key: 'study_deferral',     titleAr: 'طلب تأجيل دراسة',     titleEn: 'Study Deferral',           descAr: 'تقديم طلب لتأجيل الدراسة لفصل دراسي كامل.',      descEn: 'Request official study deferral for a semester.',  icon: PauseCircle,    status: 'available', catKey: 'academic' },
+  { key: 'course_withdrawal',  titleAr: 'طلب انسحاب من مادة', titleEn: 'Course Withdrawal',        descAr: 'الانسحاب من مقرر دراسي مسجل حالياً.',         descEn: 'Request withdrawal from an active registered course.',       icon: LogOut,         status: 'available', catKey: 'academic' },
+  { key: 'faculty_transfer',   titleAr: 'طلب تحويل كلية',      titleEn: 'Faculty Transfer',         descAr: 'طلب للتحويل إلى تخصص أو كلية أخرى.',           descEn: 'Request official transfer to another faculty/department.',    icon: ArrowLeftRight, status: 'available', catKey: 'academic' },
+  { key: 'fee_refund',         titleAr: 'طلب استرداد رسوم',    titleEn: 'Fee Refund',               descAr: 'استرداد الرسوم المدفوعة أو المبالغ الزائدة.',        descEn: 'Request official tuition fee or excess balance refund.',             icon: Wallet,         status: 'available', catKey: 'financial' },
+  { key: 'fee_installment',    titleAr: 'طلب تقسيط رسوم',     titleEn: 'Fee Installment',          descAr: 'تقسيط المصروفات الدراسية المتبقية.',         descEn: 'Request official payment installment plan.',   icon: CreditCard,     status: 'available', catKey: 'financial' },
 ];
 
 type StudentInfo = { name: string; email: string; studentNumber: string; program: { nameAr: string; nameEn: string }; gpa: number | null; currentLevel: number };
@@ -94,13 +114,6 @@ export default function ServicesPage() {
   const loc = (locale as 'ar' | 'en') === 'en' ? 'en' : 'ar';
   const t   = i18n[loc];
   const dir = loc === 'ar' ? 'rtl' : 'ltr';
-  const th  = dark ? darkTheme : theme;
-  const card   = dark ? darkTheme.surface    : theme.white;
-  const bdr    = dark ? darkTheme.border     : theme.border;
-  const bdrL   = dark ? darkTheme.borderLight : theme.border;
-  const iconBg = dark ? darkTheme.surfaceAlt : theme.surface;
-  const heroBg = dark ? darkTheme.surface    : theme.primary;
-  const heroText = dark ? darkTheme.text     : '#1A1612';
 
   const fetchData = useCallback(async () => {
     if (!user) return;
@@ -117,7 +130,9 @@ export default function ServicesPage() {
     }
   }, [user]);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const categories = [
     { key: 'all',      label: t.all },
@@ -138,7 +153,7 @@ export default function ServicesPage() {
 
   const catLabel = (key: string) => {
     const map: Record<string, { ar: string; en: string }> = {
-      certs:    { ar: 'الشهادات', en: 'Certificates' },
+      certs:    { ar: 'الشهادات والوثائق', en: 'Certificates' },
       academic: { ar: 'الطلبات الأكاديمية', en: 'Academic Requests' },
       financial:{ ar: 'الخدمات المالية', en: 'Financial Services' },
     };
@@ -166,141 +181,162 @@ export default function ServicesPage() {
     }
   };
 
-  const statusColor = (s: string) => s === 'approved' ? '#22c55e' : s === 'rejected' ? '#ef4444' : th.primary;
-  const statusLabel = (s: string) => s === 'approved' ? t.approved : s === 'rejected' ? t.rejected : t.pending;
-  const StatusIcon  = (s: string) => s === 'approved' ? CheckCircle : s === 'rejected' ? XCircle : Clock;
-
-  const stagger = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.04 } } };
-  const item    = { hidden: { y: 8, opacity: 0 }, visible: { y: 0, opacity: 1, transition: { type: 'spring' as const, stiffness: 200, damping: 20 } } };
+  const getStatusStyles = (s: string) => {
+    if (s === 'approved') return { text: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100/40', icon: CheckCircle };
+    if (s === 'rejected') return { text: 'text-red-500', bg: 'bg-red-50 dark:bg-red-950/20 border-red-100/40', icon: XCircle };
+    return { text: 'text-[#D97706]', bg: 'bg-amber-50 dark:bg-amber-955/20 border-amber-100/40', icon: Clock };
+  };
 
   if (loading || !user) return null;
 
   return (
     <DashboardLayout user={user} role="student">
-      <div dir={dir} className="max-w-7xl mx-auto space-y-6">
+      <div dir={dir} className="max-w-7xl mx-auto space-y-6 py-6 px-4 sm:px-6">
 
-        
+        {toast && (
+          <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-xl shadow-lg font-bold text-xs bg-[#FABA19] text-white">
+            <CheckCircle className="w-4.5 h-4.5" />
+            {toast}
+          </div>
+        )}
+
+        {/* Top Header Card */}
         <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
-          <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-            <div style={{ background: heroBg, padding: '1.25rem 1.5rem' }}>
+          <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-amber-500/10 via-amber-600/5 to-transparent p-6 border-b border-stone-100 dark:border-stone-800">
               <div className="flex items-center gap-4">
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: dark ? darkTheme.border : 'rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <FileText className="w-6 h-6" style={{ color: heroText }} />
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                  <FileText className="w-6 h-6" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-extrabold" style={{ color: heroText }}>{t.title}</h1>
-                  <p className="text-sm font-semibold opacity-75" style={{ color: heroText }}>
+                  <h1 className="text-xl font-bold text-[#1C1917] dark:text-stone-100">{t.title}</h1>
+                  <p className="text-xs text-stone-500 dark:text-stone-400 font-semibold mt-0.5">
                     {studentInfo?.name ?? `${user.firstName} ${user.lastName}`} • {t.subtitle}
                   </p>
                 </div>
               </div>
             </div>
-            
+
             {studentInfo && (
-              <div style={{ background: card, padding: '0.75rem 1.5rem', borderBottom: `1px solid ${bdrL}` }} className="flex flex-wrap gap-4">
+              <div className="px-6 py-3 bg-stone-50/20 dark:bg-stone-850/10 border-b border-stone-100 dark:border-stone-800 flex flex-wrap gap-x-6 gap-y-2">
                 {[
                   { label: t.program, value: loc === 'ar' ? studentInfo.program.nameAr : studentInfo.program.nameEn },
                   { label: t.gpa,     value: studentInfo.gpa?.toFixed(2) ?? '—' },
-                  { label: t.level,   value: `${studentInfo.currentLevel}` },
-                ].map(({ label, value }) => (
-                  <div key={label} className="flex items-center gap-2">
-                    <span className="text-xs font-semibold" style={{ color: th.textMuted }}>{label}:</span>
-                    <span className="text-sm font-extrabold" style={{ color: th.primary }}>{value}</span>
+                  { label: t.level,   value: studentInfo.currentLevel },
+                ].map(({ label, value }, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-xs">
+                    <span className="font-semibold text-stone-400 dark:text-stone-500">{label}:</span>
+                    <span className="font-bold text-[#D97706]">{value}</span>
                   </div>
                 ))}
               </div>
             )}
-            <div style={{ background: iconBg, padding: '1rem 1.5rem' }}>
-              <div className="grid grid-cols-3 gap-3">
+
+            <div className="bg-stone-50/30 dark:bg-stone-800/10 p-5">
+              <div className="grid grid-cols-3 gap-4 text-center">
                 {[
-                  { label: t.totalServices, value: stats.total,       color: th.primary },
-                  { label: t.available,     value: stats.available,   color: '#22c55e' },
-                  { label: t.unavailable,   value: stats.unavailable, color: '#ef4444' },
-                ].map(({ label, value, color }) => (
-                  <div key={label} style={{ background: card, border: `1px solid ${bdrL}`, borderRadius: 12, padding: '0.875rem 1rem', textAlign: 'center' }}>
-                    <p className="text-xs font-semibold mb-1" style={{ color: th.textMuted }}>{label}</p>
-                    <p className="text-2xl font-extrabold" style={{ color }}>{value}</p>
+                  { label: t.totalServices, value: stats.total,       color: 'text-[#D97706]' },
+                  { label: t.available,     value: stats.available,   color: 'text-emerald-600' },
+                  { label: t.unavailable,   value: stats.unavailable, color: 'text-red-500' },
+                ].map(({ label, value, color }, idx) => (
+                  <div key={idx} className="bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-xl p-3.5 space-y-0.5">
+                    <p className="text-[10px] text-stone-400 dark:text-stone-500 font-bold">{label}</p>
+                    <p className={`text-xl font-bold ${color}`}>{value}</p>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
+          </Card>
         </motion.div>
 
-        
-        <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
+        {/* Requests Collapse Panel */}
+        <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
           <button
             onClick={() => setShowHistory(v => !v)}
-            className="w-full flex items-center justify-between"
-            style={{ padding: '0.875rem 1.25rem', background: iconBg, borderBottom: showHistory ? `1px solid ${bdrL}` : 'none' }}>
+            className="w-full flex items-center justify-between p-4 bg-stone-50/30 dark:bg-stone-850/20 border-b border-stone-100 dark:border-stone-800/60"
+          >
             <div className="flex items-center gap-3">
-              <div style={{ width: 40, height: 40, borderRadius: 12, background: card, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Clock className="w-5 h-5" style={{ color: th.primary }} />
+              <div className="w-9 h-9 rounded-lg bg-white dark:bg-stone-900 border border-stone-150 dark:border-stone-800 flex items-center justify-center text-[#D97706]">
+                <Clock className="w-5 h-5" />
               </div>
-              <span className="font-extrabold" style={{ color: th.text }}>{t.myRequests}</span>
+              <span className="text-xs font-bold text-stone-850 dark:text-stone-150">{t.myRequests}</span>
               {requests.length > 0 && (
-                <span className="px-2 py-0.5 rounded-full text-xs font-extrabold" style={{ background: `${th.primary}22`, color: th.primary, border: `1px solid ${th.primary}44` }}>{requests.length}</span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-[#D97706]">{requests.length}</span>
               )}
             </div>
-            {showHistory ? <ChevronUp className="w-4 h-4" style={{ color: th.textMuted }} /> : <ChevronDown className="w-4 h-4" style={{ color: th.textMuted }} />}
+            {showHistory ? <ChevronUp className="w-4 h-4 text-stone-450" /> : <ChevronDown className="w-4 h-4 text-stone-450" />}
           </button>
           <AnimatePresence>
             {showHistory && (
-              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: 'hidden' }}>
-                <div style={{ padding: '1rem 1.25rem' }}>
+              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                <CardContent className="p-4 space-y-3">
                   {dataLoading ? (
-                    <p className="text-sm text-center py-4" style={{ color: th.textMuted }}>...</p>
+                    <div className="flex justify-center py-4">
+                      <div className="w-5 h-5 rounded-full border-2 border-[#FABA19] border-t-transparent animate-spin" />
+                    </div>
                   ) : requests.length === 0 ? (
-                    <p className="text-sm text-center py-4" style={{ color: th.textMuted }}>{t.noRequests}</p>
+                    <p className="text-xs text-center py-4 text-stone-450 font-bold">{t.noRequests}</p>
                   ) : (
                     <div className="space-y-2">
                       {requests.map(r => {
                         const svc = SERVICES.find(s => s.key === r.serviceKey);
-                        const Icon = StatusIcon(r.status);
-                        const color = statusColor(r.status);
+                        const styles = getStatusStyles(r.status);
+                        const Icon = styles.icon;
                         return (
-                          <div key={r.id} style={{ background: iconBg, border: `1px solid ${bdrL}`, borderRadius: 12, padding: '0.875rem 1rem' }} className="flex items-center justify-between gap-3">
-                            <div className="flex items-center gap-3 flex-1 min-w-0">
-                              <Icon className="w-5 h-5 flex-shrink-0" style={{ color }} />
+                          <div key={r.id} className="p-3.5 rounded-xl border border-stone-100 dark:border-stone-800 bg-stone-50/20 dark:bg-stone-850/10 flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <Icon className={`w-5 h-5 shrink-0 ${styles.text}`} />
                               <div className="min-w-0">
-                                <p className="font-extrabold text-sm truncate" style={{ color: th.text }}>{svc ? (loc === 'ar' ? svc.titleAr : svc.titleEn) : r.serviceKey}</p>
-                                {r.notes && <p className="text-xs truncate" style={{ color: th.textMuted }}>{r.notes}</p>}
+                                <p className="text-xs font-bold text-stone-800 dark:text-stone-150 truncate">
+                                  {svc ? (loc === 'ar' ? svc.titleAr : svc.titleEn) : r.serviceKey}
+                                </p>
+                                {r.notes && <p className="text-[10px] text-stone-450 dark:text-stone-500 font-semibold mt-0.5 truncate">{r.notes}</p>}
                               </div>
                             </div>
-                            <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                              <span className="px-2 py-0.5 rounded-full text-xs font-extrabold" style={{ background: `${color}22`, color, border: `1px solid ${color}44` }}>{statusLabel(r.status)}</span>
-                              <span className="text-xs" style={{ color: th.textMuted }}>{new Date(r.createdAt).toLocaleDateString(loc === 'ar' ? 'ar-EG' : 'en-US')}</span>
+                            <div className="text-end shrink-0">
+                              <span className={`inline-block px-2.5 py-0.5 rounded-full text-[9px] font-bold border border-current ${styles.text} ${styles.bg}`}>
+                                {r.status === 'approved' ? t.approved : r.status === 'rejected' ? t.rejected : t.pending}
+                              </span>
+                              <p className="text-[9px] text-stone-400 dark:text-stone-500 font-semibold mt-1">
+                                {new Date(r.createdAt).toLocaleDateString(loc === 'ar' ? 'ar-EG' : 'en-US')}
+                              </p>
                             </div>
                           </div>
                         );
                       })}
                     </div>
                   )}
-                </div>
+                </CardContent>
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </Card>
 
-        
-        <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, padding: '0.875rem 1.25rem' }} className="flex items-center justify-between flex-wrap gap-3">
+        {/* Filter Toolbar */}
+        <div className="flex items-center justify-between flex-wrap gap-3 p-4 bg-white dark:bg-stone-900 border border-stone-150 dark:border-stone-800 rounded-2xl shadow-sm">
           <div className="flex items-center gap-2">
-            <SlidersHorizontal className="w-4 h-4" style={{ color: th.primary }} />
-            <span className="text-sm font-semibold" style={{ color: th.textMuted }}>{t.filterBy}</span>
+            <SlidersHorizontal className="w-4 h-4 text-[#D97706]" />
+            <span className="text-xs font-bold text-stone-400 dark:text-stone-500">{t.filterBy}</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {categories.map(({ key, label }) => (
-              <button key={key} onClick={() => setSelectedCat(key)}
-                className="px-4 py-2 rounded-xl font-extrabold text-sm transition-all"
-                style={{ background: selectedCat === key ? th.primary : iconBg, color: selectedCat === key ? heroText : th.textMuted, border: `1px solid ${selectedCat === key ? th.primary : bdrL}` }}>
+              <button
+                key={key}
+                onClick={() => setSelectedCat(key)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+                  selectedCat === key
+                    ? 'bg-[#FABA19] text-white border-[#FABA19]'
+                    : 'bg-stone-50/50 hover:bg-stone-50 text-stone-600 border-stone-200 dark:bg-stone-800/40 dark:hover:bg-stone-800 dark:text-stone-300 dark:border-stone-700'
+                }`}
+              >
                 {label}
               </button>
             ))}
           </div>
         </div>
 
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Services List Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map(s => {
             const Icon = s.icon;
             const isAvailable = s.status === 'available';
@@ -308,97 +344,109 @@ export default function ServicesPage() {
             const desc  = loc === 'ar' ? s.descAr  : s.descEn;
             const pendingCount = requests.filter(r => r.serviceKey === s.key && r.status === 'pending').length;
             return (
-              <motion.div key={s.key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', stiffness: 200, damping: 20 }}>
-                <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, padding: '1.25rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <div style={{ width: 56, height: 56, borderRadius: 14, background: iconBg, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                      <Icon className="w-7 h-7" style={{ color: th.primary }} />
-                      {pendingCount > 0 && (
-                        <span style={{ position: 'absolute', top: -6, right: -6, width: 18, height: 18, borderRadius: '50%', background: th.primary, color: heroText, fontSize: 10, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{pendingCount}</span>
-                      )}
+              <motion.div key={s.key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden p-5 flex flex-col justify-between h-full min-h-[220px]">
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="w-12 h-12 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-100 dark:border-stone-800 flex items-center justify-center text-[#D97706] relative shrink-0">
+                        <Icon className="w-6 h-6" />
+                        {pendingCount > 0 && (
+                          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#FABA19] text-white text-[9px] font-bold flex items-center justify-center border border-white dark:border-stone-900">
+                            {pendingCount}
+                          </span>
+                        )}
+                      </div>
+                      <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-extrabold border ${
+                        isAvailable
+                          ? 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100/40'
+                          : 'text-red-500 bg-red-50 dark:bg-red-950/20 border-red-100/40'
+                      }`}>
+                        {isAvailable ? t.statusAvailable : t.statusUnavailable}
+                      </span>
                     </div>
-                    <span className="px-2 py-1 rounded-full text-xs font-extrabold"
-                      style={{ background: isAvailable ? '#22c55e22' : '#ef444422', color: isAvailable ? '#22c55e' : '#ef4444', border: `1px solid ${isAvailable ? '#22c55e44' : '#ef444444'}` }}>
-                      {isAvailable ? t.statusAvailable : t.statusUnavailable}
-                    </span>
+
+                    <div className="space-y-1">
+                      <p className="text-xs font-bold text-stone-850 dark:text-stone-100">{title}</p>
+                      <p className="text-[11px] text-stone-450 dark:text-stone-500 font-semibold leading-relaxed">{desc}</p>
+                    </div>
                   </div>
-                  <p className="font-extrabold mb-1" style={{ color: th.text }}>{title}</p>
-                  <p className="text-sm mb-3 flex-1" style={{ color: th.textMuted }}>{desc}</p>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-extrabold px-2 py-1 rounded-full" style={{ background: `${th.primary}22`, color: th.primary, border: `1px solid ${th.primary}44` }}>{catLabel(s.catKey)}</span>
-                    <span className="text-xs" style={{ color: th.textMuted }}>{t.responseTime}</span>
+
+                  <div className="space-y-3 pt-4 border-t border-stone-50 dark:border-stone-850 mt-4">
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="font-bold text-[#D97706] bg-amber-500/5 px-2 py-0.5 rounded-full">
+                        {catLabel(s.catKey)}
+                      </span>
+                      <span className="font-semibold text-stone-400 dark:text-stone-500">{t.responseTime}</span>
+                    </div>
+
+                    <Button
+                      disabled={!isAvailable}
+                      onClick={() => isAvailable && setModal({ key: s.key, titleAr: s.titleAr, titleEn: s.titleEn })}
+                      className="w-full bg-[#FABA19] hover:bg-[#e5a816] text-white font-bold text-xs py-2 rounded-xl shadow-sm border-0 disabled:opacity-50 disabled:bg-stone-100 disabled:text-stone-400 dark:disabled:bg-stone-800 dark:disabled:text-stone-600 transition-colors"
+                    >
+                      {isAvailable && <Send className="w-3.5 h-3.5 me-1.5" />}
+                      {isAvailable ? t.requestService : t.notAvailable}
+                    </Button>
                   </div>
-                  <button
-                    disabled={!isAvailable}
-                    onClick={() => isAvailable && setModal({ key: s.key, titleAr: s.titleAr, titleEn: s.titleEn })}
-                    className="w-full py-2.5 rounded-xl font-extrabold text-sm transition-all flex items-center justify-center gap-2"
-                    style={{ background: isAvailable ? th.primary : iconBg, color: isAvailable ? heroText : th.textMuted, border: `1px solid ${isAvailable ? th.primary : bdrL}`, cursor: isAvailable ? 'pointer' : 'not-allowed' }}>
-                    {isAvailable && <Send className="w-4 h-4" />}
-                    {isAvailable ? t.requestService : t.notAvailable}
-                  </button>
-                </div>
+                </Card>
               </motion.div>
             );
           })}
         </div>
       </div>
 
-      
+      {/* Modal Dialog */}
       <AnimatePresence>
         {modal && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: 'rgba(0,0,0,0.5)' }}
-            onClick={() => setModal(null)}>
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
-              style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 20, padding: '1.5rem', width: '100%', maxWidth: 440 }}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setModal(null)}>
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white dark:bg-stone-900 border border-stone-150 dark:border-stone-800 rounded-2xl p-6 w-full max-w-md shadow-xl space-y-4"
               dir={dir}
-              onClick={e => e.stopPropagation()}>
-              <div className="flex items-center justify-between mb-4">
-                <p className="font-extrabold text-lg" style={{ color: th.text }}>{loc === 'ar' ? modal.titleAr : modal.titleEn}</p>
-                <button onClick={() => setModal(null)} style={{ color: th.textMuted }}><X className="w-5 h-5" /></button>
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between pb-2 border-b border-stone-100 dark:border-stone-800">
+                <p className="font-bold text-xs text-stone-850 dark:text-stone-150">
+                  {loc === 'ar' ? modal.titleAr : modal.titleEn}
+                </p>
+                <button onClick={() => setModal(null)} className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200">
+                  <X className="w-5 h-5" />
+                </button>
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-semibold mb-2" style={{ color: th.textMuted }}>{t.notes}</label>
+
+              <div className="space-y-2">
+                <label className="block text-xs font-bold text-stone-400 dark:text-stone-500">{t.notes}</label>
                 <textarea
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
                   placeholder={t.notesPlaceholder}
-                  rows={3}
-                  className="w-full rounded-xl p-3 text-sm resize-none outline-none"
-                  style={{ background: iconBg, border: `1px solid ${bdrL}`, color: th.text }}
+                  rows={4}
+                  className="w-full rounded-xl p-3 text-xs font-semibold border border-stone-200 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-900 text-stone-800 dark:text-stone-150 outline-none resize-none"
                 />
               </div>
-              <div className="flex gap-3">
-                <button onClick={handleSubmit} disabled={submitting}
-                  className="flex-1 py-2.5 rounded-xl font-extrabold text-sm flex items-center justify-center gap-2"
-                  style={{ background: th.primary, color: heroText, opacity: submitting ? 0.7 : 1 }}>
-                  <Send className="w-4 h-4" />
+
+              <div className="flex gap-3 pt-2">
+                <Button
+                  onClick={handleSubmit}
+                  disabled={submitting}
+                  className="flex-1 bg-[#FABA19] hover:bg-[#e5a816] text-white font-bold text-xs py-2 rounded-xl shadow-sm border-0 disabled:opacity-50"
+                >
+                  <Send className="w-3.5 h-3.5 me-1.5" />
                   {submitting ? t.submitting : t.submitRequest}
-                </button>
-                <button onClick={() => setModal(null)}
-                  className="px-4 py-2.5 rounded-xl font-extrabold text-sm"
-                  style={{ background: iconBg, color: th.textMuted, border: `1px solid ${bdrL}` }}>
+                </Button>
+                <Button
+                  onClick={() => setModal(null)}
+                  className="bg-stone-50 hover:bg-stone-100 dark:bg-stone-850 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 font-bold text-xs py-2 rounded-xl border border-stone-200 dark:border-stone-800 shadow-sm"
+                >
                   {t.cancel}
-                </button>
+                </Button>
               </div>
             </motion.div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
-
-      
-      <AnimatePresence>
-        {toast && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl font-extrabold text-sm flex items-center gap-2"
-            style={{ background: '#22c55e', color: '#fff', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
-            <CheckCircle className="w-4 h-4" />
-            {toast}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
     </DashboardLayout>
   );
 }

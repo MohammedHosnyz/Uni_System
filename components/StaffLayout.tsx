@@ -41,7 +41,7 @@ export default function StaffLayout({ children, userName = 'أ. أحمد محم�
   };
 
   return (
-    <div className={`${cairo.className} min-h-screen bg-[#F5EFE6] flex flex-col`} dir="rtl">
+    <div className={`${cairo.className} min-h-screen bg-[#FAF7F2] flex flex-col`} dir="rtl">
       <StaffHeaderTop onLogout={handleLogout} userName={userName} />
       
       <div className="flex flex-1">

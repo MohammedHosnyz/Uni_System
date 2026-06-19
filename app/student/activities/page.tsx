@@ -6,68 +6,91 @@ import DashboardLayout from '@/components/DashboardLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslations } from '@/lib/useTranslations';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { theme, darkTheme } from '@/lib/theme';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import {
   Compass, CheckCircle2, Star, CalendarDays, MapPin,
-  Users, Sparkles, SlidersHorizontal,
+  Users, SlidersHorizontal,
 } from 'lucide-react';
 
 const i18n = {
   ar: {
-    title: 'الأنشطة الطلابية', subtitle: 'اكتشف الأنشطة وسجل مشاركتك',
-    available: 'الأنشطة المتاحة', myActivities: 'أنشطتي',
-    points: 'النقاط المكتسبة', upcoming: 'الأنشطة القادمة',
-    all: 'جميع الأنشطة', tech: 'تقني', training: 'تدريبي',
-    sports: 'رياضي', academic: 'أكاديمي', cultural: 'ثقافي',
-    statusUpcoming: 'قادم', statusRegistered: 'مسجل',
-    statusAvailable: 'متاح', statusDone: 'مكتمل', statusAttended: 'حضرت',
-    participants: 'مشارك',
-    btnRegister: 'التسجيل في النشاط', btnRegistered: 'مسجل بالفعل',
-    btnDone: 'انتهى النشاط', btnSoon: 'قريباً', btnRegistering: 'جاري التسجيل...',
-    benefits: 'فوائد المشاركة في الأنشطة',
-    b1: 'تطوير المهارات الشخصية والمهنية',
-    b2: 'بناء شبكة علاقات مع الزملاء',
-    b3: 'الحصول على نقاط إضافية في السجل الأكاديمي',
-    b4: 'تعزيز الثقة بالنفس والقيادة',
-    b5: 'إثراء السيرة الذاتية بالخبرات العملية',
-    noActivities: 'لا توجد أنشطة في هذا التصنيف',
-    noMyActivities: 'لم تسجل في أي نشاط بعد',
-    pts: 'نقطة',
+    title: 'الأنشطة والفعاليات الطلابية',
+    subtitle: 'اكتشف الأنشطة الجامعية والمسابقات، وسجل حضورك لتكسب نقاط تميز',
+    available: 'أنشطة متاحة للتسجيل',
+    myActivities: 'سجل مشاركاتي النشطة',
+    points: 'إجمالي نقاط التميز المكتسبة',
+    upcoming: 'فعاليات قادمة قريباً',
+    all: 'جميع الأنشطة والفعاليات',
+    tech: 'تقني وتكنولوجي',
+    training: 'تدريب وورش عمل',
+    sports: 'رياضي وبدني',
+    academic: 'أكاديمي وعلمي',
+    cultural: 'ثقافي وفني',
+    statusUpcoming: 'قادم',
+    statusRegistered: 'تم الحجز بنجاح',
+    statusAvailable: 'متاح للتسجيل',
+    statusDone: 'منتهي',
+    statusAttended: 'تم حضور الفعالية',
+    participants: 'مشارك مسجل',
+    btnRegister: 'تأكيد التسجيل بالفعالية',
+    btnRegistered: 'مسجل بالفعل بالفعالية',
+    btnDone: 'انتهت فترة الفعالية',
+    btnSoon: 'قريباً جداً',
+    btnRegistering: 'جاري الحجز...',
+    noActivities: 'لا توجد أنشطة معلنة في هذا التصنيف حالياً',
+    noMyActivities: 'لم تقم بالتسجيل في أي نشاط طلابي بعد في هذا الفصل',
+    pts: 'نقطة تميز',
   },
   en: {
-    title: 'Student Activities', subtitle: 'Discover activities and register your participation',
-    available: 'Available Activities', myActivities: 'My Activities',
-    points: 'Points Earned', upcoming: 'Upcoming',
-    all: 'All Activities', tech: 'Technical', training: 'Training',
-    sports: 'Sports', academic: 'Academic', cultural: 'Cultural',
-    statusUpcoming: 'Upcoming', statusRegistered: 'Registered',
-    statusAvailable: 'Available', statusDone: 'Completed', statusAttended: 'Attended',
-    participants: 'participants',
-    btnRegister: 'Register', btnRegistered: 'Already Registered',
-    btnDone: 'Activity Ended', btnSoon: 'Coming Soon', btnRegistering: 'Registering...',
-    benefits: 'Benefits of Participation',
-    b1: 'Develop personal and professional skills',
-    b2: 'Build a network with peers',
-    b3: 'Earn extra points in academic record',
-    b4: 'Boost confidence and leadership',
-    b5: 'Enrich your CV with practical experience',
-    noActivities: 'No activities in this category',
-    noMyActivities: 'You have not registered for any activity yet',
-    pts: 'pts',
+    title: 'Student Activities & Events',
+    subtitle: 'Explore campus clubs, workshops, tournaments and build extracurricular credits',
+    available: 'Available to Join',
+    myActivities: 'My Enrolled Activities',
+    points: 'Total Distinction Points',
+    upcoming: 'Upcoming Campus Events',
+    all: 'All Categories',
+    tech: 'Tech & Innovation',
+    training: 'Workshops & Training',
+    sports: 'Sports & Athletics',
+    academic: 'Scientific & Academic',
+    cultural: 'Art & Cultural',
+    statusUpcoming: 'Upcoming',
+    statusRegistered: 'Successfully Booked',
+    statusAvailable: 'Open for Registration',
+    statusDone: 'Completed',
+    statusAttended: 'Attended & Verified',
+    participants: 'registered students',
+    btnRegister: 'Register for Event',
+    btnRegistered: 'Already Registered',
+    btnDone: 'Event Completed',
+    btnSoon: 'Opening Soon',
+    btnRegistering: 'Booking Seat...',
+    noActivities: 'No activities found in this category yet',
+    noMyActivities: 'You have not registered for any campus activities this semester',
+    pts: 'distinction points',
   },
 } as const;
 
 type Activity = {
-  id: number; titleAr: string; titleEn: string;
-  descAr: string; descEn: string;
-  categoryAr: string; categoryEn: string;
-  date: string; timeAr: string; timeEn: string;
-  locationAr: string; locationEn: string;
-  maxParticipants: number; points: number;
-  status: string; participantCount: number;
+  id: number;
+  titleAr: string;
+  titleEn: string;
+  descAr: string;
+  descEn: string;
+  categoryAr: string;
+  categoryEn: string;
+  date: string;
+  timeAr: string;
+  timeEn: string;
+  locationAr: string;
+  locationEn: string;
+  maxParticipants: number;
+  points: number;
+  status: string;
+  participantCount: number;
   myStatus: string | null;
 };
 
@@ -85,14 +108,6 @@ export default function ActivitiesPage() {
   const loc      = (locale as 'ar' | 'en') === 'en' ? 'en' : 'ar';
   const t        = i18n[loc];
   const dir      = loc === 'ar' ? 'rtl' : 'ltr';
-  const th       = dark ? darkTheme : theme;
-  const card     = dark ? darkTheme.surface    : theme.white;
-  const bdr      = dark ? darkTheme.border     : theme.border;
-  const bdrL     = dark ? darkTheme.borderLight : theme.border;
-  const iconBg   = dark ? darkTheme.surfaceAlt : theme.surface;
-  const heroBg   = dark ? darkTheme.surface    : theme.primary;
-  const heroText = dark ? darkTheme.text       : '#1A1612';
-  const p        = th.primary;
 
   const fetchData = useCallback(async () => {
     if (!user) return;
@@ -109,7 +124,9 @@ export default function ActivitiesPage() {
     }
   }, [user]);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const categories = [
     { key: 'all',      label: t.all },
@@ -180,90 +197,96 @@ export default function ActivitiesPage() {
 
   return (
     <DashboardLayout user={user} role="student">
-      <div dir={dir} className="max-w-7xl mx-auto space-y-6">
+      <div dir={dir} className="max-w-7xl mx-auto space-y-6 py-6 px-4 sm:px-6">
 
-        
+        {/* Top Header Card */}
         <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
-          <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-            <div style={{ background: heroBg, padding: '1.25rem 1.5rem' }}>
+          <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-amber-500/10 via-amber-600/5 to-transparent p-6 border-b border-stone-100 dark:border-stone-800">
               <div className="flex items-center gap-4">
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: dark ? darkTheme.border : 'rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Compass className="w-6 h-6" style={{ color: heroText }} />
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                  <Compass className="w-6 h-6" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-extrabold" style={{ color: heroText }}>{t.title}</h1>
-                  <p className="text-sm font-semibold opacity-75" style={{ color: heroText }}>
+                  <h1 className="text-xl font-bold text-[#1C1917] dark:text-stone-100">{t.title}</h1>
+                  <p className="text-xs text-stone-500 dark:text-stone-400 font-semibold mt-0.5">
                     {user.firstName} {user.lastName} • {t.subtitle}
                   </p>
                 </div>
               </div>
             </div>
-            <div style={{ background: iconBg, padding: '1rem 1.5rem' }}>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="bg-stone-50/30 dark:bg-stone-800/10 p-5">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 {[
                   { label: t.available,    value: dataLoading ? '—' : stats.available,      icon: Compass      },
                   { label: t.myActivities, value: dataLoading ? '—' : myActivities.length,  icon: CheckCircle2 },
                   { label: t.points,       value: dataLoading ? '—' : totalPoints,           icon: Star         },
                   { label: t.upcoming,     value: dataLoading ? '—' : stats.upcoming,        icon: CalendarDays },
-                ].map(({ label, value, icon: Icon }) => (
-                  <div key={label} style={{ background: card, border: `1px solid ${bdrL}`, borderRadius: 12, padding: '0.875rem 1rem' }} className="flex items-center gap-3">
-                    <div style={{ width: 36, height: 36, borderRadius: 10, background: iconBg, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Icon className="w-4 h-4" style={{ color: p }} />
+                ].map(({ label, value, icon: Icon }, idx) => (
+                  <div key={idx} className="bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-xl p-3 flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                      <Icon className="w-4.5 h-4.5" />
                     </div>
-                    <div>
-                      <p className="text-xs font-semibold" style={{ color: th.textMuted }}>{label}</p>
-                      <p className="text-xl font-extrabold" style={{ color: p }}>{value}</p>
+                    <div className="text-start min-w-0">
+                      <p className="text-[9px] text-stone-450 dark:text-stone-550 font-bold truncate">{label}</p>
+                      <p className="text-sm font-bold text-[#D97706] truncate">{value}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
+          </Card>
         </motion.div>
 
-        
+        {/* My Enrolled Activities Log */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <Card style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-            <CardHeader style={{ background: iconBg, borderBottom: `1px solid ${bdrL}` }} className="py-3 px-5">
-              <div className="flex items-center gap-3">
-                <div style={{ width: 40, height: 40, borderRadius: 12, background: card, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <CheckCircle2 className="w-5 h-5" style={{ color: p }} />
+          <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+            <CardHeader className="pb-3 border-b border-stone-50 dark:border-stone-850 flex flex-row items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706]">
+                  <CheckCircle2 className="w-5 h-5" />
                 </div>
-                <CardTitle style={{ color: th.text }}>{t.myActivities}</CardTitle>
-                {myActivities.length > 0 && (
-                  <Badge style={{ background: `${p}18`, color: p, border: `1px solid ${p}33` }}>{myActivities.length}</Badge>
-                )}
+                <CardTitle className="text-sm font-bold text-stone-850 dark:text-stone-150">{t.myActivities}</CardTitle>
               </div>
+              {myActivities.length > 0 && (
+                <Badge className="bg-amber-500/10 text-[#D97706] border-0 text-[9px] font-bold shadow-none px-2.5 py-0.5">
+                  {myActivities.length}
+                </Badge>
+              )}
             </CardHeader>
-            <CardContent className="p-5">
+            <CardContent className="p-4 space-y-3">
               {dataLoading ? (
                 <div className="flex justify-center py-6">
-                  <div className="w-6 h-6 rounded-full border-2 animate-spin" style={{ borderColor: `${p} transparent transparent transparent` }} />
+                  <div className="w-6 h-6 rounded-full border-2 border-[#FABA19] border-t-transparent animate-spin" />
                 </div>
               ) : myActivities.length === 0 ? (
-                <p className="text-sm text-center py-4" style={{ color: th.textMuted }}>{t.noMyActivities}</p>
+                <div className="py-6 text-center text-stone-450 dark:text-stone-550 font-bold text-xs">
+                  {t.noMyActivities}
+                </div>
               ) : (
                 <div className="space-y-3">
-                  {myActivities.map(a => (
-                    <div key={a.id} style={{ background: iconBg, border: `1px solid ${bdrL}`, borderRadius: 12, padding: '1rem' }}
-                      className="flex items-center justify-between gap-4">
-                      <div className="flex items-center gap-3">
-                        <div style={{ width: 40, height: 40, borderRadius: 10, background: card, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <Star className="w-5 h-5" style={{ color: p }} />
+                  {myActivities.map((a, idx) => (
+                    <div key={a.id} className="space-y-3">
+                      <div className="p-3.5 rounded-xl border border-stone-100 dark:border-stone-800 bg-stone-50/20 dark:bg-stone-850/5 flex items-center justify-between gap-4 flex-wrap">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                            <Star className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold text-stone-800 dark:text-stone-150">
+                              {loc === 'ar' ? a.titleAr : a.titleEn}
+                            </p>
+                            <p className="text-[10px] text-stone-400 dark:text-stone-500 font-semibold mt-0.5">{fmtDate(a.date)}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-extrabold text-sm" style={{ color: th.text }}>
-                            {loc === 'ar' ? a.titleAr : a.titleEn}
-                          </p>
-                          <p className="text-xs" style={{ color: th.textMuted }}>{fmtDate(a.date)}</p>
+                        <div className="flex items-center gap-2.5 shrink-0">
+                          <Badge className="bg-amber-500/10 text-[#D97706] border-0 text-[9px] font-bold shadow-none px-2.5 py-0.5">
+                            {statusLabel(a.status, a.myStatus)}
+                          </Badge>
+                          <span className="text-xs font-bold text-[#D97706]">+{a.points} {t.pts}</span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <Badge style={{ background: `${p}18`, color: p, border: `1px solid ${p}33` }}>
-                          {statusLabel(a.status, a.myStatus)}
-                        </Badge>
-                        <span className="text-xs font-extrabold" style={{ color: p }}>+{a.points} {t.pts}</span>
-                      </div>
+                      {idx < myActivities.length - 1 && <Separator className="bg-stone-100 dark:bg-stone-800" />}
                     </div>
                   ))}
                 </div>
@@ -272,32 +295,38 @@ export default function ActivitiesPage() {
           </Card>
         </motion.div>
 
-        
-        <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, padding: '0.875rem 1.25rem' }}
-          className="flex items-center gap-3 flex-wrap">
-          <SlidersHorizontal className="w-4 h-4 flex-shrink-0" style={{ color: p }} />
+        {/* Filter Category Tabs */}
+        <div className="p-3 bg-white dark:bg-stone-900 border border-stone-150 dark:border-stone-800 rounded-2xl shadow-sm flex items-center gap-2.5 flex-wrap">
+          <SlidersHorizontal className="w-4 h-4 text-[#D97706] shrink-0" />
           <div className="flex flex-wrap gap-2">
             {categories.map(({ key, label }) => (
-              <button key={key} onClick={() => setSelectedCat(key)}
-                className="px-4 py-2 rounded-xl font-extrabold text-sm transition-all"
-                style={{ background: selectedCat === key ? p : iconBg, color: selectedCat === key ? heroText : th.textMuted, border: `1px solid ${selectedCat === key ? p : bdrL}` }}>
+              <Button
+                key={key}
+                onClick={() => setSelectedCat(key)}
+                className={`text-xs font-bold py-1.5 px-3.5 rounded-xl transition-all shadow-sm ${
+                  selectedCat === key
+                    ? 'bg-[#FABA19] hover:bg-[#e5a816] text-white border-0'
+                    : 'bg-stone-50 hover:bg-stone-100 dark:bg-stone-850 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-800'
+                }`}
+              >
                 {label}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
 
-        
+        {/* Category Specific Activities Directory */}
         {dataLoading ? (
-          <div className="flex justify-center py-12">
-            <div className="w-8 h-8 rounded-full border-2 animate-spin" style={{ borderColor: `${p} transparent transparent transparent` }} />
+          <div className="flex items-center justify-center py-16 bg-white dark:bg-stone-900 rounded-2xl">
+            <div className="w-8 h-8 rounded-full border-2 border-[#FABA19] border-t-transparent animate-spin" />
           </div>
         ) : filtered.length === 0 ? (
-          <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, padding: '3rem' }} className="text-center">
-            <p style={{ color: th.textMuted }}>{t.noActivities}</p>
-          </div>
+          <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl p-12 text-center flex flex-col items-center justify-center space-y-2">
+            <Compass className="w-12 h-12 text-stone-300 dark:text-stone-700" />
+            <p className="text-xs font-bold text-stone-450 dark:text-stone-550">{t.noActivities}</p>
+          </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {filtered.map(a => {
               const title = loc === 'ar' ? a.titleAr : a.titleEn;
               const desc  = loc === 'ar' ? a.descAr  : a.descEn;
@@ -309,49 +338,63 @@ export default function ActivitiesPage() {
 
               return (
                 <motion.div key={a.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                  <div style={{ background: card, border: `1px solid ${isRegistered ? p : bdr}`, borderRadius: 16, padding: '1.25rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div>
-                        <p className="font-extrabold" style={{ color: th.text }}>{title}</p>
-                        <p className="text-xs font-extrabold mt-0.5" style={{ color: p }}>{cat}</p>
-                      </div>
-                      <Badge style={{ background: `${p}18`, color: p, border: `1px solid ${p}33`, flexShrink: 0 }}>
-                        {statusLabel(a.status, a.myStatus)}
-                      </Badge>
-                    </div>
-
-                    <p className="text-sm mb-3 flex-1" style={{ color: th.textMuted }}>{desc}</p>
-
-                    <div className="space-y-1.5 mb-3">
-                      {[
-                        { icon: CalendarDays, text: `${fmtDate(a.date)} — ${time}` },
-                        { icon: MapPin,       text: loc2 },
-                        { icon: Users,        text: `${a.participantCount}/${a.maxParticipants} ${t.participants}` },
-                        { icon: Star,         text: `${a.points} ${t.pts}` },
-                      ].map(({ icon: Icon, text }) => (
-                        <div key={text} className="flex items-center gap-2 text-sm" style={{ color: th.textMuted }}>
-                          <Icon className="w-4 h-4 flex-shrink-0" style={{ color: p }} />
-                          {text}
+                  <div className={`p-5 rounded-2xl border transition-all flex flex-col justify-between h-full bg-white dark:bg-stone-900 ${
+                    isRegistered
+                      ? 'border-[#FABA19]'
+                      : 'border-stone-150 dark:border-stone-800 hover:border-amber-200/50'
+                  }`}>
+                    <div className="space-y-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-bold text-stone-850 dark:text-stone-100">{title}</p>
+                          <p className="text-[10px] font-bold text-[#D97706] mt-0.5 uppercase">{cat}</p>
                         </div>
-                      ))}
+                        <Badge className="bg-amber-500/10 hover:bg-amber-500/15 text-[#D97706] border-0 text-[9px] font-bold shadow-none px-2.5 py-0.5">
+                          {statusLabel(a.status, a.myStatus)}
+                        </Badge>
+                      </div>
+
+                      <p className="text-xs text-stone-500 dark:text-stone-400 font-semibold leading-relaxed">{desc}</p>
+
+                      <div className="p-3.5 rounded-xl border border-stone-100 dark:border-stone-800 bg-stone-50/20 dark:bg-stone-850/5 space-y-2.5">
+                        {[
+                          { icon: CalendarDays, text: `${fmtDate(a.date)} • ${time}` },
+                          { icon: MapPin,       text: loc2 },
+                          { icon: Users,        text: `${a.participantCount} / ${a.maxParticipants} ${t.participants}` },
+                          { icon: Star,         text: `+${a.points} ${t.pts}` },
+                        ].map(({ icon: Icon, text }, i) => (
+                          <div key={i} className="flex items-center gap-2 text-xs font-semibold text-stone-500 dark:text-stone-400">
+                            <Icon className="w-4.5 h-4.5 text-[#D97706] shrink-0" />
+                            <span className="truncate">{text}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Participant Cap Bar */}
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between text-[10px] font-bold text-stone-450 dark:text-stone-500">
+                          <span>{t.participants}</span>
+                          <span>{pct}%</span>
+                        </div>
+                        <div className="h-1 rounded-full bg-stone-100 dark:bg-stone-800 overflow-hidden">
+                          <div className="h-1 rounded-full bg-[#FABA19]" style={{ width: `${pct}%` }} />
+                        </div>
+                      </div>
                     </div>
 
-                    
-                    <div style={{ background: bdrL, borderRadius: 99, height: 6, marginBottom: '0.75rem' }}>
-                      <div style={{ width: `${pct}%`, height: 6, borderRadius: 99, background: p, transition: 'width 0.4s' }} />
+                    <div className="mt-5">
+                      <Button
+                        disabled={!canRegister(a)}
+                        onClick={() => canRegister(a) && handleRegister(a.id)}
+                        className={`w-full font-bold text-xs py-2 rounded-xl transition-all shadow-sm ${
+                          canRegister(a)
+                            ? 'bg-[#FABA19] hover:bg-[#e5a816] text-white border-0'
+                            : 'bg-stone-50 dark:bg-stone-850 text-stone-400 dark:text-stone-600 border border-stone-200 dark:border-stone-800 cursor-not-allowed'
+                        }`}
+                      >
+                        {btnLabel(a)}
+                      </Button>
                     </div>
-
-                    <Button
-                      disabled={!canRegister(a)}
-                      onClick={() => canRegister(a) && handleRegister(a.id)}
-                      style={{
-                        background: canRegister(a) ? p : iconBg,
-                        color: canRegister(a) ? heroText : th.textMuted,
-                        border: `1px solid ${canRegister(a) ? p : bdrL}`,
-                        cursor: canRegister(a) ? 'pointer' : 'not-allowed',
-                      }}>
-                      {btnLabel(a)}
-                    </Button>
                   </div>
                 </motion.div>
               );

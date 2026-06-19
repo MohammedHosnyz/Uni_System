@@ -5,78 +5,98 @@ import DashboardLayout from '@/components/DashboardLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { useTranslations } from '@/lib/useTranslations';
-import { theme, darkTheme } from '@/lib/theme';
-import { CreditCard, Printer, Download, Mail, GraduationCap, Phone, MapPin, Globe, Shield, Hash, User, CheckCircle2 } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import {
+  CreditCard, Printer, Download, Mail, GraduationCap,
+  Phone, MapPin, Globe, Hash, User, CheckCircle2,
+} from 'lucide-react';
 
 const i18n = {
   ar: {
-    title: 'البطاقة الجامعية', subtitle: 'بطاقة هوية الطالب الرسمية',
-    university: 'جامعة أسيوط الأهلية', universityEn: 'Assiut National University',
-    nameLabel: 'الاسم الكامل', idLabel: 'رقم الطالب', levelLabel: 'المستوى',
-    programLabel: 'البرنامج', facultyLabel: 'الكلية',
-    issuedLabel: 'تاريخ الإصدار', validLabel: 'صالح حتى', studentId: 'STUDENT ID',
+    title: 'البطاقة والهوية الجامعية الذكية',
+    subtitle: 'الهوية الطلابية الرسمية وبطاقة إثبات القيد بالجامعة',
+    university: 'جامعة أسيوط الأهلية',
+    universityEn: 'Assiut National University',
+    nameLabel: 'اسم الطالب الرباعي',
+    idLabel: 'الرقم الأكاديمي الموحد',
+    levelLabel: 'المستوى الدراسي',
+    programLabel: 'البرنامج التعليمي',
+    facultyLabel: 'الكلية / التخصص',
+    issuedLabel: 'تاريخ إصدار الهوية',
+    validLabel: 'تاريخ انتهاء الصلاحية',
+    studentId: 'STUDENT ID',
     levelPrefix: 'المستوى',
-    print: 'طباعة', download: 'تحميل PDF', sendEmail: 'إرسال بالبريد',
-    printConfirm: 'جارٍ تحضير البطاقة للطباعة...', downloadConfirm: 'جارٍ تحضير ملف PDF...',
-    emailConfirm: 'تم إرسال البطاقة على بريدك الإلكتروني',
-    backTitle: 'شروط الاستخدام', contactTitle: 'معلومات الاتصال',
-    rule1: 'هذه البطاقة ملك جامعة أسيوط الأهلية ويجب إعادتها عند الطلب',
-    rule2: 'يجب إبراز هذه البطاقة عند دخول الجامعة والامتحانات',
-    rule3: 'في حالة الفقد يجب الإبلاغ فوراً وسيتم إصدار بدل فاقد برسوم',
-    rule4: 'البطاقة شخصية ولا يجوز استخدامها من قبل شخص آخر',
-    address: 'أسيوط، مصر', phone: '088-1234567',
+    print: 'طباعة البطاقة الجامعية',
+    download: 'تحميل كبطاقة رقمية PDF',
+    sendEmail: 'إرسال نسخة للبريد الإلكتروني',
+    emailConfirm: 'تم إرسال البطاقة الأكاديمية بنجاح لبريدك الإلكتروني المعتمد ✓',
+    backTitle: 'شروط استخدام الهوية الجامعية',
+    contactTitle: 'معلومات الدعم الفني والأمن',
+    address: 'أسيوط الجديدة، مصر',
+    phone: '088-2300100',
     website: 'www.aun.edu.eg',
-    scanHint: 'امسح للتحقق', cardProperty: 'هذه البطاقة ملك جامعة أسيوط الأهلية',
-    importantTitle: 'معلومات هامة',
-    imp1: 'احتفظ بالبطاقة في مكان آمن', imp2: 'يجب تجديد البطاقة سنوياً',
-    imp3: 'رسوم بدل الفاقد: 100 جنيه', imp4: 'مدة إصدار بدل الفاقد: 3-5 أيام',
-    front: 'الوجه الأمامي', back: 'الوجه الخلفي',
+    scanHint: 'امسح الرمز للتحقق من الصلاحية',
+    cardProperty: 'هذه البطاقة وثيقة رسمية ملك جامعة أسيوط الأهلية',
+    front: 'الوجه الأمامي للبطاقة',
+    back: 'الوجه الخلفي للبطاقة',
   },
   en: {
-    title: 'University ID Card', subtitle: 'Official Student Identity Card',
-    university: 'Assiut National University', universityEn: 'جامعة أسيوط الأهلية',
-    nameLabel: 'Full Name', idLabel: 'Student ID', levelLabel: 'Level',
-    programLabel: 'Program', facultyLabel: 'Faculty',
-    issuedLabel: 'Issue Date', validLabel: 'Valid Until', studentId: 'STUDENT ID',
+    title: 'Smart University ID Card',
+    subtitle: 'Official digital student identification and access card',
+    university: 'Assiut National University',
+    universityEn: 'جامعة أسيوط الأهلية',
+    nameLabel: 'Full Student Name',
+    idLabel: 'Unique Student ID',
+    levelLabel: 'Academic Level',
+    programLabel: 'Academic Program',
+    facultyLabel: 'Faculty / College',
+    issuedLabel: 'Date of Issue',
+    validLabel: 'Date of Expiry',
+    studentId: 'STUDENT ID',
     levelPrefix: 'Level',
-    print: 'Print', download: 'Download PDF', sendEmail: 'Send by Email',
-    printConfirm: 'Preparing card for printing...', downloadConfirm: 'Preparing PDF file...',
-    emailConfirm: 'Card sent to your email',
-    backTitle: 'Terms of Use', contactTitle: 'Contact Information',
-    rule1: 'This card is the property of Assiut National University and must be returned on request',
-    rule2: 'This card must be presented when entering the university and during exams',
-    rule3: 'In case of loss, report immediately — a replacement will be issued for a fee',
-    rule4: 'This card is personal and may not be used by another person',
-    address: 'Assiut, Egypt', phone: '088-1234567',
+    print: 'Print Physical Card',
+    download: 'Download Digital PDF',
+    sendEmail: 'Send to Registered Email',
+    emailConfirm: 'Academic card details successfully sent to your email ✓',
+    backTitle: 'Terms of Use & Verification',
+    contactTitle: 'Campus Support & Security',
+    address: 'New Assiut City, Egypt',
+    phone: '088-2300100',
     website: 'www.aun.edu.eg',
-    scanHint: 'Scan to verify', cardProperty: 'Property of Assiut National University',
-    importantTitle: 'Important Information',
-    imp1: 'Keep the card in a safe place', imp2: 'Card must be renewed annually',
-    imp3: 'Replacement fee: 100 EGP', imp4: 'Replacement issuance: 3-5 days',
-    front: 'Front Side', back: 'Back Side',
+    scanHint: 'Scan code to verify student status',
+    cardProperty: 'This card remains the property of Assiut National University',
+    front: 'ID Card Front Side',
+    back: 'ID Card Back Side',
   },
 } as const;
 
 interface ProfileData {
-  studentNumber: string; enrollmentYear: number; currentLevel: number;
+  studentNumber: string;
+  enrollmentYear: number;
+  currentLevel: number;
   user: { firstName: string; lastName: string; email: string; phone: string | null };
   program: { nameAr: string; nameEn: string };
   department: { nameAr: string; nameEn: string };
   faculty: { nameAr: string; nameEn: string };
 }
 
-
-const Barcode = ({ light }: { light: boolean }) => (
-  <svg viewBox="0 0 130 36" style={{ width: '100%', height: 36 }}>
+const Barcode = () => (
+  <svg viewBox="0 0 130 36" className="w-full h-9">
     {[3,7,10,14,17,22,25,29,33,37,41,45,49,53,57,61,65,69,73,77,81,85,89,93,97,101,105,109,113,117,121,125].map((x, i) => (
-      <rect key={i} x={x} y={2} width={i % 4 === 0 ? 3 : i % 3 === 0 ? 2 : 1} height={32}
-        fill={light ? 'rgba(255,255,255,0.9)' : '#2F2415'} />
+      <rect
+        key={i}
+        x={x}
+        y={2}
+        width={i % 4 === 0 ? 3 : i % 3 === 0 ? 2 : 1}
+        height={32}
+        className="fill-white/90"
+      />
     ))}
   </svg>
 );
 
-
-const QRCode = ({ light, bg }: { light: boolean; bg: string }) => {
+const QRCode = () => {
   const cells = [
     [1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1],
     [1,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,1],
@@ -96,23 +116,20 @@ const QRCode = ({ light, bg }: { light: boolean; bg: string }) => {
     [1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1],
   ];
   const s = 5;
-  const fg = light ? 'rgba(255,255,255,0.95)' : '#2F2415';
   return (
-    <svg viewBox={`0 0 ${17*s} ${16*s}`} style={{ width: 80, height: 80 }}>
-      <rect width="100%" height="100%" fill={bg} rx="4" />
+    <svg viewBox={`0 0 ${17*s} ${16*s}`} className="w-20 h-20">
+      <rect width="100%" height="100%" className="fill-stone-100 dark:fill-stone-800" rx="4" />
       {cells.map((row, r) => row.map((cell, c) =>
-        cell ? <rect key={`${r}-${c}`} x={c*s} y={r*s} width={s} height={s} fill={fg} /> : null
+        cell ? <rect key={`${r}-${c}`} x={c*s} y={r*s} width={s} height={s} className="fill-stone-850 dark:fill-stone-200" /> : null
       ))}
     </svg>
   );
 };
 
-
 export default function IDCardPage() {
   const { user, loading } = useAuth();
   const { dark: isDark } = useDarkMode();
   const { locale } = useTranslations();
-  const th = isDark ? darkTheme : theme;
   const t = i18n[locale as 'ar' | 'en'] ?? i18n.ar;
   const dir = locale === 'en' ? 'ltr' : 'rtl';
 
@@ -132,7 +149,6 @@ export default function IDCardPage() {
 
   const handleDownload = useCallback(async () => {
     if (!cardAreaRef.current) return;
-    showToast(t.downloadConfirm);
     try {
       const html2canvas = (await import('html2canvas')).default;
       const { jsPDF } = await import('jspdf');
@@ -145,7 +161,7 @@ export default function IDCardPage() {
     } catch (e) {
       console.error(e);
     }
-  }, [profile, t.downloadConfirm, showToast]);
+  }, [profile]);
 
   const handleEmail = useCallback(() => {
     const name = profile ? `${profile.user?.firstName ?? ''} ${profile.user?.lastName ?? ''}`.trim() : '';
@@ -163,272 +179,205 @@ export default function IDCardPage() {
     if (!user?.id) return;
     fetch(`/api/student/profile?userId=${user.id}`)
       .then(r => r.json())
-      .then(d => { setProfile(d); setFetching(false); })
+      .then(d => {
+        setProfile(d);
+        setFetching(false);
+      })
       .catch(() => setFetching(false));
   }, [user?.id]);
 
-
   if (loading || !user) return null;
 
-  // Derive display values safely AFTER auth guard — profile.user may be undefined if API errored
   const issueDate = profile ? `${profile.enrollmentYear}/09/01` : '—';
   const validDate = profile ? `${profile.enrollmentYear + 4}/06/30` : '—';
   const fullName  = profile ? `${profile.user?.firstName ?? ''} ${profile.user?.lastName ?? ''}`.trim() || '—' : '—';
 
-  const heroText  = isDark ? '#1A1612' : '#fff';
-  const cardBg    = isDark ? '#1E1A14' : '#FFFDF8';
-  const iconBg    = isDark ? '#2A2520' : '#F3EBDD';
-  const goldGrad  = `linear-gradient(135deg, ${th.primary} 0%, ${isDark ? '#C9A030' : '#B8902E'} 100%)`;
-  const cardShadow = isDark
-    ? '0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4)'
-    : '0 8px 32px rgba(47,36,21,0.18), 0 2px 8px rgba(47,36,21,0.10)';
-
-  const CARD_W = 340;
-  const CARD_H = 215;
-
-
-  
-  const FrontCard = () => (
-    <div style={{
-      width: CARD_W, height: CARD_H, borderRadius: 16, overflow: 'hidden',
-      boxShadow: cardShadow, flexShrink: 0, position: 'relative',
-      background: cardBg, border: `1px solid ${th.border}`,
-    }}>
-      
-      <div style={{ background: goldGrad, padding: '10px 14px 8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{
-          width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(255,255,255,0.25)', border: '2px solid rgba(255,255,255,0.5)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-        }}>
-          <GraduationCap size={18} color="#fff" />
-        </div>
-        <div style={{ textAlign: 'center', flex: 1, padding: '0 8px' }}>
-          <div style={{ color: '#fff', fontWeight: 800, fontSize: 11, letterSpacing: 0.3 }}>{t.university}</div>
-          <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: 8.5, marginTop: 1 }}>{t.universityEn}</div>
-        </div>
-        <div style={{
-          background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.4)',
-          borderRadius: 6, padding: '2px 7px', color: '#fff', fontSize: 7.5, fontWeight: 700, letterSpacing: 1, flexShrink: 0,
-        }}>{t.studentId}</div>
-      </div>
-
-      
-      <div style={{ display: 'flex', padding: '12px 14px 0', gap: 12, height: 'calc(100% - 58px - 44px)' }}>
-        
-        <div style={{
-          width: 64, height: 80, borderRadius: 8, flexShrink: 0,
-          background: iconBg, border: `2px solid ${th.primary}`,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4,
-        }}>
-          <User size={28} color={th.primary} />
-          <div style={{ fontSize: 7, color: th.textMuted, textAlign: 'center', lineHeight: 1.2 }}>صورة<br/>الطالب</div>
-        </div>
-
-        
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
-          <div>
-            <div style={{ fontSize: 7.5, color: th.textMuted, marginBottom: 1 }}>{t.nameLabel}</div>
-            <div style={{ fontSize: 11.5, fontWeight: 700, color: th.text, lineHeight: 1.2 }}>
-              {fetching ? '...' : fullName}
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: 12 }}>
-            <div>
-              <div style={{ fontSize: 7.5, color: th.textMuted, marginBottom: 1 }}>{t.idLabel}</div>
-              <div style={{ fontSize: 10, fontWeight: 700, color: th.primary, letterSpacing: 0.5 }}>
-                {fetching ? '...' : (profile?.studentNumber ?? '—')}
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: 7.5, color: th.textMuted, marginBottom: 1 }}>{t.levelLabel}</div>
-              <div style={{ fontSize: 10, fontWeight: 700, color: th.text }}>
-                {fetching ? '...' : `${t.levelPrefix} ${profile?.currentLevel ?? '—'}`}
-              </div>
-            </div>
-          </div>
-          <div>
-            <div style={{ fontSize: 7.5, color: th.textMuted, marginBottom: 1 }}>{t.facultyLabel}</div>
-            <div style={{ fontSize: 9.5, fontWeight: 600, color: th.text, lineHeight: 1.3 }}>
-              {fetching ? '...' : (profile?.faculty?.nameAr ?? '—')}
-            </div>
-          </div>
-          <div>
-            <div style={{ fontSize: 7.5, color: th.textMuted, marginBottom: 1 }}>{t.programLabel}</div>
-            <div style={{ fontSize: 9, color: th.text, lineHeight: 1.3 }}>
-              {fetching ? '...' : (profile?.program?.nameAr ?? '—')}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 14px 0' }}>
-        <div>
-          <span style={{ fontSize: 7.5, color: th.textMuted }}>{t.issuedLabel}: </span>
-          <span style={{ fontSize: 8, fontWeight: 600, color: th.text }}>{issueDate}</span>
-        </div>
-        <div>
-          <span style={{ fontSize: 7.5, color: th.textMuted }}>{t.validLabel}: </span>
-          <span style={{ fontSize: 8, fontWeight: 600, color: th.primary }}>{validDate}</span>
-        </div>
-      </div>
-
-      
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        background: goldGrad, padding: '4px 14px 5px', height: 44,
-        display: 'flex', alignItems: 'center',
-      }}>
-        <Barcode light={true} />
-      </div>
-    </div>
-  );
-
-  
-  const BackCard = () => (
-    <div style={{
-      width: CARD_W, height: CARD_H, borderRadius: 16, overflow: 'hidden',
-      boxShadow: cardShadow, flexShrink: 0, position: 'relative',
-      background: cardBg, border: `1px solid ${th.border}`,
-    }}>
-      
-      <div style={{ background: goldGrad, height: 8 }} />
-
-      
-      <div style={{ display: 'flex', height: 'calc(100% - 8px - 32px)', padding: '10px 14px', gap: 12 }}>
-        
-        <div style={{ flex: 1 }}>
-          <div style={{ marginTop: 8 }}>
-            <div style={{ fontSize: 9, fontWeight: 700, color: th.primary, marginBottom: 5, display: 'flex', alignItems: 'center', gap: 4 }}>
-              <Phone size={10} color={th.primary} />{t.contactTitle}
-            </div>
-            {[
-              { icon: <MapPin size={8} color={th.textMuted} />, val: t.address },
-              { icon: <Phone size={8} color={th.textMuted} />, val: t.phone },
-              { icon: <Globe size={8} color={th.textMuted} />, val: t.website },
-            ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 3 }}>
-                {item.icon}
-                <span style={{ fontSize: 7.5, color: th.textMuted }}>{item.val}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        
-        <div style={{
-          display: 'flex', flexDirection: 'column', alignItems: 'center',
-          justifyContent: 'center', gap: 8, width: 96, flexShrink: 0,
-        }}>
-          <QRCode light={false} bg={iconBg} />
-          <div style={{ fontSize: 7, color: th.textMuted, textAlign: 'center' }}>{t.scanHint}</div>
-          <div style={{
-            background: iconBg, border: `1px solid ${th.border}`,
-            borderRadius: 6, padding: '3px 8px',
-            display: 'flex', alignItems: 'center', gap: 4,
-          }}>
-            <Hash size={8} color={th.primary} />
-            <span style={{ fontSize: 8, fontWeight: 700, color: th.primary, letterSpacing: 0.5 }}>
-              {profile?.studentNumber ?? '—'}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        background: goldGrad, height: 32,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        <span style={{ color: '#fff', fontSize: 8, fontWeight: 600, letterSpacing: 0.5 }}>{t.cardProperty}</span>
-      </div>
-    </div>
-  );
-
-  
   return (
     <DashboardLayout user={user} role="student">
-      <div dir={dir} style={{ minHeight: '100vh', background: th.background, padding: '0 0 40px' }}>
+      <div dir={dir} className="max-w-7xl mx-auto space-y-6 py-6 px-4 sm:px-6">
 
-        
         {toastMsg && (
-          <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-xl shadow-xl font-bold text-sm"
-            style={{ background: th.primary, color: heroText }}>
-            <CheckCircle2 className="w-5 h-5" />{toastMsg}
+          <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-xl shadow-lg font-bold text-xs bg-[#FABA19] text-white">
+            <CheckCircle2 className="w-4.5 h-4.5" />
+            {toastMsg}
           </div>
         )}
 
-        
-        <div style={{
-          background: `linear-gradient(135deg, ${th.primary}22 0%, ${th.primary}08 100%)`,
-          borderBottom: `1px solid ${th.border}`,
-          padding: '28px 24px 20px',
-        }}>
-          <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{
-              width: 48, height: 48, borderRadius: 12,
-              background: `${th.primary}22`, border: `1.5px solid ${th.primary}55`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <CreditCard size={24} color={th.primary} />
-            </div>
-            <div>
-              <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: th.text }}>{t.title}</h1>
-              <p style={{ margin: 0, fontSize: 13, color: th.textMuted }}>{t.subtitle}</p>
+        {/* Top Header Card */}
+        <div className="bg-white dark:bg-stone-900 border border-stone-150 dark:border-stone-800 rounded-2xl overflow-hidden shadow-sm">
+          <div className="bg-gradient-to-r from-amber-500/10 via-amber-600/5 to-transparent p-6 border-b border-stone-100 dark:border-stone-800">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                <CreditCard className="w-6 h-6" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-[#1C1917] dark:text-stone-100">{t.title}</h1>
+                <p className="text-xs text-stone-500 dark:text-stone-400 font-semibold mt-0.5">{t.subtitle}</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px 16px' }}>
-
-          
-          <div style={{ display: 'flex', gap: 10, marginBottom: 28, flexWrap: 'wrap' }}>
-            {[
-              { icon: <Printer size={15} />, label: t.print,     action: handlePrint },
-              { icon: <Download size={15} />, label: t.download,  action: handleDownload },
-              { icon: <Mail size={15} />,     label: t.sendEmail, action: handleEmail },
-            ].map((btn, i) => (
-              <button key={i}
+        {/* Action Toolbar */}
+        <div className="flex items-center gap-3 flex-wrap p-4 bg-white dark:bg-stone-900 border border-stone-150 dark:border-stone-800 rounded-2xl shadow-sm">
+          {[
+            { icon: Printer, label: t.print,     action: handlePrint,     primary: true },
+            { icon: Download, label: t.download,  action: handleDownload,  primary: false },
+            { icon: Mail,     label: t.sendEmail, action: handleEmail,     primary: false },
+          ].map((btn, idx) => {
+            const Icon = btn.icon;
+            return (
+              <Button
+                key={idx}
                 onClick={btn.action}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 7,
-                  padding: '9px 18px', borderRadius: 10, cursor: 'pointer',
-                  background: i === 0 ? th.primary : 'transparent',
-                  color: i === 0 ? '#fff' : th.primary,
-                  border: `1.5px solid ${th.primary}`,
-                  fontSize: 13, fontWeight: 600, transition: 'opacity 0.15s',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = '0.82')}
-                onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+                className={`text-xs font-bold py-2 px-4 rounded-xl shadow-sm transition-all flex items-center gap-1.5 ${
+                  btn.primary
+                    ? 'bg-[#FABA19] hover:bg-[#e5a816] text-white border-0'
+                    : 'bg-stone-50 hover:bg-stone-150 dark:bg-stone-850 dark:hover:bg-stone-800 text-[#D97706] border border-stone-200 dark:border-stone-800'
+                }`}
               >
-                {btn.icon} {btn.label}
-              </button>
-            ))}
+                <Icon className="w-4 h-4" />
+                {btn.label}
+              </Button>
+            );
+          })}
+        </div>
+
+        {/* ID Cards Layout Wrapper */}
+        <div ref={cardAreaRef} className="flex gap-8 flex-wrap justify-center py-6 px-4 bg-stone-50/30 dark:bg-stone-850/5 border border-stone-150 dark:border-stone-800 rounded-2xl">
+          
+          {/* Front Side */}
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-xs font-bold text-stone-450 dark:text-stone-500">{t.front}</span>
+            <div className="w-[340px] h-[215px] rounded-2xl overflow-hidden shadow-md relative bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex flex-col justify-between shrink-0">
+              
+              {/* Gold Header */}
+              <div className="bg-gradient-to-r from-amber-500 to-amber-600 p-2.5 flex items-center justify-between text-white shrink-0">
+                <div className="w-8 h-8 rounded-full bg-white/20 border border-white/40 flex items-center justify-center shrink-0">
+                  <GraduationCap className="w-4.5 h-4.5" />
+                </div>
+                <div className="text-center flex-1 px-2 min-w-0">
+                  <p className="font-bold text-[10px] truncate">{t.university}</p>
+                  <p className="text-[7.5px] text-white/80 font-mono truncate">{t.universityEn}</p>
+                </div>
+                <div className="bg-white/25 border border-white/40 rounded px-1.5 py-0.5 text-[7px] font-bold tracking-wider shrink-0">
+                  {t.studentId}
+                </div>
+              </div>
+
+              {/* Body Details */}
+              <div className="flex px-4 py-3 gap-3.5 flex-1 min-h-0 items-center">
+                <div className="w-16 h-20 rounded-lg bg-stone-50 dark:bg-stone-850 border border-stone-200 dark:border-stone-800 flex flex-col items-center justify-center gap-1 shrink-0 text-[#D97706]">
+                  <User className="w-8 h-8" />
+                  <span className="text-[6.5px] text-stone-400 dark:text-stone-500 font-bold text-center leading-tight">PHOTO</span>
+                </div>
+
+                <div className="flex-1 space-y-1.5 min-w-0 text-start">
+                  <div>
+                    <span className="block text-[6.5px] text-stone-400 dark:text-stone-500 font-bold">{t.nameLabel}</span>
+                    <span className="block text-[10.5px] font-bold text-stone-800 dark:text-stone-150 leading-tight truncate">
+                      {fetching ? '...' : fullName}
+                    </span>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div>
+                      <span className="block text-[6.5px] text-stone-400 dark:text-stone-500 font-bold">{t.idLabel}</span>
+                      <span className="block text-[9px] font-bold text-[#D97706] font-mono leading-none mt-0.5">
+                        {fetching ? '...' : (profile?.studentNumber ?? '—')}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="block text-[6.5px] text-stone-400 dark:text-stone-500 font-bold">{t.levelLabel}</span>
+                      <span className="block text-[9px] font-bold text-stone-800 dark:text-stone-200 leading-none mt-0.5">
+                        {fetching ? '...' : `${t.levelPrefix} ${profile?.currentLevel ?? '—'}`}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="block text-[6.5px] text-stone-400 dark:text-stone-500 font-bold">{t.facultyLabel}</span>
+                    <span className="block text-[8.5px] font-bold text-stone-800 dark:text-stone-200 leading-tight truncate">
+                      {fetching ? '...' : (profile?.faculty?.nameAr ?? '—')}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="block text-[6.5px] text-stone-400 dark:text-stone-500 font-bold">{t.programLabel}</span>
+                    <span className="block text-[8px] font-semibold text-stone-600 dark:text-stone-400 leading-tight truncate">
+                      {fetching ? '...' : (profile?.program?.nameAr ?? '—')}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Dates */}
+              <div className="px-4 pb-12 flex justify-between text-[7px] text-stone-400 dark:text-stone-500 shrink-0 font-semibold">
+                <div>{t.issuedLabel}: <span className="font-bold text-stone-700 dark:text-stone-300">{issueDate}</span></div>
+                <div>{t.validLabel}: <span className="font-bold text-[#D97706]">{validDate}</span></div>
+              </div>
+
+              {/* Barcode Footer Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-1.5 h-11 flex items-center justify-center shrink-0">
+                <Barcode />
+              </div>
+            </div>
           </div>
 
-          
-          <div ref={cardAreaRef} className="print-cards-only" style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center', marginBottom: 28 }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: th.textMuted }}>{t.front}</div>
-              <FrontCard />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: th.textMuted }}>{t.back}</div>
-              <BackCard />
-            </div>
-          </div>
+          {/* Back Side */}
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-xs font-bold text-stone-450 dark:text-stone-500">{t.back}</span>
+            <div className="w-[340px] h-[215px] rounded-2xl overflow-hidden shadow-md relative bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex flex-col justify-between shrink-0">
+              
+              <div className="bg-gradient-to-r from-amber-500 to-amber-600 h-2 shrink-0" />
 
-          
-          <div style={{ background: cardBg, border: `1px solid ${th.border}`, borderRadius: 14, overflow: 'hidden' }}>
-            
-            
-            
-        
+              {/* Body Details Back */}
+              <div className="flex px-4 py-3 gap-4 flex-1 items-center justify-between text-start">
+                
+                <div className="space-y-3 flex-1 min-w-0">
+                  <div>
+                    <p className="text-[8.5px] font-bold text-[#D97706] flex items-center gap-1 mb-1">
+                      <Phone className="w-3 h-3" />
+                      {t.contactTitle}
+                    </p>
+                    <div className="space-y-1 font-semibold text-stone-450 dark:text-stone-500 text-[7px]">
+                      <div className="flex items-center gap-1.5">
+                        <MapPin className="w-2.5 h-2.5 text-stone-400 shrink-0" />
+                        <span className="truncate">{t.address}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Phone className="w-2.5 h-2.5 text-stone-400 shrink-0" />
+                        <span>{t.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Globe className="w-2.5 h-2.5 text-stone-400 shrink-0" />
+                        <span className="font-mono">{t.website}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* QR Section */}
+                <div className="flex flex-col items-center justify-center gap-2 shrink-0 w-24">
+                  <QRCode />
+                  <span className="text-[6.5px] text-stone-400 dark:text-stone-500 font-bold text-center mt-0.5">{t.scanHint}</span>
+                  <div className="bg-stone-50 dark:bg-stone-850 border border-stone-150 dark:border-stone-800 rounded px-1.5 py-0.5 flex items-center gap-1 shrink-0">
+                    <Hash className="w-2.5 h-2.5 text-[#D97706]" />
+                    <span className="text-[7.5px] font-bold text-[#D97706] font-mono leading-none">
+                      {profile?.studentNumber ?? '—'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="bg-gradient-to-r from-amber-500 to-amber-600 p-2.5 h-9 flex items-center justify-center shrink-0">
+                <span className="text-white text-[8px] font-bold tracking-wide">{t.cardProperty}</span>
+              </div>
+            </div>
           </div>
 
         </div>
+
       </div>
     </DashboardLayout>
   );

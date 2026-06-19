@@ -6,41 +6,79 @@ import DashboardLayout from '@/components/DashboardLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslations } from '@/lib/useTranslations';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { theme, darkTheme } from '@/lib/theme';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
 import {
-  MdSchool, MdSchedule, MdPrint, MdMenuBook, MdTrendingUp, MdCheckCircle,
-} from 'react-icons/md';
+  GraduationCap,
+  Clock,
+  Printer,
+  BookOpen,
+  TrendingUp,
+  CheckCircle2,
+} from 'lucide-react';
 
 const i18n = {
   ar: {
-    title: 'كشف الدرجات', print: 'طباعة',
-    studentName: 'اسم الطالب', studentNum: 'رقم الطالب',
-    faculty: 'الكلية', dept: 'القسم', level: 'المستوى',
-    gpa: 'المعدل التراكمي', earnedHours: 'الساعات المكتسبة',
-    filterAll: 'الكل', filterDone: 'المكتملة', filterCurrent: 'الحالية',
-    colNum: '#', colSemester: 'الفصل', colCode: 'الكود', colName: 'المادة',
-    colCredits: 'الساعات', colMid: 'المنتصف', colFinal: 'النهائي',
-    colAssign: 'الواجبات', colTotal: 'الإجمالي', colGrade: 'التقدير',
-    inProgress: 'قيد الدراسة', pending: '—',
-    sumDone: 'المكتملة', sumCurrent: 'الحالية', sumRemaining: 'المتبقي',
-    noData: 'لا توجد درجات',
+    title: 'كشف الدرجات الأكاديمي',
+    print: 'طباعة التقرير',
+    studentName: 'اسم الطالب',
+    studentNum: 'رقم الطالب',
+    faculty: 'الكلية',
+    dept: 'القسم',
+    level: 'المستوى',
+    gpa: 'المعدل التراكمي (GPA)',
+    earnedHours: 'الساعات المكتسبة',
+    filterAll: 'جميع المواد',
+    filterDone: 'المكتملة',
+    filterCurrent: 'قيد الدراسة',
+    colNum: '#',
+    colSemester: 'الفصل الدراسي',
+    colCode: 'كود المادة',
+    colName: 'اسم المادة',
+    colCredits: 'الساعات',
+    colMid: 'أعمال السنة / المنتصف',
+    colFinal: 'النهائي',
+    colAssign: 'الأنشطة والواجبات',
+    colTotal: 'المجموع',
+    colGrade: 'التقدير',
+    inProgress: 'قيد الدراسة',
+    pending: '—',
+    sumDone: 'المواد المجتازة',
+    sumCurrent: 'المواد الحالية',
+    sumRemaining: 'الساعات المتبقية',
+    noData: 'لا توجد درجات مسجلة لعرضها',
   },
   en: {
-    title: 'Grade Report', print: 'Print',
-    studentName: 'Student Name', studentNum: 'Student ID',
-    faculty: 'Faculty', dept: 'Department', level: 'Level',
-    gpa: 'GPA', earnedHours: 'Earned Credits',
-    filterAll: 'All', filterDone: 'Completed', filterCurrent: 'In Progress',
-    colNum: '#', colSemester: 'Semester', colCode: 'Code', colName: 'Course',
-    colCredits: 'Credits', colMid: 'Midterm', colFinal: 'Final',
-    colAssign: 'Assignments', colTotal: 'Total', colGrade: 'Grade',
-    inProgress: 'In Progress', pending: '—',
-    sumDone: 'Completed', sumCurrent: 'In Progress', sumRemaining: 'Remaining',
-    noData: 'No grades found',
+    title: 'Academic Transcript',
+    print: 'Print Transcript',
+    studentName: 'Student Name',
+    studentNum: 'Student ID',
+    faculty: 'Faculty',
+    dept: 'Department',
+    level: 'Level',
+    gpa: 'Cumulative GPA',
+    earnedHours: 'Earned Credits',
+    filterAll: 'All Courses',
+    filterDone: 'Completed',
+    filterCurrent: 'In Progress',
+    colNum: '#',
+    colSemester: 'Semester',
+    colCode: 'Code',
+    colName: 'Course Title',
+    colCredits: 'Credits',
+    colMid: 'Midterm / Work',
+    colFinal: 'Final Exam',
+    colAssign: 'Assignments',
+    colTotal: 'Total',
+    colGrade: 'Grade',
+    inProgress: 'In Progress',
+    pending: '—',
+    sumDone: 'Passed Courses',
+    sumCurrent: 'In Progress',
+    sumRemaining: 'Remaining Hours',
+    noData: 'No grades recorded to display',
   },
 } as const;
 
@@ -62,6 +100,7 @@ interface GradeItem {
   gradePoint: number | null;
   status: string | null;
 }
+
 interface InProgressItem {
   id: number;
   courseCode: string;
@@ -71,6 +110,7 @@ interface InProgressItem {
   semesterName: string;
   semesterYear: number;
 }
+
 interface StudentInfo {
   currentLevel: number;
   gpa: string | null;
@@ -83,20 +123,20 @@ interface StudentInfo {
   facultyNameAr: string;
   facultyNameEn: string;
 }
+
 interface PageData {
   student: StudentInfo;
   grades: GradeItem[];
   inProgress: InProgressItem[];
 }
 
-function gradeColor(letter: string | null, primary: string): string {
-  if (!letter) return '#6b7280';
-  if (['A+', 'A'].includes(letter)) return '#22c55e';
-  if (['A-', 'B+'].includes(letter)) return '#3b82f6';
-  if (['B', 'B-'].includes(letter)) return '#06b6d4';
-  if (['C+', 'C', 'C-'].includes(letter)) return primary;
-  if (['D+', 'D'].includes(letter)) return '#f97316';
-  return '#ef4444';
+function getGradeBadgeStyle(letter: string | null): string {
+  if (!letter) return 'bg-stone-50 text-stone-600 border border-stone-200';
+  if (['A+', 'A', 'A-'].includes(letter)) return 'bg-emerald-50 text-emerald-700 border border-emerald-100';
+  if (['B+', 'B', 'B-'].includes(letter)) return 'bg-blue-50 text-blue-700 border border-blue-100';
+  if (['C+', 'C', 'C-'].includes(letter)) return 'bg-amber-50 text-amber-700 border border-amber-100';
+  if (['D+', 'D'].includes(letter)) return 'bg-orange-50 text-orange-700 border border-orange-100';
+  return 'bg-red-50 text-red-700 border border-red-100';
 }
 
 export default function GradesPage() {
@@ -107,14 +147,6 @@ export default function GradesPage() {
   const loc = (locale as 'ar' | 'en') === 'en' ? 'en' : 'ar';
   const t   = i18n[loc];
   const dir = loc === 'ar' ? 'rtl' : 'ltr';
-  const th  = dark ? darkTheme : theme;
-
-  const card     = dark ? darkTheme.surface    : theme.white;
-  const bdr      = dark ? darkTheme.border     : theme.border;
-  const bdrL     = dark ? darkTheme.borderLight : theme.border;
-  const iconBg   = dark ? darkTheme.surfaceAlt : theme.surface;
-  const heroBg   = dark ? darkTheme.surface    : theme.primary;
-  const heroText = dark ? darkTheme.text       : '#1A1612';
 
   const [view, setView] = useState<View>('all');
   const [pageData, setPageData] = useState<PageData | null>(null);
@@ -134,7 +166,7 @@ export default function GradesPage() {
   const allGrades  = pageData?.grades ?? [];
   const inProgress = pageData?.inProgress ?? [];
   const completed  = allGrades.filter(g => g.status === 'pass' || g.status === 'fail');
-  const remaining  = (info?.totalRequired ?? 0) - (info?.completedCredits ?? 0);
+  const remaining  = (info?.totalRequired ?? 136) - (info?.completedCredits ?? 0);
 
   const display: Array<GradeItem | (InProgressItem & { _inProgress: true })> =
     view === 'completed' ? completed :
@@ -142,41 +174,39 @@ export default function GradesPage() {
     [...allGrades, ...inProgress.map(r => ({ ...r, _inProgress: true as const }))];
 
   const stagger  = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.04 } } };
-  const itemAnim = { hidden: { y: 8, opacity: 0 }, visible: { y: 0, opacity: 1 } };
-
-  const Skeleton = () => (
-    <div className="space-y-2 p-4">
-      {[1,2,3,4,5].map(i => <div key={i} className="h-10 rounded animate-pulse" style={{ background: iconBg }} />)}
-    </div>
-  );
 
   return (
     <DashboardLayout user={user} role="student">
-      <div dir={dir} className="max-w-7xl mx-auto space-y-5 p-1">
+      <div dir={dir} className="max-w-7xl mx-auto space-y-6 py-6 px-4 sm:px-6">
 
-        
+        {/* Top Header Card */}
         <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
-          <Card style={{ background: card, borderColor: bdr, overflow: 'hidden' }}>
-            <div style={{ background: heroBg, padding: '1.25rem 1.5rem' }}>
-              <div className="flex items-center justify-between flex-wrap gap-4">
+          <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-amber-500/10 via-amber-600/5 to-transparent p-6 border-b border-stone-100 dark:border-stone-800">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(0,0,0,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <MdSchool size={22} style={{ color: heroText }} />
+                  <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                    <GraduationCap className="h-6 w-6" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-bold" style={{ color: heroText }}>{t.title}</h1>
-                    <p className="text-sm opacity-75" style={{ color: heroText }}>{user.firstName} {user.lastName}</p>
+                    <h1 className="text-xl font-bold text-[#1C1917] dark:text-stone-100">{t.title}</h1>
+                    <p className="text-xs text-stone-500 dark:text-stone-400 font-medium">
+                      {user.firstName} {user.lastName} • {user.studentNumber ?? '—'}
+                    </p>
                   </div>
                 </div>
-                <button onClick={() => window.print()}
-                  className="px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2"
-                  style={{ background: 'rgba(0,0,0,0.18)', color: heroText, border: '1px solid rgba(0,0,0,0.12)' }}>
-                  <MdPrint size={16} /> {t.print}
+                <button
+                  onClick={() => window.print()}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs text-white bg-[#FABA19] hover:bg-[#e5a816] transition-colors shadow-sm self-start sm:self-auto"
+                >
+                  <Printer className="h-4 w-4" />
+                  {t.print}
                 </button>
               </div>
             </div>
-            <CardContent className="p-4">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+
+            <CardContent className="p-6">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-6 gap-x-4">
                 {[
                   { label: t.studentName, value: `${user.firstName} ${user.lastName}` },
                   { label: t.studentNum,  value: user.studentNumber ?? '—' },
@@ -184,12 +214,16 @@ export default function GradesPage() {
                   { label: t.dept,        value: loc === 'ar' ? (info?.deptNameAr ?? '—') : (info?.deptNameEn ?? '—') },
                   { label: t.level,       value: `${loc === 'ar' ? 'المستوى' : 'Level'} ${info?.currentLevel ?? user.currentLevel ?? 1}` },
                   { label: loc === 'ar' ? 'البرنامج' : 'Program', value: loc === 'ar' ? (info?.programNameAr ?? '—') : (info?.programNameEn ?? '—') },
-                  { label: t.gpa,         value: info?.gpa ?? '—', gold: true },
-                  { label: t.earnedHours, value: String(info?.completedCredits ?? 0), green: true },
-                ].map(r => (
-                  <div key={r.label}>
-                    <p className="text-xs mb-1" style={{ color: th.textMuted }}>{r.label}</p>
-                    <p className="font-bold text-sm" style={{ color: r.gold ? th.primary : r.green ? th.primary : th.text }}>{r.value}</p>
+                  { label: t.gpa,         value: info?.gpa ?? '—', highlight: true },
+                  { label: t.earnedHours, value: String(info?.completedCredits ?? 0), success: true },
+                ].map((r, i) => (
+                  <div key={i} className="space-y-1">
+                    <p className="text-xs text-stone-400 dark:text-stone-500 font-semibold">{r.label}</p>
+                    <p className={`text-sm font-bold ${
+                      r.highlight ? 'text-[#D97706] text-lg' :
+                      r.success ? 'text-emerald-600 dark:text-emerald-500' :
+                      'text-stone-850 dark:text-stone-200'
+                    }`}>{r.value}</p>
                   </div>
                 ))}
               </div>
@@ -197,45 +231,62 @@ export default function GradesPage() {
           </Card>
         </motion.div>
 
-        
-        <div className="flex items-center justify-between flex-wrap gap-3 p-3 rounded-xl"
-          style={{ background: card, border: `1px solid ${bdr}` }}>
-          <div className="flex items-center gap-2">
-            <MdMenuBook size={18} style={{ color: th.primary }} />
-            <span className="text-sm font-semibold" style={{ color: th.textMuted }}>
-              {loc === 'ar' ? 'السنة الأكاديمية والفصل الدراسي' : 'Academic Year & Semester'}
+        {/* Filters */}
+        <div className="flex items-center justify-between flex-wrap gap-4 px-6 py-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 shadow-sm">
+          <div className="flex items-center gap-2 text-stone-600 dark:text-stone-450">
+            <BookOpen className="h-5 w-5 text-[#D97706]" />
+            <span className="text-xs font-bold">
+              {loc === 'ar' ? 'تصنيف السجل الأكاديمي' : 'Filter Academic Record'}
             </span>
           </div>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2">
             {([['all', t.filterAll], ['completed', t.filterDone], ['current', t.filterCurrent]] as [View, string][]).map(([v, label]) => (
-              <button key={v} onClick={() => setView(v)}
-                className="px-4 py-1.5 rounded-lg font-bold text-sm transition-all"
-                style={{ background: view === v ? th.primary : iconBg, color: view === v ? '#1A1612' : th.textMuted, border: `1px solid ${view === v ? th.primary : bdrL}` }}>
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
+                  view === v
+                    ? 'bg-[#FABA19] text-white border-[#FABA19]'
+                    : 'bg-stone-50/50 hover:bg-stone-50 text-stone-600 border-stone-200 dark:bg-stone-800/40 dark:hover:bg-stone-800 dark:text-stone-300 dark:border-stone-700'
+                }`}
+              >
                 {label}
               </button>
             ))}
           </div>
         </div>
 
-        
+        {/* Transcript Table */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <Card style={{ background: card, borderColor: bdr }}>
+          <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
             <CardContent className="p-0">
-              {dataLoading ? <Skeleton /> : display.length === 0 ? (
-                <p className="text-sm text-center py-8" style={{ color: th.textMuted }}>{t.noData}</p>
+              {dataLoading ? (
+                <div className="space-y-3 p-6">
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <div key={i} className="h-10 bg-stone-100 dark:bg-stone-800 rounded animate-pulse" />
+                  ))}
+                </div>
+              ) : display.length === 0 ? (
+                <div className="text-center py-12">
+                  <BookOpen className="h-12 w-12 text-stone-350 mx-auto mb-3" />
+                  <p className="text-sm font-medium text-stone-500 dark:text-stone-400">{t.noData}</p>
+                </div>
               ) : (
                 <div className="overflow-x-auto">
                   <Table>
-                    <TableHeader>
-                      <TableRow style={{ background: heroBg }}>
-                        {[t.colNum, t.colSemester, t.colCode, t.colName, t.colCredits,
-                          t.colMid, t.colFinal, t.colAssign, t.colTotal, t.colGrade].map(h => (
-                          <TableHead key={h} className="text-xs font-bold h-9 px-3 whitespace-nowrap"
-                            style={{ color: heroText, textAlign: 'start' }}>{h}</TableHead>
+                    <TableHeader className="bg-stone-50/60 dark:bg-stone-800/30">
+                      <TableRow className="border-b border-stone-100 dark:border-stone-800">
+                        {[
+                          t.colNum, t.colSemester, t.colCode, t.colName, t.colCredits,
+                          t.colMid, t.colFinal, t.colAssign, t.colTotal, t.colGrade
+                        ].map((h, i) => (
+                          <TableHead key={i} className="text-xs font-bold text-stone-600 dark:text-stone-400 py-3.5 px-4 text-start whitespace-nowrap">
+                            {h}
+                          </TableHead>
                         ))}
                       </TableRow>
                     </TableHeader>
-                    <motion.tbody variants={stagger} animate="visible">
+                    <TableBody>
                       {display.map((row, i) => {
                         const isIP = '_inProgress' in row;
                         const g = isIP ? null : row as GradeItem;
@@ -247,47 +298,49 @@ export default function GradesPage() {
                         const sem = isIP ? ip!.semesterName : g!.semesterName;
 
                         return (
-                          <motion.tr key={`${isIP ? 'ip' : 'g'}-${row.id}`}
-                            initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.2, delay: i * 0.03 }}
-                            style={{ borderTop: `1px solid ${bdrL}`, background: i % 2 === 0 ? iconBg : card }}>
-                            <TableCell className="px-3 py-3 text-sm" style={{ color: th.textMuted }}>{i + 1}</TableCell>
-                            <TableCell className="px-3 py-3 text-xs whitespace-nowrap" style={{ color: th.textMuted }}>{sem}</TableCell>
-                            <TableCell className="px-3 py-3">
-                              <span className="text-xs font-mono font-bold" style={{ color: th.primary }}>{code}</span>
+                          <TableRow
+                            key={`${isIP ? 'ip' : 'g'}-${row.id}`}
+                            className="border-b border-stone-100 dark:border-stone-800 hover:bg-stone-50/30 dark:hover:bg-stone-800/10 transition-colors"
+                          >
+                            <TableCell className="px-4 py-4 text-xs font-semibold text-stone-450">{i + 1}</TableCell>
+                            <TableCell className="px-4 py-4 text-xs font-bold text-stone-600 dark:text-stone-300 whitespace-nowrap">{sem}</TableCell>
+                            <TableCell className="px-4 py-4">
+                              <span className="text-xs font-mono font-bold text-[#D97706] bg-amber-50 dark:bg-amber-950/20 px-2 py-1 rounded">
+                                {code}
+                              </span>
                             </TableCell>
-                            <TableCell className="px-3 py-3">
-                              <p className="text-sm font-semibold whitespace-nowrap" style={{ color: th.text }}>{loc === 'ar' ? nameAr : nameEn}</p>
+                            <TableCell className="px-4 py-4">
+                              <p className="text-xs font-bold text-stone-800 dark:text-stone-100 whitespace-nowrap">{loc === 'ar' ? nameAr : nameEn}</p>
+                              <p className="text-[10px] text-stone-450 dark:text-stone-500 font-semibold">{loc === 'ar' ? nameEn : nameAr}</p>
                             </TableCell>
-                            <TableCell className="px-3 py-3 text-sm tabular-nums text-center" style={{ color: th.text }}>{credits}</TableCell>
-                            <TableCell className="px-3 py-3 text-sm tabular-nums text-center" style={{ color: th.text }}>
+                            <TableCell className="px-4 py-4 text-xs font-bold text-center text-stone-800 dark:text-stone-200">{credits}</TableCell>
+                            <TableCell className="px-4 py-4 text-xs font-semibold text-center text-stone-600 dark:text-stone-400">
                               {g?.midtermGrade ?? t.pending}
                             </TableCell>
-                            <TableCell className="px-3 py-3 text-sm tabular-nums text-center" style={{ color: th.text }}>
+                            <TableCell className="px-4 py-4 text-xs font-semibold text-center text-stone-600 dark:text-stone-400">
                               {g?.finalGrade ?? t.pending}
                             </TableCell>
-                            <TableCell className="px-3 py-3 text-sm tabular-nums text-center" style={{ color: th.text }}>
+                            <TableCell className="px-4 py-4 text-xs font-semibold text-center text-stone-600 dark:text-stone-400">
                               {g?.assignmentGrade ?? t.pending}
                             </TableCell>
-                            <TableCell className="px-3 py-3 text-sm font-bold tabular-nums text-center" style={{ color: th.text }}>
+                            <TableCell className="px-4 py-4 text-xs font-bold text-center text-stone-800 dark:text-stone-100">
                               {g?.totalGrade ?? t.pending}
                             </TableCell>
-                            <TableCell className="px-3 py-3 text-center">
+                            <TableCell className="px-4 py-4 text-center whitespace-nowrap">
                               {isIP ? (
-                                <span className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: th.primary }}>
-                                  <MdSchedule size={14} /> {t.inProgress}
+                                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#D97706] bg-amber-50 dark:bg-amber-950/20 px-2.5 py-1 rounded-full">
+                                  <Clock className="h-3 w-3" /> {t.inProgress}
                                 </span>
                               ) : (
-                                <span className="text-sm font-bold"
-                                  style={{ color: gradeColor(g!.letterGrade, th.primary) }}>
+                                <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full ${getGradeBadgeStyle(g!.letterGrade)}`}>
                                   {g!.letterGrade ?? t.pending}
                                 </span>
                               )}
                             </TableCell>
-                          </motion.tr>
+                          </TableRow>
                         );
                       })}
-                    </motion.tbody>
+                    </TableBody>
                   </Table>
                 </div>
               )}
@@ -295,24 +348,32 @@ export default function GradesPage() {
           </Card>
         </motion.div>
 
-        
-        <motion.div variants={stagger} initial="hidden" animate="visible"
-          className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Overview Stats Cards */}
+        <motion.div
+          variants={stagger}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        >
           {[
-            { icon: <MdCheckCircle size={24} />, label: t.sumDone,     value: completed.length,  color: th.primary },
-            { icon: <MdSchedule size={24} />,    label: t.sumCurrent,  value: inProgress.length, color: th.primary },
-            { icon: <MdTrendingUp size={24} />,  label: t.sumRemaining, value: remaining,         color: th.primary },
+            { icon: <CheckCircle2 className="h-5 w-5" />, label: t.sumDone,     value: completed.length,  badgeColor: 'bg-emerald-500/10 text-emerald-600' },
+            { icon: <Clock className="h-5 w-5" />,        label: t.sumCurrent,  value: inProgress.length, badgeColor: 'bg-amber-500/10 text-[#D97706]' },
+            { icon: <TrendingUp className="h-5 w-5" />,  label: t.sumRemaining, value: remaining,         badgeColor: 'bg-blue-500/10 text-blue-600' },
           ].map((s, i) => (
-            <motion.div key={i} variants={itemAnim}>
-              <Card style={{ background: card, borderColor: bdr }}>
-                <CardContent className="p-4 text-center">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2"
-                    style={{ background: iconBg, border: `1px solid ${bdrL}`, color: s.color }}>
+            <motion.div
+              key={i}
+              variants={{ hidden: { y: 8, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
+            >
+              <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-stone-400 dark:text-stone-500 font-semibold mb-1">{s.label}</p>
+                    <p className="text-2xl font-bold text-stone-800 dark:text-stone-100">{s.value}</p>
+                  </div>
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${s.badgeColor}`}>
                     {s.icon}
                   </div>
-                  <p className="text-xs mb-1" style={{ color: th.textMuted }}>{s.label}</p>
-                  <p className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</p>
-                </CardContent>
+                </div>
               </Card>
             </motion.div>
           ))}

@@ -6,44 +6,68 @@ import DashboardLayout from '@/components/DashboardLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslations } from '@/lib/useTranslations';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { theme, darkTheme } from '@/lib/theme';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import {
   CalendarDays, Clock, MapPin, BookOpen, CheckCircle2,
-  AlertCircle, Lightbulb, ListChecks,
+  AlertCircle, ListChecks,
 } from 'lucide-react';
 
 const i18n = {
   ar: {
-    title: 'جدول الامتحانات',
-    totalExams: 'إجمالي الامتحانات', upcoming: 'القادمة', completed: 'المكتملة',
-    nextExam: 'الامتحان القادم', daysLeft: 'يوم متبقي', today: 'اليوم',
-    date: 'التاريخ', time: 'الوقت', room: 'القاعة', duration: 'المدة', mins: 'دقيقة',
-    midterms: 'امتحانات نصف الترم', finals: 'الامتحانات النهائية',
-    subject: 'المادة', type: 'النوع', status: 'الحالة',
-    typeFinal: 'نهائي', typeMidterm: 'نصف الترم',
-    statusToday: 'اليوم', statusUpcoming: 'قادم', statusCompleted: 'مكتمل',
-    examCount: 'امتحان', noData: 'لا توجد امتحانات حالياً',
-    tips: 'نصائح للامتحانات',
-    tip1Title: 'احضر مبكراً',        tip1Desc: 'تأكد من الوصول قبل 15 دقيقة من موعد الامتحان',
-    tip2Title: 'أحضر البطاقة الجامعية', tip2Desc: 'البطاقة الجامعية إلزامية لدخول الامتحان',
-    tip3Title: 'راجع المنهج',         tip3Desc: 'تأكد من مراجعة جميع المواضيع المقررة',
-    tip4Title: 'نم جيداً',            tip4Desc: 'احصل على قسط كافٍ من النوم قبل الامتحان',
+    title: 'جدول امتحانات الفصل الدراسي',
+    subtitle: 'متابعة مواعيد، قاعات، وتفاصيل الاختبارات الفصلية والنهائية',
+    totalExams: 'إجمالي المواد المقررة',
+    upcoming: 'امتحانات قادمة',
+    completed: 'امتحانات منتهية',
+    nextExam: 'الامتحان القادم المستحق',
+    daysLeft: 'يوم متبقي',
+    today: 'اليوم الجاري',
+    date: 'تاريخ الامتحان',
+    time: 'توقيت الجلسة',
+    room: 'القاعة الامتحانية',
+    duration: 'الزمن المحدد',
+    mins: 'دقيقة',
+    midterms: 'امتحانات نصف الفصل (Midterm)',
+    finals: 'الامتحانات النهائية (Final Exams)',
+    subject: 'المادة الأكاديمية',
+    type: 'نوع الاختبار',
+    status: 'الحالة',
+    typeFinal: 'نهائي',
+    typeMidterm: 'نصف الترم',
+    statusToday: 'اليوم',
+    statusUpcoming: 'قادم',
+    statusCompleted: 'مكتمل',
+    examCount: 'امتحان مقرر',
+    noData: 'لا توجد امتحانات معلنة أو مجدولة لك حالياً في هذا الفصل الدراسي',
   },
   en: {
-    title: 'Exam Schedule',
-    totalExams: 'Total Exams', upcoming: 'Upcoming', completed: 'Completed',
-    nextExam: 'Next Exam', daysLeft: 'days left', today: 'Today',
-    date: 'Date', time: 'Time', room: 'Room', duration: 'Duration', mins: 'min',
-    midterms: 'Midterm Exams', finals: 'Final Exams',
-    subject: 'Subject', type: 'Type', status: 'Status',
-    typeFinal: 'Final', typeMidterm: 'Midterm',
-    statusToday: 'Today', statusUpcoming: 'Upcoming', statusCompleted: 'Completed',
-    examCount: 'exam', noData: 'No exams scheduled',
-    tips: 'Exam Tips',
-    tip1Title: 'Arrive Early',        tip1Desc: 'Make sure to arrive 15 minutes before the exam',
-    tip2Title: 'Bring Your ID',       tip2Desc: 'University ID is required to enter the exam',
-    tip3Title: 'Review the Syllabus', tip3Desc: 'Make sure to review all required topics',
-    tip4Title: 'Sleep Well',          tip4Desc: 'Get enough sleep before the exam',
+    title: 'Semester Exam Schedule',
+    subtitle: 'Track your midterm and final exam schedules, venues, and timings',
+    totalExams: 'Total Courses Scheduled',
+    upcoming: 'Upcoming Exams',
+    completed: 'Completed Exams',
+    nextExam: 'Next Scheduled Exam',
+    daysLeft: 'days left',
+    today: 'Scheduled for Today',
+    date: 'Exam Date',
+    time: 'Session Duration',
+    room: 'Exam Room / Hall',
+    duration: 'Allotted Time',
+    mins: 'min',
+    midterms: 'Midterm Assessments',
+    finals: 'Final Semester Examinations',
+    subject: 'Course / Subject',
+    type: 'Assessment Type',
+    status: 'Status',
+    typeFinal: 'Final Exam',
+    typeMidterm: 'Midterm',
+    statusToday: 'Today',
+    statusUpcoming: 'Upcoming',
+    statusCompleted: 'Completed',
+    examCount: 'scheduled exam',
+    noData: 'No exams currently scheduled or published in this semester',
   },
 } as const;
 
@@ -71,18 +95,10 @@ export default function ExamsPage() {
   const loc = (locale as 'ar' | 'en') === 'en' ? 'en' : 'ar';
   const t   = i18n[loc];
   const dir = loc === 'ar' ? 'rtl' : 'ltr';
-  const th  = dark ? darkTheme : theme;
 
   const [exams, setExams]           = useState<ApiExam[]>([]);
   const [semesterName, setSemName]  = useState('');
   const [dataLoading, setLoading]   = useState(true);
-
-  const card     = dark ? darkTheme.surface    : theme.white;
-  const bdr      = dark ? darkTheme.border     : theme.border;
-  const bdrL     = dark ? darkTheme.borderLight : theme.border;
-  const iconBg   = dark ? darkTheme.surfaceAlt : theme.surface;
-  const heroBg   = dark ? darkTheme.surface    : theme.primary;
-  const heroText = dark ? darkTheme.text       : '#1A1612';
 
   useEffect(() => {
     if (!user?.id) return;
@@ -113,148 +129,134 @@ export default function ExamsPage() {
   const typeLabel  = (type: string) => type === 'final' ? t.typeFinal : t.typeMidterm;
   const statusLabel = (s: string)  => s === 'today' ? t.statusToday : s === 'upcoming' ? t.statusUpcoming : t.statusCompleted;
 
-  const typeColor = (type: string) => type === 'final' ? '#ef4444' : th.primary;
-  const statusColor = (s: string) => s === 'today' ? th.primary : s === 'upcoming' ? '#3b82f6' : '#22c55e';
-
-  const stagger  = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.07 } } };
-  const itemAnim = { hidden: { y: 12, opacity: 0 }, visible: { y: 0, opacity: 1, transition: { type: 'spring' as const, stiffness: 130 } } };
-
-  const Skeleton = () => (
-    <div className="space-y-3 p-4">
-      {[1,2,3].map(i => <div key={i} className="h-14 rounded-xl animate-pulse" style={{ background: iconBg }} />)}
-    </div>
-  );
-
   if (loading || !user) return null;
 
   return (
     <DashboardLayout user={user} role="student">
-      <div dir={dir} className="max-w-7xl mx-auto space-y-6">
+      <div dir={dir} className="max-w-7xl mx-auto space-y-6 py-6 px-4 sm:px-6">
 
-        
+        {/* Top Header Card */}
         <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
-          <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-            <div style={{ background: heroBg, padding: '1.25rem 1.5rem' }}>
+          <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-amber-500/10 via-amber-600/5 to-transparent p-6 border-b border-stone-100 dark:border-stone-800">
               <div className="flex items-center gap-4">
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: 'rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <CalendarDays className="w-6 h-6" style={{ color: heroText }} />
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                  <CalendarDays className="w-6 h-6" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-extrabold" style={{ color: heroText }}>{t.title}</h1>
-                  <p className="text-sm font-semibold opacity-75" style={{ color: heroText }}>
+                  <h1 className="text-xl font-bold text-[#1C1917] dark:text-stone-100">{t.title}</h1>
+                  <p className="text-xs text-stone-500 dark:text-stone-400 font-semibold mt-0.5">
                     {semesterName || '—'} • {user.firstName} {user.lastName}
                   </p>
                 </div>
               </div>
             </div>
-            <div style={{ background: iconBg, padding: '1rem 1.5rem' }}>
-              <div className="grid grid-cols-3 gap-4">
+            <div className="bg-stone-50/30 dark:bg-stone-800/10 p-5">
+              <div className="grid grid-cols-3 gap-4 text-center">
                 {[
                   { label: t.totalExams, value: stats.total,     icon: ListChecks },
                   { label: t.upcoming,   value: stats.upcoming,  icon: AlertCircle },
                   { label: t.completed,  value: stats.completed, icon: CheckCircle2 },
-                ].map(({ label, value, icon: Icon }) => (
-                  <div key={label} style={{ background: card, border: `1px solid ${bdrL}`, borderRadius: 12, padding: '0.875rem 1rem' }} className="flex items-center gap-3">
-                    <div style={{ width: 40, height: 40, borderRadius: 10, background: iconBg, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Icon className="w-5 h-5" style={{ color: th.primary }} />
+                ].map(({ label, value, icon: Icon }, idx) => (
+                  <div key={idx} className="bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 rounded-xl p-3.5 flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                      <Icon className="w-5 h-5" />
                     </div>
-                    <div>
-                      <p className="text-xs font-semibold" style={{ color: th.textMuted }}>{label}</p>
-                      <p className="text-xl font-extrabold" style={{ color: th.text }}>{value}</p>
+                    <div className="text-start">
+                      <p className="text-[10px] text-stone-450 dark:text-stone-550 font-bold">{label}</p>
+                      <p className="text-base font-bold text-stone-850 dark:text-stone-100">{value}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
+          </Card>
         </motion.div>
 
-        
-        {dataLoading && (
-          <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16 }}>
-            <Skeleton />
+        {dataLoading ? (
+          <div className="flex items-center justify-center py-16 bg-white dark:bg-stone-900 rounded-2xl">
+            <div className="w-8 h-8 rounded-full border-2 border-[#FABA19] border-t-transparent animate-spin" />
           </div>
-        )}
+        ) : exams.length === 0 ? (
+          <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl p-12 text-center flex flex-col items-center justify-center space-y-2">
+            <CalendarDays className="w-12 h-12 text-stone-300 dark:text-stone-700" />
+            <p className="text-xs font-bold text-stone-450 dark:text-stone-550">{t.noData}</p>
+          </Card>
+        ) : (
+          <div className="space-y-6">
 
-        
-        {!dataLoading && exams.length === 0 && (
-          <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, padding: '3rem', textAlign: 'center' }}>
-            <CalendarDays className="w-12 h-12 mx-auto mb-3" style={{ color: th.textMuted }} />
-            <p style={{ color: th.textMuted }}>{t.noData}</p>
-          </div>
-        )}
-
-        
-        {!dataLoading && nextExam && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-            <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-              <div style={{ background: iconBg, padding: '0.875rem 1.25rem', borderBottom: `1px solid ${bdrL}` }} className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div style={{ width: 40, height: 40, borderRadius: 12, background: card, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <AlertCircle className="w-5 h-5" style={{ color: th.primary }} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold" style={{ color: th.textMuted }}>{t.nextExam}</p>
-                    <p className="font-extrabold" style={{ color: th.text }}>{courseName(nextExam)}</p>
-                  </div>
-                </div>
-                <div className="text-end">
-                  <p className="text-2xl font-extrabold" style={{ color: th.primary }}>
-                    {nextExam.status === 'today' ? t.today : nextExam.daysLeft}
-                  </p>
-                  {nextExam.status !== 'today' && (
-                    <p className="text-xs font-semibold" style={{ color: th.textMuted }}>{t.daysLeft}</p>
-                  )}
-                </div>
-              </div>
-              <div style={{ padding: '1.25rem' }}>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-                  {[
-                    { icon: CalendarDays, label: t.date,     value: nextExam.examDate },
-                    { icon: Clock,        label: t.time,     value: `${nextExam.startTime} - ${nextExam.endTime}` },
-                    { icon: MapPin,       label: t.room,     value: nextExam.room },
-                  ].map(({ icon: Icon, label, value }) => (
-                    <div key={label} style={{ background: iconBg, border: `1px solid ${bdrL}`, borderRadius: 12, padding: '0.875rem 1rem' }} className="flex items-center gap-3">
-                      <div style={{ width: 36, height: 36, borderRadius: 10, background: card, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Icon className="w-4 h-4" style={{ color: th.primary }} />
+            {/* Next Exam Spotlight Card */}
+            {nextExam && (
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+                  <div className="bg-gradient-to-r from-amber-500/10 to-transparent p-5 border-b border-stone-100 dark:border-stone-800 flex justify-between items-center gap-4 flex-wrap">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                        <AlertCircle className="w-5 h-5" />
                       </div>
                       <div>
-                        <p className="text-xs font-semibold" style={{ color: th.textMuted }}>{label}</p>
-                        <p className="font-extrabold text-sm" style={{ color: th.text }}>{value}</p>
+                        <p className="text-[10px] text-stone-400 dark:text-stone-550 font-bold uppercase">{t.nextExam}</p>
+                        <p className="text-sm font-bold text-stone-850 dark:text-stone-100 mt-0.5">{courseName(nextExam)}</p>
                       </div>
                     </div>
-                  ))}
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { label: typeLabel(nextExam.examType),      color: typeColor(nextExam.examType) },
-                    { label: statusLabel(nextExam.status),       color: statusColor(nextExam.status) },
-                    { label: nextExam.courseCode,                color: th.primary },
-                    { label: `${nextExam.duration} ${t.mins}`,  color: th.textMuted },
-                  ].map(({ label, color }) => (
-                    <span key={label} className="px-3 py-1 rounded-full text-xs font-extrabold"
-                      style={{ background: `${color}22`, color, border: `1px solid ${color}44` }}>{label}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
+                    <div className="text-end">
+                      <p className="text-2xl font-bold text-[#D97706] font-mono leading-none">
+                        {nextExam.status === 'today' ? t.today : nextExam.daysLeft}
+                      </p>
+                      {nextExam.status !== 'today' && (
+                        <p className="text-[10px] font-bold text-stone-400 dark:text-stone-500 mt-1 uppercase">{t.daysLeft}</p>
+                      )}
+                    </div>
+                  </div>
+                  <CardContent className="p-5 space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      {[
+                        { icon: CalendarDays, label: t.date,     value: nextExam.examDate },
+                        { icon: Clock,        label: t.time,     value: `${nextExam.startTime} - ${nextExam.endTime}` },
+                        { icon: MapPin,       label: t.room,     value: nextExam.room },
+                      ].map(({ icon: Icon, label, value }, idx) => (
+                        <div key={idx} className="bg-stone-50/20 dark:bg-stone-850/5 border border-stone-100 dark:border-stone-800 rounded-xl p-3.5 flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center text-[#D97706] shrink-0">
+                            <Icon className="w-4.5 h-4.5" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-stone-400 dark:text-stone-500 font-bold">{label}</p>
+                            <p className="text-xs font-bold text-stone-800 dark:text-stone-250 mt-0.5">{value}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
 
-        
-        {!dataLoading && midterms.length > 0 && (
-          <ExamTable title={t.midterms} exams={midterms} t={t} th={th}
-            card={card} bdr={bdr} bdrL={bdrL} iconBg={iconBg} heroBg={heroBg} heroText={heroText}
-            courseName={courseName} typeLabel={typeLabel} statusLabel={statusLabel}
-            typeColor={typeColor} statusColor={statusColor} loc={loc} />
-        )}
+                    <div className="flex gap-2 flex-wrap pt-1">
+                      <Badge className="bg-amber-500/10 hover:bg-amber-500/15 text-[#D97706] border-0 text-[9px] font-bold shadow-none px-2.5 py-0.5">
+                        {typeLabel(nextExam.examType)}
+                      </Badge>
+                      <Badge className="bg-stone-50 hover:bg-stone-100 dark:bg-stone-850 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-800 text-[9px] font-bold shadow-none px-2.5 py-0.5">
+                        {statusLabel(nextExam.status)}
+                      </Badge>
+                      <Badge className="bg-stone-50 hover:bg-stone-100 dark:bg-stone-850 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-800 text-[9px] font-bold shadow-none px-2.5 py-0.5">
+                        {nextExam.courseCode}
+                      </Badge>
+                      <Badge className="bg-stone-50 hover:bg-stone-100 dark:bg-stone-850 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-800 text-[9px] font-bold shadow-none px-2.5 py-0.5">
+                        {nextExam.duration} {t.mins}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
 
-        
-        {!dataLoading && finals.length > 0 && (
-          <ExamTable title={t.finals} exams={finals} t={t} th={th}
-            card={card} bdr={bdr} bdrL={bdrL} iconBg={iconBg} heroBg={heroBg} heroText={heroText}
-            courseName={courseName} typeLabel={typeLabel} statusLabel={statusLabel}
-            typeColor={typeColor} statusColor={statusColor} loc={loc} />
+            {/* Midterms Table */}
+            {midterms.length > 0 && (
+              <ExamTableSection title={t.midterms} exams={midterms} t={t} courseName={courseName} typeLabel={typeLabel} statusLabel={statusLabel} loc={loc} />
+            )}
+
+            {/* Finals Table */}
+            {finals.length > 0 && (
+              <ExamTableSection title={t.finals} exams={finals} t={t} courseName={courseName} typeLabel={typeLabel} statusLabel={statusLabel} loc={loc} />
+            )}
+
+          </div>
         )}
 
       </div>
@@ -262,74 +264,93 @@ export default function ExamsPage() {
   );
 }
 
-function ExamTable({
-  title, exams, t, th, card, bdr, bdrL, iconBg, heroBg, heroText,
-  courseName, typeLabel, statusLabel, typeColor, statusColor,
+function ExamTableSection({
+  title, exams, t, courseName, typeLabel, statusLabel, loc,
 }: {
-  title: string; exams: ApiExam[];
-  t: typeof i18n[keyof typeof i18n]; th: typeof theme | typeof darkTheme;
-  card: string; bdr: string; bdrL: string; iconBg: string; heroBg: string; heroText: string;
+  title: string;
+  exams: ApiExam[];
+  t: typeof i18n[keyof typeof i18n];
   courseName: (e: ApiExam) => string;
-  typeLabel: (x: string) => string; statusLabel: (x: string) => string;
-  typeColor: (x: string) => string; statusColor: (x: string) => string;
+  typeLabel: (x: string) => string;
+  statusLabel: (x: string) => string;
   loc: string;
 }) {
+  const dir = loc === 'ar' ? 'rtl' : 'ltr';
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-      <div style={{ background: card, border: `1px solid ${bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-        <div style={{ background: iconBg, padding: '0.875rem 1.25rem', borderBottom: `1px solid ${bdrL}` }} className="flex items-center gap-3">
-          <div style={{ width: 40, height: 40, borderRadius: 12, background: card, border: `1px solid ${bdrL}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <BookOpen className="w-5 h-5" style={{ color: th.primary }} />
+      <Card className="border-0 shadow-sm bg-white dark:bg-stone-900 rounded-2xl overflow-hidden">
+        <CardHeader className="pb-3 border-b border-stone-50 dark:border-stone-850 flex flex-row items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-[#D97706]">
+              <BookOpen className="w-5 h-5" />
+            </div>
+            <CardTitle className="text-sm font-bold text-stone-850 dark:text-stone-150">{title}</CardTitle>
           </div>
-          <p className="font-extrabold" style={{ color: th.text }}>{title}</p>
-          <span className="px-2 py-0.5 rounded-full text-xs font-extrabold"
-            style={{ background: `${th.primary}22`, color: th.primary, border: `1px solid ${th.primary}44` }}>
+          <Badge className="bg-amber-500/10 text-[#D97706] border-0 text-[9px] font-bold shadow-none px-2.5 py-0.5">
             {exams.length} {t.examCount}
-          </span>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[700px]">
-            <thead>
-              <tr style={{ background: heroBg }}>
-                {[t.subject, t.date, t.time, t.duration, t.room, t.type, t.status].map(h => (
-                  <th key={h} className="px-4 py-3 text-center text-sm font-extrabold"
-                    style={{ color: heroText, borderRight: `1px solid rgba(0,0,0,0.1)` }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {exams.map((exam, i) => (
-                <tr key={exam.id} style={{ background: i % 2 === 0 ? iconBg : card, borderBottom: `1px solid ${bdrL}` }}>
-                  <td className="px-4 py-3" style={{ borderRight: `1px solid ${bdrL}` }}>
-                    <p className="font-extrabold text-sm" style={{ color: th.text }}>{courseName(exam)}</p>
-                    <p className="text-xs font-mono" style={{ color: th.primary }}>{exam.courseCode}</p>
-                  </td>
-                  <td className="px-4 py-3 text-center text-sm" style={{ color: th.text, borderRight: `1px solid ${bdrL}` }}>{exam.examDate}</td>
-                  <td className="px-4 py-3 text-center text-sm whitespace-nowrap" style={{ color: th.text, borderRight: `1px solid ${bdrL}` }}>
-                    {exam.startTime} - {exam.endTime}
-                  </td>
-                  <td className="px-4 py-3 text-center text-sm" style={{ color: th.text, borderRight: `1px solid ${bdrL}` }}>
-                    {exam.duration} {t.mins}
-                  </td>
-                  <td className="px-4 py-3 text-center text-sm" style={{ color: th.text, borderRight: `1px solid ${bdrL}` }}>{exam.room}</td>
-                  <td className="px-4 py-3 text-center" style={{ borderRight: `1px solid ${bdrL}` }}>
-                    <span className="px-2 py-1 rounded-full text-xs font-extrabold"
-                      style={{ background: `${typeColor(exam.examType)}22`, color: typeColor(exam.examType), border: `1px solid ${typeColor(exam.examType)}44` }}>
-                      {typeLabel(exam.examType)}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <span className="px-2 py-1 rounded-full text-xs font-extrabold"
-                      style={{ background: `${statusColor(exam.status)}22`, color: statusColor(exam.status), border: `1px solid ${statusColor(exam.status)}44` }}>
-                      {statusLabel(exam.status)}
-                    </span>
-                  </td>
+          </Badge>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px] text-xs">
+              <thead>
+                <tr className="border-b border-stone-100 dark:border-stone-800 bg-stone-50/40 dark:bg-stone-800/10 font-bold text-stone-400 dark:text-stone-500 text-start">
+                  <th className={`px-5 py-3.5 font-bold ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>{t.subject}</th>
+                  <th className="px-4 py-3.5 font-bold text-center">{t.date}</th>
+                  <th className="px-4 py-3.5 font-bold text-center">{t.time}</th>
+                  <th className="px-4 py-3.5 font-bold text-center">{t.duration}</th>
+                  <th className="px-4 py-3.5 font-bold text-center">{t.room}</th>
+                  <th className="px-4 py-3.5 font-bold text-center">{t.type}</th>
+                  <th className="px-4 py-3.5 font-bold text-center">{t.status}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+              </thead>
+              <tbody className="divide-y divide-stone-100 dark:divide-stone-800">
+                {exams.map((exam, idx) => {
+                  const isToday = exam.status === 'today';
+                  const isCompleted = exam.status === 'completed';
+                  return (
+                    <tr
+                      key={exam.id}
+                      className={`hover:bg-stone-50/30 dark:hover:bg-stone-850/10 transition-colors ${
+                        isToday ? 'bg-amber-500/5' : ''
+                      }`}
+                    >
+                      <td className="px-5 py-4 font-semibold">
+                        <p className="font-bold text-stone-800 dark:text-stone-200">{courseName(exam)}</p>
+                        <p className="text-[10px] text-[#D97706] font-mono mt-0.5">{exam.courseCode}</p>
+                      </td>
+                      <td className="px-4 py-4 text-center font-semibold text-stone-650 dark:text-stone-400">{exam.examDate}</td>
+                      <td className="px-4 py-4 text-center font-semibold text-stone-650 dark:text-stone-400 whitespace-nowrap">
+                        {exam.startTime} - {exam.endTime}
+                      </td>
+                      <td className="px-4 py-4 text-center font-semibold text-stone-650 dark:text-stone-400">
+                        {exam.duration} {t.mins}
+                      </td>
+                      <td className="px-4 py-4 text-center font-semibold text-stone-650 dark:text-stone-400">{exam.room}</td>
+                      <td className="px-4 py-4 text-center">
+                        <Badge className="bg-stone-50 hover:bg-stone-100 dark:bg-stone-850 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-800 text-[9px] font-bold shadow-none px-2.5 py-0.5">
+                          {typeLabel(exam.examType)}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-4 text-center">
+                        <Badge className={`border-0 text-[9px] font-bold shadow-none px-2.5 py-0.5 ${
+                          isCompleted
+                            ? 'bg-emerald-50 hover:bg-emerald-100/50 text-emerald-600 dark:bg-emerald-950/20'
+                            : isToday
+                            ? 'bg-amber-500/10 hover:bg-amber-500/15 text-[#D97706]'
+                            : 'bg-blue-50 hover:bg-blue-100/50 text-blue-600 dark:bg-blue-950/20'
+                        }`}>
+                          {statusLabel(exam.status)}
+                        </Badge>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
     </motion.div>
   );
 }

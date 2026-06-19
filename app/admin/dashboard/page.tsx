@@ -2,22 +2,756 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useI18n } from '@/lib/i18n';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
 import {
-  TabButtonProps,
-  StatCardProps,
-  ProgressBarProps,
-  ActivityItemProps,
-  StudentRowProps,
-  CourseCardProps,
-  GradeCardProps,
-  GradeDistributionProps,
-  StatColor,
-  ProgressColor,
-  SessionUser
-} from '../../../types';
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Building2,
+  Plus,
+  Users,
+  BookOpen,
+  Edit,
+  Trash2,
+  CreditCard,
+  Download,
+  TrendingUp,
+  AlertTriangle,
+  CheckCircle,
+  MoreHorizontal,
+  FileText,
+  BarChart3,
+  GraduationCap,
+  Clock,
+  MapPin,
+  Calendar,
+  Search,
+  LogOut,
+} from "lucide-react";
+import { motion, AnimatePresence } from 'framer-motion';
+import { SessionUser } from '../../../types';
+
+// ─── Helper Components ───────────────────────────────────────────────────────
+
+interface TabButtonProps {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}
+
+function TabButton({ active, onClick, children }: TabButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 whitespace-nowrap ${
+        active
+          ? 'bg-[#FABA19] text-[#1C1917] shadow-sm'
+          : 'text-stone-600 hover:text-[#FABA19] hover:bg-amber-50/50'
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ─── Overview Tab ────────────────────────────────────────────────────────────
+
+function OverviewTab() {
+  const { t } = useI18n();
+
+  return (
+    <div className="space-y-6">
+      {/* Quick Stats Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { titleAr: "إجمالي الطلاب", titleEn: "Total Students", value: "5,234", change: "+12%", icon: "🎓", color: "text-blue-600 bg-blue-50 border-blue-100" },
+          { titleAr: "أعضاء هيئة التدريس", titleEn: "Faculty Staff", value: "287", change: "+5%", icon: "👨‍🏫", color: "text-green-600 bg-green-50 border-green-100" },
+          { titleAr: "المواد الدراسية", titleEn: "Courses", value: "156", change: "+8", icon: "📚", color: "text-purple-600 bg-purple-50 border-purple-100" },
+          { titleAr: "معدل النجاح", titleEn: "Pass Rate", value: "94.5%", change: "+2.3%", icon: "📊", color: "text-[#FABA19] bg-amber-50 border-amber-100" },
+        ].map((s, idx) => (
+          <Card key={idx} className="border-0 shadow-sm bg-white">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className={`flex h-11 w-11 items-center justify-center rounded-xl border ${s.color}`}>
+                  <span className="text-xl">{s.icon}</span>
+                </div>
+                <Badge variant="secondary" className="bg-green-50 text-green-700 text-xs font-semibold gap-1">
+                  <TrendingUp className="h-3 w-3" />
+                  {s.change}
+                </Badge>
+              </div>
+              <p className="text-sm text-stone-500 font-medium">{t(s.titleAr, s.titleEn)}</p>
+              <p className="mt-1 text-2xl sm:text-3xl font-bold text-stone-800">{s.value}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="border-0 shadow-sm bg-white">
+          <CardHeader className="pb-2 border-b border-stone-50">
+            <CardTitle className="text-base font-bold text-[#1C1917]">{t("توزيع الطلاب حسب الكليات", "Student Distribution by Faculty")}</CardTitle>
+          </CardHeader>
+          <CardContent className="p-5 space-y-4">
+            {[
+              { labelAr: "كلية الهندسة", labelEn: "Faculty of Engineering", value: 45, color: "blue" },
+              { labelAr: "كلية الطب", labelEn: "Faculty of Medicine", value: 30, color: "red" },
+              { labelAr: "كلية التجارة", labelEn: "Faculty of Business", value: 15, color: "green" },
+              { labelAr: "كلية الآداب", labelEn: "Faculty of Arts", value: 10, color: "purple" },
+            ].map((fac, idx) => (
+              <div key={idx}>
+                <div className="mb-2 flex justify-between text-sm">
+                  <span className="text-stone-600 font-medium">{t(fac.labelAr, fac.labelEn)}</span>
+                  <span className="font-semibold text-stone-800">{fac.value}%</span>
+                </div>
+                <Progress value={fac.value} className="h-2 bg-stone-100 [&>div]:bg-[#FABA19]" />
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-sm bg-white">
+          <CardHeader className="pb-2 border-b border-stone-50">
+            <CardTitle className="text-base font-bold text-[#1C1917]">{t("الأنشطة الأخيرة", "Recent Activities")}</CardTitle>
+          </CardHeader>
+          <CardContent className="p-5 space-y-3">
+            {[
+              { icon: "✅", textAr: "تم تسجيل 45 طالب جديد", textEn: "45 new students registered", timeAr: "منذ ساعتين", timeEn: "2 hours ago" },
+              { icon: "📝", textAr: "تم رفع درجات مادة CS101", textEn: "CS101 course grades uploaded", timeAr: "منذ 4 ساعات", timeEn: "4 hours ago" },
+              { icon: "📅", textAr: "تحديث الجدول الدراسي للفصل الحالي", textEn: "Current semester class schedule updated", timeAr: "منذ يوم", timeEn: "1 day ago" },
+              { icon: "💰", textAr: "تم تسجيل 120 عملية دفع", textEn: "120 student payment transactions recorded", timeAr: "منذ يومين", timeEn: "2 days ago" },
+            ].map((act, idx) => (
+              <div key={idx} className="flex items-start gap-3 p-3 bg-stone-50/60 rounded-xl border border-stone-100 hover:bg-stone-50 transition-colors">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-[#FABA19]">
+                  <span className="text-lg">{act.icon}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-stone-700 text-sm font-medium leading-relaxed">{t(act.textAr, act.textEn)}</p>
+                  <p className="text-stone-400 text-xs mt-1 flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    {t(act.timeAr, act.timeEn)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+// ─── Users Tab ───────────────────────────────────────────────────────────────
+
+const usersData = [
+  { id: "001", nameAr: "أحمد محمد علي", nameEn: "Ahmed Mohamed Ali", email: "ahmed@uni.edu", roleAr: "طالب", roleEn: "Student", role: "student", statusAr: "نشط", statusEn: "Active", status: "active" },
+  { id: "002", nameAr: "د. فاطمة حسن", nameEn: "Dr. Fatima Hassan", email: "fatima@uni.edu", roleAr: "أستاذ", roleEn: "Professor", role: "professor", statusAr: "نشط", statusEn: "Active", status: "active" },
+  { id: "003", nameAr: "محمد أحمد", nameEn: "Mohamed Ahmed", email: "m.ahmed@uni.edu", roleAr: "مسؤول", roleEn: "Admin", role: "admin", statusAr: "نشط", statusEn: "Active", status: "active" },
+  { id: "004", nameAr: "سارة خالد", nameEn: "Sara Khaled", email: "sara@uni.edu", roleAr: "مالية", roleEn: "Finance", role: "finance", statusAr: "نشط", statusEn: "Active", status: "active" },
+  { id: "005", nameAr: "يوسف إبراهيم", nameEn: "Yousef Ibrahim", email: "yousef@uni.edu", roleAr: "طالب", roleEn: "Student", role: "student", statusAr: "معلق", statusEn: "Suspended", status: "suspended" },
+  { id: "006", nameAr: "د. خالد عمر", nameEn: "Dr. Khaled Omar", email: "khaled@uni.edu", roleAr: "أستاذ", roleEn: "Professor", role: "professor", statusAr: "نشط", statusEn: "Active", status: "active" },
+  { id: "007", nameAr: "نورا حسن", nameEn: "Noura Hassan", email: "noura@uni.edu", roleAr: "طالب", roleEn: "Student", role: "student", statusAr: "نشط", statusEn: "Active", status: "active" },
+  { id: "008", nameAr: "عمر سعيد", nameEn: "Omar Saeed", email: "omar@uni.edu", roleAr: "طالب", roleEn: "Student", role: "student", statusAr: "خريج", statusEn: "Graduated", status: "graduated" },
+];
+
+const roleColors: Record<string, string> = {
+  student: "bg-blue-50 text-blue-700 border border-blue-100",
+  professor: "bg-purple-50 text-purple-700 border border-purple-100",
+  admin: "bg-amber-50 text-amber-700 border border-amber-100",
+  finance: "bg-green-50 text-green-700 border border-green-100",
+};
+
+const statusColors: Record<string, string> = {
+  active: "bg-green-50 text-green-700 border border-green-100",
+  suspended: "bg-red-50 text-red-700 border border-red-100",
+  graduated: "bg-stone-100 text-stone-600 border border-stone-200",
+};
+
+function UsersTab() {
+  const { t } = useI18n();
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+
+  const filtered = usersData.filter(
+    (u) =>
+      (roleFilter === "all" || u.role === roleFilter) &&
+      (u.nameAr.includes(search) ||
+        u.nameEn.toLowerCase().includes(search.toLowerCase()) ||
+        u.email.includes(search))
+  );
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-stone-800">
+            {t("إدارة المستخدمين", "User Management")}
+          </h1>
+          <p className="mt-1 text-stone-500">
+            {t("إدارة حسابات وأدوار المستخدمين", "Manage user accounts and roles")}
+          </p>
+        </div>
+        <Button className="gap-2 bg-[#FABA19] text-white hover:bg-[#e5a816]">
+          <Plus className="h-4 w-4" />
+          {t("إضافة مستخدم", "Add User")}
+        </Button>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+          <Input
+            placeholder={t("بحث...", "Search...")}
+            className="ps-10 border-stone-200"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <select
+          value={roleFilter}
+          onChange={(e) => setRoleFilter(e.target.value)}
+          className="w-40 h-10 px-3 py-2 text-sm bg-white border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#FABA19] text-stone-700 font-medium"
+        >
+          <option value="all">{t("جميع الأدوار", "All Roles")}</option>
+          <option value="student">{t("طالب", "Student")}</option>
+          <option value="professor">{t("أستاذ", "Professor")}</option>
+          <option value="admin">{t("مسؤول", "Admin")}</option>
+          <option value="finance">{t("مالية", "Finance")}</option>
+        </select>
+      </div>
+
+      <Card className="border-0 shadow-sm bg-white overflow-hidden">
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader className="bg-stone-50/50">
+              <TableRow>
+                <TableHead className="font-semibold text-stone-700">{t("الاسم", "Name")}</TableHead>
+                <TableHead className="font-semibold text-stone-700">{t("البريد", "Email")}</TableHead>
+                <TableHead className="text-center font-semibold text-stone-700">{t("الدور", "Role")}</TableHead>
+                <TableHead className="text-center font-semibold text-stone-700">{t("الحالة", "Status")}</TableHead>
+                <TableHead className="w-12"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map((user) => (
+                <TableRow key={user.id} className="hover:bg-stone-50/20">
+                  <TableCell className="font-semibold text-stone-850">{t(user.nameAr, user.nameEn)}</TableCell>
+                  <TableCell className="text-stone-500 font-medium">{user.email}</TableCell>
+                  <TableCell className="text-center">
+                    <Badge variant="secondary" className={roleColors[user.role]}>{t(user.roleAr, user.roleEn)}</Badge>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Badge variant="secondary" className={statusColors[user.status]}>{t(user.statusAr, user.statusEn)}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-stone-400 hover:text-stone-600">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem className="font-medium text-stone-700">{t("تعديل", "Edit")}</DropdownMenuItem>
+                        <DropdownMenuItem className="font-medium text-stone-700">{t("تغيير الدور", "Change Role")}</DropdownMenuItem>
+                        <DropdownMenuItem className="text-red-600 font-medium">{t("تعليق", "Suspend")}</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ─── Faculties Tab ───────────────────────────────────────────────────────────
+
+const faculties = [
+  { nameAr: "كلية الطب", nameEn: "Medicine", depts: 8, students: 2500, profs: 120, statusAr: "نشط", statusEn: "Active" },
+  { nameAr: "كلية الحاسبات", nameEn: "Computing", depts: 5, students: 2200, profs: 85, statusAr: "نشط", statusEn: "Active" },
+  { nameAr: "كلية التجارة", nameEn: "Business", depts: 7, students: 2000, profs: 90, statusAr: "نشط", statusEn: "Active" },
+  { nameAr: "كلية العلوم", nameEn: "Sciences", depts: 6, students: 1800, profs: 75, statusAr: "نشط", statusEn: "Active" },
+  { nameAr: "كلية الحقوق", nameEn: "Law", depts: 4, students: 1500, profs: 60, statusAr: "نشط", statusEn: "Active" },
+  { nameAr: "كلية الفنون", nameEn: "Arts & Design", depts: 5, students: 1000, profs: 45, statusAr: "نشط", statusEn: "Active" },
+];
+
+function FacultiesTab() {
+  const { t } = useI18n();
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-stone-800">
+            {t("إدارة الكليات والأقسام", "Faculty & Department Management")}
+          </h1>
+          <p className="mt-1 text-stone-500">
+            {t("إضافة وتعديل الكليات والأقسام العلمية", "Add and manage faculties and departments")}
+          </p>
+        </div>
+        <Button className="gap-2 bg-[#FABA19] text-white hover:bg-[#e5a816]">
+          <Plus className="h-4 w-4" />
+          {t("إضافة كلية", "Add Faculty")}
+        </Button>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        {faculties.map((fac) => (
+          <Card key={fac.nameEn} className="border-0 shadow-sm bg-white">
+            <CardContent className="p-5">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+                    <Building2 className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-stone-800">{t(fac.nameAr, fac.nameEn)}</h3>
+                    <Badge variant="secondary" className="mt-1 bg-green-50 text-green-700 border border-green-100">{t(fac.statusAr, fac.statusEn)}</Badge>
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-stone-400 hover:text-amber-600"><Edit className="h-4 w-4" /></Button>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-stone-400 hover:text-red-600"><Trash2 className="h-4 w-4" /></Button>
+                </div>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-4 text-sm text-stone-500">
+                <span className="flex items-center gap-1"><BookOpen className="h-3.5 w-3.5" />{fac.depts} {t("أقسام", "Depts")}</span>
+                <span className="flex items-center gap-1"><Users className="h-3.5 w-3.5" />{fac.students.toLocaleString()} {t("طالب", "Students")}</span>
+                <span className="flex items-center gap-1"><Users className="h-3.5 w-3.5" />{fac.profs} {t("أستاذ", "Profs")}</span>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Programs Tab ────────────────────────────────────────────────────────────
+
+const programs = [
+  { nameAr: "بكالوريوس الطب", nameEn: "MBBS", facultyAr: "الطب", facultyEn: "Medicine", credits: 240, students: 450, statusAr: "نشط", statusEn: "Active" },
+  { nameAr: "بكالوريوس علوم الحاسب", nameEn: "BSc CS", facultyAr: "الحاسبات", facultyEn: "Computing", credits: 140, students: 650, statusAr: "نشط", statusEn: "Active" },
+  { nameAr: "بكالوريوس الذكاء الاصطناعي", nameEn: "BSc AI", facultyAr: "الحاسبات", facultyEn: "Computing", credits: 138, students: 350, statusAr: "نشط", statusEn: "Active" },
+  { nameAr: "ماجستير علوم البيانات", nameEn: "MSc Data Science", facultyAr: "الحاسبات", facultyEn: "Computing", credits: 36, students: 45, statusAr: "نشط", statusEn: "Active" },
+  { nameAr: "بكالوريوس المحاسبة", nameEn: "BSc Accounting", facultyAr: "التجارة", facultyEn: "Business", credits: 136, students: 520, statusAr: "نشط", statusEn: "Active" },
+  { nameAr: "بكالوريوس القانون", nameEn: "LLB", facultyAr: "الحقوق", facultyEn: "Law", credits: 144, students: 400, statusAr: "نشط", statusEn: "Active" },
+];
+
+function ProgramsTab() {
+  const { t } = useI18n();
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-stone-800">{t("إدارة البرامج والمقررات", "Programs & Courses")}</h1>
+          <p className="mt-1 text-stone-500">{t("إضافة وتعديل البرامج والمقررات الأكاديمية", "Manage academic programs and courses")}</p>
+        </div>
+        <Button className="gap-2 bg-[#FABA19] text-white hover:bg-[#e5a816]"><Plus className="h-4 w-4" />{t("إضافة برنامج", "Add Program")}</Button>
+      </div>
+
+      <Card className="border-0 shadow-sm bg-white overflow-hidden">
+        <CardHeader className="border-b border-stone-50">
+          <CardTitle className="flex items-center gap-2 text-base"><BookOpen className="h-5 w-5 text-[#FABA19]" />{t("البرامج الأكاديمية", "Academic Programs")}</CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader className="bg-stone-50/50">
+              <TableRow>
+                <TableHead className="font-semibold text-stone-700">{t("البرنامج", "Program")}</TableHead>
+                <TableHead className="font-semibold text-stone-700">{t("الكلية", "Faculty")}</TableHead>
+                <TableHead className="text-center font-semibold text-stone-700">{t("الساعات", "Credits")}</TableHead>
+                <TableHead className="text-center font-semibold text-stone-700">{t("الطلاب", "Students")}</TableHead>
+                <TableHead className="text-center font-semibold text-stone-700">{t("الحالة", "Status")}</TableHead>
+                <TableHead className="w-12"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {programs.map((p) => (
+                <TableRow key={p.nameEn} className="hover:bg-stone-50/20">
+                  <TableCell className="font-semibold text-stone-850">{t(p.nameAr, p.nameEn)}</TableCell>
+                  <TableCell className="text-stone-500 font-medium">{t(p.facultyAr, p.facultyEn)}</TableCell>
+                  <TableCell className="text-center font-semibold text-stone-800">{p.credits}</TableCell>
+                  <TableCell className="text-center font-semibold text-stone-800">{p.students}</TableCell>
+                  <TableCell className="text-center"><Badge variant="secondary" className="bg-green-50 text-green-700 border border-green-100">{t(p.statusAr, p.statusEn)}</Badge></TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8 text-stone-400 hover:text-stone-600"><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem className="font-medium text-stone-700">{t("تعديل", "Edit")}</DropdownMenuItem>
+                        <DropdownMenuItem className="font-medium text-stone-700">{t("المقررات", "Courses")}</DropdownMenuItem>
+                        <DropdownMenuItem className="text-red-600 font-medium">{t("حذف", "Delete")}</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ─── Schedules Tab ───────────────────────────────────────────────────────────
+
+const scheduleEntries = [
+  { courseAr: "حسب ٣٠١ - هياكل البيانات", courseEn: "CS 301 - Data Structures", profAr: "د. محمد سعيد", profEn: "Dr. M. Saeed", dayAr: "أحد/ثلاثاء", dayEn: "Sun/Tue", time: "08:00-09:30", roomAr: "ق١٢٠", roomEn: "R120", capacity: 60, enrolled: 42 },
+  { courseAr: "حسب ٣٠٥ - قواعد البيانات", courseEn: "CS 305 - Databases", profAr: "د. فاطمة حسن", profEn: "Dr. F. Hassan", dayAr: "اثنين/أربعاء", dayEn: "Mon/Wed", time: "10:00-11:30", roomAr: "ق٢٠٥", roomEn: "R205", capacity: 50, enrolled: 42 },
+  { courseAr: "ريض ٢٠٣ - رياضيات متقطعة", courseEn: "MATH 203 - Discrete Math", profAr: "د. أحمد كمال", profEn: "Dr. A. Kamal", dayAr: "أحد/ثلاثاء", dayEn: "Sun/Tue", time: "12:00-13:30", roomAr: "ق٣١٠", roomEn: "R310", capacity: 80, enrolled: 65 },
+  { courseAr: "حسب ٣١٠ - شبكات حاسب", courseEn: "CS 310 - Networks", profAr: "د. خالد عمر", profEn: "Dr. K. Omar", dayAr: "اثنين/أربعاء", dayEn: "Mon/Wed", time: "14:00-15:30", roomAr: "م١٠١", roomEn: "L101", capacity: 30, enrolled: 28 },
+  { courseAr: "حسب ٣٢٠ - هندسة البرمجيات", courseEn: "CS 320 - Software Eng.", profAr: "د. فاطمة حسن", profEn: "Dr. F. Hassan", dayAr: "أحد/ثلاثاء", dayEn: "Sun/Tue", time: "08:00-09:30", roomAr: "ق١٣٠", roomEn: "R130", capacity: 70, enrolled: 61 },
+];
+
+function SchedulesTab() {
+  const { t } = useI18n();
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-stone-800">{t("الجداول والقاعات", "Schedules & Classrooms")}</h1>
+          <p className="mt-1 text-stone-500">{t("إدارة الجداول الدراسية وتوزيع القاعات", "Manage class schedules and room assignments")}</p>
+        </div>
+        <Button className="gap-2 bg-[#FABA19] text-white hover:bg-[#e5a816]"><Plus className="h-4 w-4" />{t("إضافة جدول", "Add Schedule")}</Button>
+      </div>
+
+      <div className="flex gap-3">
+        <select
+          defaultValue="computing"
+          className="w-48 h-10 px-3 py-2 text-sm bg-white border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#FABA19] text-stone-700 font-medium"
+        >
+          <option value="computing">{t("كلية الحاسبات", "Computing")}</option>
+          <option value="medicine">{t("كلية الطب", "Medicine")}</option>
+          <option value="business">{t("كلية التجارة", "Business")}</option>
+        </select>
+      </div>
+
+      <Card className="border-0 shadow-sm bg-white overflow-hidden">
+        <CardHeader className="border-b border-stone-50">
+          <CardTitle className="flex items-center gap-2 text-base"><Clock className="h-5 w-5 text-[#FABA19]" />{t("جدول المحاضرات", "Lecture Schedule")}</CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader className="bg-stone-50/50">
+              <TableRow>
+                <TableHead className="font-semibold text-stone-700">{t("المقرر", "Course")}</TableHead>
+                <TableHead className="font-semibold text-stone-700">{t("المحاضر", "Instructor")}</TableHead>
+                <TableHead className="font-semibold text-stone-700">{t("اليوم", "Day")}</TableHead>
+                <TableHead className="font-semibold text-stone-700">{t("الوقت", "Time")}</TableHead>
+                <TableHead className="font-semibold text-stone-700">{t("القاعة", "Room")}</TableHead>
+                <TableHead className="text-center font-semibold text-stone-700">{t("الإشغال", "Occupancy")}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {scheduleEntries.map((entry, i) => (
+                <TableRow key={i} className="hover:bg-stone-50/20">
+                  <TableCell className="font-semibold text-stone-850">{t(entry.courseAr, entry.courseEn)}</TableCell>
+                  <TableCell className="text-stone-500 font-medium">{t(entry.profAr, entry.profEn)}</TableCell>
+                  <TableCell className="font-medium text-stone-600">{t(entry.dayAr, entry.dayEn)}</TableCell>
+                  <TableCell><Badge variant="secondary" className="gap-1 bg-amber-50 text-amber-705 border border-amber-100"><Clock className="h-3 w-3" />{entry.time}</Badge></TableCell>
+                  <TableCell><Badge variant="outline" className="gap-1 border-stone-200 font-medium text-stone-600"><MapPin className="h-3 w-3 text-stone-400" />{t(entry.roomAr, entry.roomEn)}</Badge></TableCell>
+                  <TableCell className="text-center">
+                    <span className={entry.enrolled / entry.capacity > 0.9 ? "text-red-600 font-semibold" : "text-stone-600 font-medium"}>
+                      {entry.enrolled}/{entry.capacity}
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ─── Payments Tab ────────────────────────────────────────────────────────────
+
+const recentPayments = [
+  { studentAr: "أحمد محمد", studentEn: "Ahmed M.", amountAr: "١٢,٥٠٠", amountEn: "12,500", dateAr: "٧ فبراير", dateEn: "Feb 7", method: "Visa", statusAr: "مكتمل", statusEn: "Completed", status: "paid" },
+  { studentAr: "فاطمة حسين", studentEn: "Fatima H.", amountAr: "١٢,٥٠٠", amountEn: "12,500", dateAr: "٦ فبراير", dateEn: "Feb 6", method: "Transfer", statusAr: "مكتمل", statusEn: "Completed", status: "paid" },
+  { studentAr: "محمد خالد", studentEn: "Mohamed K.", amountAr: "٢٥,٠٠٠", amountEn: "25,000", dateAr: "٥ فبراير", dateEn: "Feb 5", method: "Visa", statusAr: "مكتمل", statusEn: "Completed", status: "paid" },
+  { studentAr: "يوسف إبراهيم", studentEn: "Yousef I.", amountAr: "١٢,٥٠٠", amountEn: "12,500", dateAr: "٣ فبراير", dateEn: "Feb 3", method: "Cash", statusAr: "معلق", statusEn: "Pending", status: "pending" },
+  { studentAr: "نورا حسن", studentEn: "Noura H.", amountAr: "١٢,٥٠٠", amountEn: "12,500", dateAr: "٢ فبراير", dateEn: "Feb 2", method: "Visa", statusAr: "مرفوض", statusEn: "Rejected", status: "rejected" },
+];
+
+function PaymentsTab() {
+  const { t } = useI18n();
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-stone-800">{t("إدارة المدفوعات", "Payment Management")}</h1>
+          <p className="mt-1 text-stone-500">{t("متابعة وإدارة المدفوعات الطلابية", "Track and manage student payments")}</p>
+        </div>
+        <Button variant="outline" className="gap-1 border-stone-200 text-stone-650 hover:bg-stone-50"><Download className="h-4 w-4" />{t("تصدير تقرير", "Export Report")}</Button>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-4">
+        <Card className="border-0 shadow-sm bg-white">
+          <CardContent className="p-5">
+            <p className="text-sm text-stone-500 font-medium">{t("إجمالي الإيرادات", "Total Revenue")}</p>
+            <p className="mt-1 text-2xl font-bold text-stone-850">{t("١٨.٥M ج.م", "18.5M EGP")}</p>
+            <p className="mt-1 text-xs text-green-600 flex items-center gap-1 font-semibold"><TrendingUp className="h-3 w-3" />+12%</p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-sm bg-white">
+          <CardContent className="p-5">
+            <p className="text-sm text-stone-500 font-medium">{t("المحصّل", "Collected")}</p>
+            <p className="mt-1 text-2xl font-bold text-green-600">{t("١٥.٢M", "15.2M")}</p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-sm bg-white">
+          <CardContent className="p-5">
+            <p className="text-sm text-stone-500 font-medium">{t("المعلق", "Pending")}</p>
+            <p className="mt-1 text-2xl font-bold text-amber-600">{t("٢.٨M", "2.8M")}</p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-sm bg-white">
+          <CardContent className="p-5">
+            <p className="text-sm text-stone-500 font-medium">{t("المتأخر", "Overdue")}</p>
+            <p className="mt-1 text-2xl font-bold text-red-600">{t("٥٠٠K", "500K")}</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="border-0 shadow-sm bg-white">
+        <CardContent className="p-5">
+          <div className="mb-2 flex justify-between text-sm">
+            <span className="text-stone-500 font-medium">{t("نسبة التحصيل", "Collection Rate")}</span>
+            <span className="font-semibold text-stone-800">82%</span>
+          </div>
+          <Progress value={82} className="h-3 bg-stone-100 [&>div]:bg-[#FABA19]" />
+        </CardContent>
+      </Card>
+
+      <Card className="border-0 shadow-sm bg-white overflow-hidden">
+        <CardHeader className="border-b border-stone-50">
+          <CardTitle className="flex items-center gap-2 text-base font-bold text-stone-800"><CreditCard className="h-5 w-5 text-[#FABA19]" />{t("آخر المدفوعات", "Recent Payments")}</CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader className="bg-stone-50/50">
+              <TableRow>
+                <TableHead className="font-semibold text-stone-700">{t("الطالب", "Student")}</TableHead>
+                <TableHead className="font-semibold text-stone-700">{t("المبلغ", "Amount")}</TableHead>
+                <TableHead className="font-semibold text-stone-700">{t("التاريخ", "Date")}</TableHead>
+                <TableHead className="font-semibold text-stone-700">{t("الطريقة", "Method")}</TableHead>
+                <TableHead className="text-center font-semibold text-stone-700">{t("الحالة", "Status")}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {recentPayments.map((p, i) => (
+                <TableRow key={i} className="hover:bg-stone-50/20">
+                  <TableCell className="font-semibold text-stone-850">{t(p.studentAr, p.studentEn)}</TableCell>
+                  <TableCell className="font-semibold text-stone-800">{t(`${p.amountAr} ج.م`, `${p.amountEn} EGP`)}</TableCell>
+                  <TableCell className="text-stone-500 font-medium">{t(p.dateAr, p.dateEn)}</TableCell>
+                  <TableCell className="font-semibold text-stone-700">{p.method}</TableCell>
+                  <TableCell className="text-center">
+                    <Badge variant="secondary" className={
+                      p.status === "paid" ? "bg-green-50 text-green-700 gap-1 border border-green-100" :
+                        p.status === "pending" ? "bg-amber-50 text-amber-700 gap-1 border border-amber-100" :
+                          "bg-red-50 text-red-700 gap-1 border border-red-100"
+                    }>
+                      {p.status === "paid" ? <CheckCircle className="h-3 w-3" /> : <AlertTriangle className="h-3 w-3" />}
+                      {t(p.statusAr, p.statusEn)}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ─── Semesters Tab ───────────────────────────────────────────────────────────
+
+const semesters = [
+  { nameAr: "الفصل الثاني ٢٠٢٥-٢٠٢٦", nameEn: "Spring 2025-2026", startAr: "١ فبراير", startEn: "Feb 1", endAr: "١٥ يونيو", endEn: "Jun 15", regStartAr: "١٥ يناير", regStartEn: "Jan 15", regEndAr: "٢٠ فبراير", regEndEn: "Feb 20", statusAr: "نشط", statusEn: "Active", status: "active" },
+  { nameAr: "الفصل الأول ٢٠٢٥-٢٠٢٦", nameEn: "Fall 2025-2026", startAr: "١ سبتمبر", startEn: "Sep 1", endAr: "١٥ يناير", endEn: "Jan 15", regStartAr: "١ أغسطس", regStartEn: "Aug 1", regEndAr: "١٥ سبتمبر", regEndEn: "Sep 15", statusAr: "مكتمل", statusEn: "Completed", status: "completed" },
+  { nameAr: "الفصل الصيفي ٢٠٢٥", nameEn: "Summer 2025", startAr: "١ يوليو", startEn: "Jul 1", endAr: "١٥ أغسطس", endEn: "Aug 15", regStartAr: "١٥ يونيو", regStartEn: "Jun 15", regEndAr: "٣٠ يونيو", regEndEn: "Jun 30", statusAr: "مكتمل", statusEn: "Completed", status: "completed" },
+];
+
+function SemestersTab() {
+  const { t } = useI18n();
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-stone-800">{t("إدارة الفصول الدراسية", "Semester Management")}</h1>
+          <p className="mt-1 text-stone-500">{t("إدارة الفصول وفترات التسجيل", "Manage semesters and registration periods")}</p>
+        </div>
+        <Button className="gap-2 bg-[#FABA19] text-white hover:bg-[#e5a816]"><Plus className="h-4 w-4" />{t("فصل جديد", "New Semester")}</Button>
+      </div>
+
+      <div className="space-y-4">
+        {semesters.map((sem) => (
+          <Card key={sem.nameEn} className="border-0 shadow-sm bg-white">
+            <CardContent className="p-5">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+                    <Calendar className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-[#1C1917]">{t(sem.nameAr, sem.nameEn)}</h3>
+                    <Badge variant="secondary" className={sem.status === "active" ? "bg-green-50 text-green-700 mt-1 border border-green-100" : "bg-stone-100 text-stone-600 mt-1"}>
+                      {t(sem.statusAr, sem.statusEn)}
+                    </Badge>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="gap-1 border-stone-200 text-stone-650 hover:bg-stone-50"><Edit className="h-3.5 w-3.5" />{t("تعديل", "Edit")}</Button>
+              </div>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-sm">
+                <div className="rounded-lg bg-stone-50 p-3">
+                  <p className="text-xs text-stone-400 font-medium">{t("بداية الفصل", "Semester Start")}</p>
+                  <p className="mt-1 font-semibold text-stone-700">{t(sem.startAr, sem.startEn)}</p>
+                </div>
+                <div className="rounded-lg bg-stone-50 p-3">
+                  <p className="text-xs text-stone-400 font-medium">{t("نهاية الفصل", "Semester End")}</p>
+                  <p className="mt-1 font-semibold text-stone-700">{t(sem.endAr, sem.endEn)}</p>
+                </div>
+                <div className="rounded-lg bg-stone-50 p-3">
+                  <p className="text-xs text-stone-400 font-medium">{t("فتح التسجيل", "Reg. Opens")}</p>
+                  <p className="mt-1 font-semibold text-stone-700">{t(sem.regStartAr, sem.regStartEn)}</p>
+                </div>
+                <div className="rounded-lg bg-stone-50 p-3">
+                  <p className="text-xs text-stone-400 font-medium">{t("إغلاق التسجيل", "Reg. Closes")}</p>
+                  <p className="mt-1 font-semibold text-stone-700">{t(sem.regEndAr, sem.regEndEn)}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Reports Tab ─────────────────────────────────────────────────────────────
+
+const reports = [
+  { titleAr: "تقرير الطلاب", titleEn: "Student Report", descAr: "إحصائيات شاملة عن الطلاب والتسجيل", descEn: "Comprehensive student and enrollment statistics" },
+  { titleAr: "تقرير الأداء الأكاديمي", titleEn: "Academic Performance", descAr: "تحليل المعدلات والنتائج حسب الكلية", descEn: "GPA analysis and results by faculty" },
+  { titleAr: "تقرير مالي", titleEn: "Financial Report", descAr: "إيرادات ومصروفات ونسبة التحصيل", descEn: "Revenue, expenses, and collection rates" },
+  { titleAr: "تقرير التخرج", titleEn: "Graduation Report", descAr: "إحصائيات الخريجين ونسب التوظيف", descEn: "Graduate statistics and employment rates" },
+  { titleAr: "تقرير المقررات", titleEn: "Course Report", descAr: "معدلات النجاح والرسوب حسب المقرر", descEn: "Pass/fail rates by course" },
+  { titleAr: "تقرير اللوائح", titleEn: "Compliance Report", descAr: "متابعة الالتزام باللوائح الأكاديمية", descEn: "Academic regulation compliance tracking" },
+];
+
+function ReportsTab() {
+  const { t } = useI18n();
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-[#1C1917]">{t("التقارير والإحصائيات", "Reports & Analytics")}</h1>
+        <p className="mt-1 text-stone-500">{t("تقارير شاملة وتحليلات إحصائية", "Comprehensive reports and statistical analysis")}</p>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { labelAr: "نسبة النجاح", labelEn: "Pass Rate", value: "87%", color: "text-green-600" },
+          { labelAr: "معدل الرضا", labelEn: "Satisfaction", value: "4.2/5", color: "text-blue-600" },
+          { labelAr: "نسبة التوظيف", labelEn: "Employment", value: "95%", color: "text-purple-600" },
+          { labelAr: "نمو الطلاب", labelEn: "Growth", value: "+8%", color: "text-amber-600" },
+        ].map((s) => (
+          <Card key={s.labelEn} className="border-0 shadow-sm bg-white">
+            <CardContent className="p-5 flex items-center justify-between">
+              <div>
+                <p className="text-sm text-stone-500">{t(s.labelAr, s.labelEn)}</p>
+                <p className={`mt-1 text-2xl font-bold ${s.color}`}>{s.value}</p>
+              </div>
+              <TrendingUp className={`h-6 w-6 ${s.color} opacity-50`} />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Faculty Distribution */}
+      <Card className="border-0 shadow-sm bg-white">
+        <CardHeader className="border-b border-stone-50">
+          <CardTitle className="text-base font-bold text-[#1C1917]">{t("توزيع المعدلات حسب الكلية", "GPA Distribution by Faculty")}</CardTitle>
+        </CardHeader>
+        <CardContent className="p-5 space-y-4">
+          {[
+            { nameAr: "كلية الطب", nameEn: "Medicine", avg: "3.2", pct: 80 },
+            { nameAr: "كلية الحاسبات", nameEn: "Computing", avg: "3.0", pct: 75 },
+            { nameAr: "كلية التجارة", nameEn: "Business", avg: "2.8", pct: 70 },
+            { nameAr: "كلية العلوم", nameEn: "Sciences", avg: "2.9", pct: 73 },
+            { nameAr: "كلية الحقوق", nameEn: "Law", avg: "3.1", pct: 78 },
+            { nameAr: "كلية الفنون", nameEn: "Arts", avg: "3.3", pct: 83 },
+          ].map((f) => (
+            <div key={f.nameEn}>
+              <div className="mb-1 flex justify-between text-sm">
+                <span className="text-stone-600 font-medium">{t(f.nameAr, f.nameEn)}</span>
+                <span className="font-semibold text-stone-800">{t(`المعدل: ${f.avg}`, `Avg GPA: ${f.avg}`)}</span>
+              </div>
+              <Progress value={f.pct} className="h-2 bg-stone-100 [&>div]:bg-[#FABA19]" />
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      {/* Report Downloads */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {reports.map((report) => (
+          <Card key={report.titleEn} className="border-0 shadow-sm bg-white">
+            <CardContent className="p-5">
+              <div className="flex items-start gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+                  <FileText className="h-5 w-5" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-stone-800">{t(report.titleAr, report.titleEn)}</h3>
+                  <p className="mt-1 text-xs text-stone-500 font-medium">{t(report.descAr, report.descEn)}</p>
+                </div>
+              </div>
+              <Button variant="outline" size="sm" className="mt-4 w-full gap-1 border-stone-200 text-stone-600 hover:bg-stone-50">
+                <Download className="h-3.5 w-3.5" />
+                {t("تحميل", "Download")}
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Dashboard Page ─────────────────────────────────────────────────────
 
 export default function Dashboard() {
   const router = useRouter();
+  const { t, locale } = useI18n();
   const [activeTab, setActiveTab] = useState('overview');
   const [user, setUser] = useState<SessionUser | null>(null);
 
@@ -38,424 +772,111 @@ export default function Dashboard() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-slate-50" dir="rtl">
-      
-      <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14 sm:h-16">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center">
-                <span className="text-sm sm:text-lg font-bold text-slate-900">AU</span>
+    <div className="min-h-screen bg-[#FAF7F2]" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+      {/* Header */}
+      <header className="bg-white border-b border-stone-200 sticky top-0 z-50 shadow-sm">
+        {/* Top Bar */}
+        <div className="bg-[#1C1917] text-[#E7E5E4] h-9">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <span className="opacity-80">{t("مرحباً،", "Welcome,")} {user.firstName} {user.lastName}</span>
+              <span className="opacity-30">|</span>
+              <span className="text-[#FABA19] font-semibold">{t("مسؤول النظام", "System Admin")}</span>
+            </div>
+            <div>
+              <button
+                onClick={() => {
+                  localStorage.removeItem('user');
+                  router.push('/login');
+                }}
+                className="flex items-center gap-1 hover:text-[#FABA19] transition-colors font-semibold"
+              >
+                <LogOut className="h-3 w-3" />
+                <span>{t("تسجيل الخروج", "Logout")}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Bar */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex justify-between items-center">
+            {/* Logo & Info */}
+            <div className="flex items-center gap-3">
+              <div className="relative w-12 h-12 flex-shrink-0">
+                <img
+                  src="/logo.png"
+                  alt="Logo"
+                  className="object-contain rounded-full p-0.5 border border-[#FABA19] bg-[#FFFDF8]"
+                />
               </div>
-              <div>
-                <h1 className="text-base sm:text-lg font-bold text-white">لوحة التحكم</h1>
-                <p className="text-xs text-amber-400 hidden sm:block">جامعة أسيوط الأهلية</p>
+              <div className="leading-tight">
+                <h1 className="text-base sm:text-lg font-bold text-[#1C1917]">{t("جامعة أسيوط الأهلية", "Assiut National University")}</h1>
+                <p className="text-xs text-[#FABA19] font-bold">{t("كلية الحاسبات والمعلومات", "Faculty of Computers & Information")}</p>
+                <p className="text-[10px] text-stone-500 font-medium">{t("لوحة تحكم مسؤول النظام", "Admin Control Panel")}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-4">
-              <div className="text-left hidden sm:block">
-                <p className="text-sm text-white font-medium">{user.firstName} {user.lastName}</p>
-                <p className="text-xs text-slate-400">{user.email}</p>
+
+            {/* Profile Avatar / Trigger */}
+            <div className="flex items-center gap-3">
+              <div className="text-left hidden md:block">
+                <p className="text-xs text-stone-400 font-medium">{t("تم تسجيل الدخول كـ", "Logged in as")}</p>
+                <p className="text-sm font-semibold text-stone-700">{user.firstName} {user.lastName}</p>
               </div>
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-amber-500 rounded-full flex items-center justify-center">
-                <span className="text-slate-900 font-bold text-sm sm:text-base">{user.firstName[0]}</span>
+              <div className="w-10 h-10 rounded-xl bg-amber-50 text-[#1C1917] border border-amber-100 flex items-center justify-center font-bold shadow-sm">
+                {user.firstName[0]}
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
-        
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 mb-4 sm:mb-6 overflow-x-auto">
-          <div className="flex gap-1 sm:gap-2 p-1.5 sm:p-2 min-w-max">
-            <TabButton active={activeTab === 'overview'} onClick={() => setActiveTab('overview')}>
-              📊 <span className="hidden sm:inline">نظرة عامة</span><span className="sm:hidden">عامة</span>
-            </TabButton>
-            <TabButton active={activeTab === 'students'} onClick={() => setActiveTab('students')}>
-              🎓 <span className="hidden sm:inline">الطلاب</span><span className="sm:hidden">طلاب</span>
-            </TabButton>
-            <TabButton active={activeTab === 'courses'} onClick={() => setActiveTab('courses')}>
-              📚 <span className="hidden sm:inline">المواد</span><span className="sm:hidden">مواد</span>
-            </TabButton>
-            <TabButton active={activeTab === 'schedule'} onClick={() => setActiveTab('schedule')}>
-              📅 <span className="hidden sm:inline">الجدول</span><span className="sm:hidden">جدول</span>
-            </TabButton>
-            <TabButton active={activeTab === 'grades'} onClick={() => setActiveTab('grades')}>
-              📝 <span className="hidden sm:inline">الدرجات</span><span className="sm:hidden">درجات</span>
-            </TabButton>
-            <TabButton active={activeTab === 'reports'} onClick={() => setActiveTab('reports')}>
-              📈 <span className="hidden sm:inline">التقارير</span><span className="sm:hidden">تقارير</span>
-            </TabButton>
-          </div>
-        </div>
-
-        
-        {activeTab === 'overview' && <OverviewTab />}
-        {activeTab === 'students' && <StudentsTab />}
-        {activeTab === 'courses' && <CoursesTab />}
-        {activeTab === 'schedule' && <ScheduleTab />}
-        {activeTab === 'grades' && <GradesTab />}
-        {activeTab === 'reports' && <ReportsTab />}
-      </div>
-    </div>
-  );
-}
-
-function TabButton({ active, onClick, children }: TabButtonProps) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-6 py-3 rounded-lg font-medium transition-all whitespace-nowrap ${
-        active
-          ? 'bg-amber-500 text-slate-900 shadow-md'
-          : 'text-slate-600 hover:bg-slate-100'
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
-function OverviewTab() {
-  return (
-    <div className="space-y-4 sm:space-y-6">
-      
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-        <StatCard title="إجمالي الطلاب" value="5,234" change="+12%" icon="🎓" color="blue" />
-        <StatCard title="أعضاء هيئة التدريس" value="287" change="+5%" icon="👨‍🏫" color="green" />
-        <StatCard title="المواد الدراسية" value="156" change="+8" icon="📚" color="purple" />
-        <StatCard title="معدل النجاح" value="94.5%" change="+2.3%" icon="📊" color="amber" />
-      </div>
-
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6">
-          <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-4">توزيع الطلاب حسب الكليات</h3>
-          <div className="space-y-3">
-            <ProgressBar label="كلية الهندسة" value={45} color="blue" />
-            <ProgressBar label="كلية الطب" value={30} color="red" />
-            <ProgressBar label="كلية التجارة" value={15} color="green" />
-            <ProgressBar label="كلية الآداب" value={10} color="purple" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6">
-          <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-4">الأنشطة الأخيرة</h3>
-          <div className="space-y-3">
-            <ActivityItem icon="✅" text="تم تسجيل 45 طالب جديد" time="منذ ساعتين" />
-            <ActivityItem icon="📝" text="تم رفع درجات مادة CS101" time="منذ 4 ساعات" />
-            <ActivityItem icon="📅" text="تحديث الجدول الدراسي للفصل الحالي" time="منذ يوم" />
-            <ActivityItem icon="💰" text="تم تسجيل 120 عملية دفع" time="منذ يومين" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function StudentsTab() {
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-      <div className="p-4 sm:p-6 border-b border-slate-200">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900">إدارة الطلاب</h2>
-          <button className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold rounded-lg transition-colors text-sm w-full sm:w-auto">
-            + إضافة طالب جديد
-          </button>
-        </div>
-      </div>
-      <div className="p-4 sm:p-6">
-        <div className="mb-4">
-          <input
-            type="text"
-            placeholder="البحث عن طالب..."
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-amber-500"
-          />
-        </div>
-        <div className="overflow-x-auto -mx-4 sm:mx-0">
-          <table className="w-full min-w-[600px]">
-            <thead className="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm font-semibold text-slate-700">الرقم الجامعي</th>
-                <th className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm font-semibold text-slate-700">الاسم</th>
-                <th className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm font-semibold text-slate-700">البرنامج</th>
-                <th className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm font-semibold text-slate-700">المستوى</th>
-                <th className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm font-semibold text-slate-700">المعدل</th>
-                <th className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm font-semibold text-slate-700">الحالة</th>
-                <th className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm font-semibold text-slate-700">الإجراءات</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200">
-              <StudentRow id="2024001" name="أحمد محمد علي" program="علوم الحاسب" level="المستوى الثاني" gpa="3.85" status="نشط" />
-              <StudentRow id="2024002" name="فاطمة حسن محمود" program="الهندسة الكهربائية" level="المستوى الأول" gpa="3.92" status="نشط" />
-              <StudentRow id="2024003" name="محمد أحمد السيد" program="علوم الحاسب" level="المستوى الثالث" gpa="3.67" status="نشط" />
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CoursesTab() {
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-      <div className="p-4 sm:p-6 border-b border-slate-200">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900">المواد الدراسية</h2>
-          <button className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold rounded-lg transition-colors text-sm w-full sm:w-auto">
-            + إضافة مادة جديدة
-          </button>
-        </div>
-      </div>
-      <div className="p-4 sm:p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-          <CourseCard code="CS101" name="مقدمة في البرمجة" credits={3} level={1} students={120} />
-          <CourseCard code="CS102" name="هياكل البيانات" credits={3} level={2} students={95} />
-          <CourseCard code="CS201" name="قواعد البيانات" credits={3} level={2} students={87} />
-          <CourseCard code="CS301" name="الذكاء الاصطناعي" credits={4} level={3} students={65} />
-          <CourseCard code="EE101" name="الدوائر الكهربائية" credits={3} level={1} students={110} />
-          <CourseCard code="MATH101" name="التفاضل والتكامل" credits={4} level={1} students={150} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ScheduleTab() {
-  const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
-  const times = ['8:00', '10:00', '12:00', '2:00', '4:00'];
-
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6">
-      <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-4 sm:mb-6">الجدول الدراسي</h2>
-      <div className="overflow-x-auto -mx-4 sm:mx-0">
-        <table className="w-full border-collapse min-w-[500px]">
-          <thead>
-            <tr>
-              <th className="border border-slate-300 bg-slate-100 p-2 sm:p-3 text-xs sm:text-sm font-semibold">الوقت</th>
-              {days.map((day) => (
-                <th key={day} className="border border-slate-300 bg-slate-100 p-2 sm:p-3 text-xs sm:text-sm font-semibold">
-                  {day}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {times.map((time) => (
-              <tr key={time}>
-                <td className="border border-slate-300 bg-slate-50 p-2 sm:p-3 text-xs sm:text-sm font-medium text-center">
-                  {time}
-                </td>
-                {days.map((day) => (
-                  <td key={`${day}-${time}`} className="border border-slate-300 p-1 sm:p-2">
-                    {Math.random() > 0.5 && (
-                      <div className="bg-blue-50 border border-blue-200 rounded p-1 sm:p-2 text-xs">
-                        <div className="font-semibold text-blue-900">CS101</div>
-                        <div className="text-blue-700 hidden sm:block">قاعة A101</div>
-                      </div>
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-function GradesTab() {
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6">
-      <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-4 sm:mb-6">إدارة الدرجات</h2>
-      <div className="space-y-3 sm:space-y-4">
-        <GradeCard student="أحمد محمد علي" course="CS101 - مقدمة في البرمجة" midterm={28} final={65} assignment={12} total={95} grade="A" />
-        <GradeCard student="فاطمة حسن محمود" course="CS102 - هياكل البيانات" midterm={26} final={62} assignment={10} total={88} grade="B+" />
-        <GradeCard student="محمد أحمد السيد" course="CS201 - قواعد البيانات" midterm={25} final={58} assignment={11} total={84} grade="B" />
-      </div>
-    </div>
-  );
-}
-
-function ReportsTab() {
-  return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6">
-          <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-4">توزيع التقديرات</h3>
-          <div className="space-y-3">
-            <GradeDistribution grade="A" count={450} percentage={25} />
-            <GradeDistribution grade="B" count={720} percentage={40} />
-            <GradeDistribution grade="C" count={450} percentage={25} />
-            <GradeDistribution grade="D" count={180} percentage={10} />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6">
-          <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-4">إحصائيات الحضور</h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600 text-sm">معدل الحضور العام</span>
-              <span className="text-xl sm:text-2xl font-bold text-green-600">92%</span>
+      {/* Main Content Area */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        {/* Navigation Tabs Bar */}
+        <Card className="border-0 shadow-sm mb-6 bg-white overflow-hidden">
+          <CardContent className="p-2">
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide py-1 px-1">
+              <TabButton active={activeTab === 'overview'} onClick={() => setActiveTab('overview')}>
+                📊 {t("نظرة عامة", "Overview")}
+              </TabButton>
+              <TabButton active={activeTab === 'users'} onClick={() => setActiveTab('users')}>
+                👥 {t("إدارة المستخدمين", "Users")}
+              </TabButton>
+              <TabButton active={activeTab === 'faculties'} onClick={() => setActiveTab('faculties')}>
+                🏢 {t("إدارة الكليات", "Faculties")}
+              </TabButton>
+              <TabButton active={activeTab === 'programs'} onClick={() => setActiveTab('programs')}>
+                🎓 {t("البرامج والمقررات", "Programs")}
+              </TabButton>
+              <TabButton active={activeTab === 'schedules'} onClick={() => setActiveTab('schedules')}>
+                📅 {t("الجداول والقاعات", "Schedules")}
+              </TabButton>
+              <TabButton active={activeTab === 'payments'} onClick={() => setActiveTab('payments')}>
+                💰 {t("إدارة المدفوعات", "Payments")}
+              </TabButton>
+              <TabButton active={activeTab === 'semesters'} onClick={() => setActiveTab('semesters')}>
+                🗓️ {t("الفصول الدراسية", "Semesters")}
+              </TabButton>
+              <TabButton active={activeTab === 'reports'} onClick={() => setActiveTab('reports')}>
+                📈 {t("التقارير والإحصائيات", "Reports")}
+              </TabButton>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600 text-sm">الطلاب المنتظمون</span>
-              <span className="text-xl sm:text-2xl font-bold text-blue-600">4,812</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600 text-sm">حالات الغياب</span>
-              <span className="text-xl sm:text-2xl font-bold text-red-600">422</span>
-            </div>
-          </div>
+          </CardContent>
+        </Card>
+
+        {/* Tab Contents */}
+        <div className="transition-all duration-300">
+          {activeTab === 'overview'  && <OverviewTab />}
+          {activeTab === 'users'     && <UsersTab />}
+          {activeTab === 'faculties' && <FacultiesTab />}
+          {activeTab === 'programs'  && <ProgramsTab />}
+          {activeTab === 'schedules' && <SchedulesTab />}
+          {activeTab === 'payments'  && <PaymentsTab />}
+          {activeTab === 'semesters' && <SemestersTab />}
+          {activeTab === 'reports'   && <ReportsTab />}
         </div>
-      </div>
-    </div>
-  );
-}
-
-
-
-function StatCard({ title, value, change, icon, color }: StatCardProps) {
-  const colors: Record<StatColor, string> = {
-    blue: 'from-blue-500 to-blue-600',
-    green: 'from-green-500 to-green-600',
-    purple: 'from-purple-500 to-purple-600',
-    amber: 'from-amber-500 to-amber-600',
-    red: 'from-red-500 to-red-600',
-  };
-
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-3 sm:p-6">
-      <div className="flex items-center justify-between mb-2 sm:mb-4">
-        <div className={`w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-br ${colors[color]} rounded-lg flex items-center justify-center text-lg sm:text-2xl`}>
-          {icon}
-        </div>
-        <span className="text-green-600 text-xs sm:text-sm font-semibold">{change}</span>
-      </div>
-      <h3 className="text-slate-600 text-xs sm:text-sm mb-1 leading-tight">{title}</h3>
-      <p className="text-xl sm:text-3xl font-bold text-slate-900">{value}</p>
-    </div>
-  );
-}
-
-function ProgressBar({ label, value, color }: ProgressBarProps) {
-  const colors: Record<ProgressColor, string> = {
-    blue: 'bg-blue-500',
-    red: 'bg-red-500',
-    green: 'bg-green-500',
-    purple: 'bg-purple-500',
-  };
-
-  return (
-    <div>
-      <div className="flex justify-between text-sm mb-1">
-        <span className="text-slate-700">{label}</span>
-        <span className="text-slate-600 font-semibold">{value}%</span>
-      </div>
-      <div className="w-full bg-slate-200 rounded-full h-2">
-        <div className={`${colors[color]} h-2 rounded-full`} style={{ width: `${value}%` }} />
-      </div>
-    </div>
-  );
-}
-
-function ActivityItem({ icon, text, time }: ActivityItemProps) {
-  return (
-    <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
-      <span className="text-xl">{icon}</span>
-      <div className="flex-1">
-        <p className="text-slate-700 text-sm">{text}</p>
-        <p className="text-slate-500 text-xs mt-1">{time}</p>
-      </div>
-    </div>
-  );
-}
-
-function StudentRow({ id, name, program, level, gpa, status }: StudentRowProps) {
-  return (
-    <tr className="hover:bg-slate-50">
-      <td className="px-4 py-3 text-sm text-slate-900">{id}</td>
-      <td className="px-4 py-3 text-sm font-medium text-slate-900">{name}</td>
-      <td className="px-4 py-3 text-sm text-slate-600">{program}</td>
-      <td className="px-4 py-3 text-sm text-slate-600">{level}</td>
-      <td className="px-4 py-3 text-sm font-semibold text-green-600">{gpa}</td>
-      <td className="px-4 py-3">
-        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">{status}</span>
-      </td>
-      <td className="px-4 py-3">
-        <button className="text-blue-600 hover:text-blue-800 text-sm">عرض</button>
-      </td>
-    </tr>
-  );
-}
-
-function CourseCard({ code, name, credits, level, students }: CourseCardProps) {
-  return (
-    <div className="border border-slate-200 rounded-lg p-4 hover:border-amber-500 transition-colors">
-      <div className="flex justify-between items-start mb-3">
-        <div>
-          <h4 className="font-bold text-slate-900">{code}</h4>
-          <p className="text-sm text-slate-600 mt-1">{name}</p>
-        </div>
-        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-          {credits} ساعات
-        </span>
-      </div>
-      <div className="flex justify-between text-sm text-slate-600">
-        <span>المستوى {level}</span>
-        <span>{students} طالب</span>
-      </div>
-    </div>
-  );
-}
-
-function GradeCard({ student, course, midterm, final, assignment, total, grade }: GradeCardProps) {
-  return (
-    <div className="border border-slate-200 rounded-lg p-3 sm:p-4">
-      <div className="flex justify-between items-start mb-3">
-        <div className="min-w-0 flex-1 ml-2">
-          <h4 className="font-semibold text-slate-900 text-sm sm:text-base">{student}</h4>
-          <p className="text-xs sm:text-sm text-slate-600 truncate">{course}</p>
-        </div>
-        <span className="px-2 sm:px-3 py-1 bg-green-100 text-green-800 font-bold rounded-lg text-sm flex-shrink-0">
-          {grade}
-        </span>
-      </div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 text-xs sm:text-sm">
-        <div>
-          <p className="text-slate-500">منتصف الفصل</p>
-          <p className="font-semibold text-slate-900">{midterm}/30</p>
-        </div>
-        <div>
-          <p className="text-slate-500">النهائي</p>
-          <p className="font-semibold text-slate-900">{final}/70</p>
-        </div>
-        <div>
-          <p className="text-slate-500">الأعمال</p>
-          <p className="font-semibold text-slate-900">{assignment}/15</p>
-        </div>
-        <div>
-          <p className="text-slate-500">المجموع</p>
-          <p className="font-bold text-slate-900">{total}/100</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function GradeDistribution({ grade, count, percentage }: GradeDistributionProps) {
-  return (
-    <div>
-      <div className="flex justify-between text-sm mb-1">
-        <span className="text-slate-700 font-semibold">تقدير {grade}</span>
-        <span className="text-slate-600">{count} طالب ({percentage}%)</span>
-      </div>
-      <div className="w-full bg-slate-200 rounded-full h-2">
-        <div className="bg-amber-500 h-2 rounded-full" style={{ width: `${percentage}%` }} />
-      </div>
+      </main>
     </div>
   );
 }

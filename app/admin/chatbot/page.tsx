@@ -2,6 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { Cairo } from 'next/font/google';
+import { 
+  Bot, 
+  Search, 
+  History, 
+  Database, 
+  Cpu, 
+  RefreshCw, 
+  Trash2, 
+  FileText, 
+  HelpCircle, 
+  Clock, 
+  ShieldCheck 
+} from 'lucide-react';
 
 const cairo = Cairo({
   subsets: ['arabic'],
@@ -88,23 +101,27 @@ export default function ChatbotAdminPage() {
   }, []);
 
   return (
-    <div className={`${cairo.className} min-h-screen bg-gray-50 p-6`} dir="rtl">
+    <div className={`${cairo.className} min-h-screen bg-[#FAF7F2] p-6`} dir="rtl">
       <div className="max-w-7xl mx-auto">
         
-                <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h1 className="text-3xl font-bold text-[#B73535] mb-2">
+        {/* Header Card */}
+        <div className="bg-white rounded-2xl p-6 border border-stone-200 mb-6">
+          <h1 className="text-2xl font-bold text-[#1C1917] flex items-center gap-2">
+            <Bot className="h-7 w-7 text-[#D97706]" />
             إدارة الشات بوت الذكي
           </h1>
-          <p className="text-gray-600">
-            إدارة ومراقبة نظام المساعد الذكي للجامعة
+          <p className="text-sm text-stone-500 font-medium mt-1">
+            مراقبة وإدارة وإعداد نظام المساعد الذكي المستند للذكاء الاصطناعي بالجامعة
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
-                    <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-              🔍 البحث في الوثائق
+          {/* Document Search Panel */}
+          <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
+            <h2 className="text-base font-bold text-[#1C1917] mb-4 flex items-center gap-2">
+              <Search className="h-5 w-5 text-[#D97706]" />
+              البحث في الوثائق واللوائح
             </h2>
             
             <div className="space-y-4">
@@ -113,14 +130,14 @@ export default function ChatbotAdminPage() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="ابحث في اللوائح والقوانين..."
-                  className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#B73535] focus:border-[#B73535] outline-none"
+                  placeholder="ابحث في القوانين، اللوائح، والمستندات..."
+                  className="flex-1 px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FABA19]/35 focus:border-[#FABA19] text-sm text-[#1C1917] font-semibold"
                   onKeyPress={(e) => e.key === 'Enter' && searchDocuments()}
                 />
                 <button
                   onClick={searchDocuments}
                   disabled={isSearching || !searchQuery.trim()}
-                  className="px-6 py-3 bg-[#B73535] text-white rounded-lg hover:bg-[#8B2828] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-5 py-2.5 bg-[#FABA19] text-[#1C1917] hover:bg-[#e5a816] disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-bold text-xs shadow-sm transition-all"
                 >
                   {isSearching ? 'جاري البحث...' : 'بحث'}
                 </button>
@@ -128,33 +145,33 @@ export default function ChatbotAdminPage() {
 
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {searchResults.map((result, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <div key={index} className="border border-stone-150 bg-stone-50/20 rounded-xl p-4">
                     <div className="flex justify-between items-start mb-2">
-                      <span className="text-sm font-semibold text-[#B73535]">
+                      <span className="text-xs font-bold text-[#D97706]">
                         {result.metadata.source}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-[10px] text-stone-500 font-bold">
                         نسبة التطابق: {(result.relevanceScore * 100).toFixed(1)}%
                       </span>
                     </div>
-                    <p className="text-gray-700 text-sm leading-relaxed">
+                    <p className="text-stone-700 text-xs leading-relaxed font-medium">
                       {result.content.substring(0, 200)}...
                     </p>
-                    <div className="text-xs text-gray-500 mt-2">
+                    <div className="text-[9px] text-stone-400 font-bold mt-2">
                       القطعة {result.metadata.chunk + 1} من {result.metadata.totalChunks}
                     </div>
                   </div>
                 ))}
                 
                 {searchResults.length === 0 && searchQuery && !isSearching && (
-                  <div className="text-center text-gray-500 py-8">
+                  <div className="text-center text-stone-400 py-8">
                     <div className="mb-4">
-                      <div className="text-4xl mb-2">📄</div>
-                      <p className="font-semibold">لا توجد نتائج للبحث</p>
-                      <p className="text-sm mt-2">
-                        إذا لم تكن قد حملت الوثائق بعد، قم بتشغيل:
+                      <FileText className="h-10 w-10 text-stone-300 mx-auto mb-2" />
+                      <p className="font-bold text-xs text-stone-500">لا توجد نتائج مطابقة</p>
+                      <p className="text-[11px] text-stone-400 mt-2 font-medium">
+                        إذا لم تكن قد حمّلت وثائق RAG للآن، يرجى تشغيل:
                       </p>
-                      <code className="bg-gray-100 px-3 py-1 rounded mt-2 inline-block">
+                      <code className="bg-stone-100 text-[#1C1917] text-[10px] font-mono px-2 py-1 rounded-md mt-2 inline-block">
                         npm run setup-rag
                       </code>
                     </div>
@@ -164,22 +181,25 @@ export default function ChatbotAdminPage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
+          {/* Conversation History Panel */}
+          <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                💬 تاريخ المحادثات
+              <h2 className="text-base font-bold text-[#1C1917] flex items-center gap-2">
+                <History className="h-5 w-5 text-[#D97706]" />
+                سجل المحادثات الأخير
               </h2>
               <div className="flex gap-2">
                 <button
                   onClick={loadChatHistory}
                   disabled={isLoadingHistory}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 text-sm"
+                  className="px-3.5 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 disabled:opacity-50 rounded-xl font-bold text-xs transition-all flex items-center gap-1"
                 >
+                  <RefreshCw className="h-3 w-3" />
                   تحديث
                 </button>
                 <button
                   onClick={clearChatHistory}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm"
+                  className="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-650 border border-red-100 rounded-xl font-bold text-xs transition-all"
                 >
                   مسح التاريخ
                 </button>
@@ -188,80 +208,89 @@ export default function ChatbotAdminPage() {
 
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {isLoadingHistory ? (
-                <div className="text-center text-gray-500 py-8">
-                  جاري تحميل التاريخ...
+                <div className="text-center text-stone-400 py-8 text-xs font-bold">
+                  جاري تحميل المحادثات...
                 </div>
               ) : chatHistory.length > 0 ? (
                 chatHistory.map((message, index) => (
                   <div
                     key={index}
-                    className={`p-3 rounded-lg ${
+                    className={`p-3 rounded-xl border ${
                       message.role === 'user'
-                        ? 'bg-[#B73535] text-white mr-8'
-                        : 'bg-gray-100 text-gray-800 ml-8'
+                        ? 'bg-[#1C1917] border-[#1C1917] text-white mr-6'
+                        : 'bg-stone-50 border-stone-200 text-stone-800 ml-6'
                     }`}
                   >
-                    <div className="text-sm font-semibold mb-1">
-                      {message.role === 'user' ? 'المستخدم' : 'المساعد'}
+                    <div className="text-[10px] font-bold mb-1 opacity-80">
+                      {message.role === 'user' ? 'الطالب' : 'المساعد الذكي'}
                     </div>
-                    <div className="text-sm">
+                    <div className="text-xs font-medium leading-relaxed">
                       {message.content.length > 150
                         ? `${message.content.substring(0, 150)}...`
                         : message.content}
                     </div>
-                    <div className={`text-xs mt-2 ${
-                      message.role === 'user' ? 'text-white/70' : 'text-gray-500'
+                    <div className={`text-[9px] mt-2 font-bold ${
+                      message.role === 'user' ? 'text-stone-400' : 'text-stone-400'
                     }`}>
                       {new Date(message.timestamp).toLocaleString('ar-EG')}
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-center text-gray-500 py-8">
-                  لا يوجد تاريخ محادثات
+                <div className="text-center text-stone-400 py-8">
+                  <Bot className="h-10 w-10 text-stone-300 mx-auto mb-2" />
+                  <p className="text-xs font-bold text-stone-500">لا توجد محادثات مسجلة للآن</p>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 mt-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-            📊 إحصائيات النظام
+        {/* System Statistics */}
+        <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm mt-6">
+          <h2 className="text-base font-bold text-[#1C1917] mb-4 flex items-center gap-2">
+            <Cpu className="h-5 w-5 text-[#D97706]" />
+            إحصائيات وحالة النظام
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-gradient-to-r from-[#B73535] to-[#8B2828] text-white p-4 rounded-lg">
-              <div className="text-2xl font-bold">{chatHistory.length}</div>
-              <div className="text-sm opacity-90">إجمالي الرسائل</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-stone-50 border border-stone-150 p-4 rounded-xl">
+              <div className="text-2xl font-bold text-[#1C1917]">{chatHistory.length}</div>
+              <div className="text-xs text-stone-500 font-bold mt-1">إجمالي الرسائل</div>
             </div>
             
-            <div className="bg-gradient-to-r from-[#D4A017] to-[#b98a12] text-white p-4 rounded-lg">
-              <div className="text-2xl font-bold">
+            <div className="bg-stone-50 border border-stone-150 p-4 rounded-xl">
+              <div className="text-2xl font-bold text-[#1C1917]">
                 {chatHistory.filter(m => m.role === 'user').length}
               </div>
-              <div className="text-sm opacity-90">أسئلة المستخدمين</div>
+              <div className="text-xs text-stone-500 font-bold mt-1">أسئلة الطلاب</div>
             </div>
             
-            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-lg">
-              <div className="text-2xl font-bold">2</div>
-              <div className="text-sm opacity-90">الوثائق المحملة</div>
+            <div className="bg-stone-50 border border-stone-150 p-4 rounded-xl">
+              <div className="text-2xl font-bold text-[#1C1917]">2</div>
+              <div className="text-xs text-stone-500 font-bold mt-1">الوثائق المحملة</div>
             </div>
             
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-lg">
-              <div className="text-2xl font-bold">متاح</div>
-              <div className="text-sm opacity-90">حالة النظام</div>
+            <div className="bg-stone-50 border border-stone-150 p-4 rounded-xl flex flex-col justify-between">
+              <div className="flex items-center gap-1 text-green-600">
+                <ShieldCheck className="h-5 w-5" />
+                <span className="text-sm font-bold">متاح ونشط</span>
+              </div>
+              <div className="text-xs text-stone-500 font-bold mt-1">حالة النظام</div>
             </div>
           </div>
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-6">
-          <h3 className="text-lg font-bold text-blue-800 mb-3">📋 تعليمات الاستخدام</h3>
-          <div className="space-y-2 text-blue-700">
-            <p>• تأكد من إعداد متغيرات البيئة (OPENAI_API_KEY, PINECONE_API_KEY)</p>
-            <p>• قم بتشغيل <code className="bg-blue-100 px-2 py-1 rounded">npm run setup-rag</code> لتحميل الوثائق</p>
-            <p>• استخدم البحث لاختبار جودة استرجاع المعلومات</p>
-            <p>• راقب تاريخ المحادثات لتحسين الأداء</p>
+        {/* Usage Instructions */}
+        <div className="bg-amber-50/40 border border-amber-100/70 rounded-2xl p-6 mt-6">
+          <h3 className="text-sm font-bold text-[#D97706] mb-3 flex items-center gap-1.5">
+            <HelpCircle className="h-4 w-4" />
+            تعليمات التشغيل والإعداد
+          </h3>
+          <div className="space-y-2 text-xs text-stone-600 font-medium">
+            <p>• يرجى التأكد من إعداد مفاتيح الاتصال الضرورية بملف الإعدادات البيئية مثل: <code className="bg-amber-100/50 px-1.5 py-0.5 rounded text-stone-800 font-mono">OPENAI_API_KEY</code>.</p>
+            <p>• لتحديث قاعدة المعرفة RAG ورفع المستندات الجديدة، قم بتشغيل الأمر: <code className="bg-amber-100/50 px-1.5 py-0.5 rounded text-stone-800 font-mono">npm run setup-rag</code>.</p>
+            <p>• يمكنك استخدام أداة البحث في الجانب الأيمن للتأكد من دقة استرجاع المعلومات والتحقق من سلامة الأجوبة المسترجعة.</p>
           </div>
         </div>
       </div>
